@@ -1,0 +1,1 @@
+scalac /src/*.scala -d Allain_Louis_TP6_Echiquier.jar -Xmain-class CavalierEuler

@@ -1,0 +1,1 @@
+scalac Anagramme.scala -d Allain_Louis_Anagramme.jar -Xmain-class Anagramme

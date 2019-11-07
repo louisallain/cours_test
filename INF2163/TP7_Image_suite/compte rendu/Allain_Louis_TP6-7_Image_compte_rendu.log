@@ -1,0 +1,274 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7140 64-bit) (preloaded format=pdflatex 2019.10.2)  5 NOV 2019 14:48
+entering extended mode
+**./Allain_Louis_TP6-7_Image_compte_rendu.tex
+(Allain_Louis_TP6-7_Image_compte_rendu.tex
+LaTeX2e <2018-12-01>
+("C:\Program Files\MiKTeX 2.9\tex/latex/base\article.cls"
+Document Class: article 2018/09/03 v1.4i Standard LaTeX document class
+("C:\Program Files\MiKTeX 2.9\tex/latex/base\size12.clo"
+File: size12.clo 2018/09/03 v1.4i Standard LaTeX file (size option)
+)
+\c@part=\count80
+\c@section=\count81
+\c@subsection=\count82
+\c@subsubsection=\count83
+\c@paragraph=\count84
+\c@subparagraph=\count85
+\c@figure=\count86
+\c@table=\count87
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+) ("C:\Program Files\MiKTeX 2.9\tex/latex/amsfonts\amsfonts.sty"
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\@emptytoks=\toks14
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+) ("C:\Program Files\MiKTeX 2.9\tex/latex/graphics\graphicx.sty"
+Package: graphicx 2017/06/01 v1.1a Enhanced LaTeX Graphics (DPC,SPQR)
+
+("C:\Program Files\MiKTeX 2.9\tex/latex/graphics\keyval.sty"
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks15
+)
+("C:\Program Files\MiKTeX 2.9\tex/latex/graphics\graphics.sty"
+Package: graphics 2017/06/25 v1.2c Standard LaTeX Graphics (DPC,SPQR)
+ ("C:\Program Files\MiKTeX 2.9\tex/latex/graphics\trig.sty"
+Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
+) ("C:\Program Files\MiKTeX 2.9\tex/latex/graphics-cfg\graphics.cfg"
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 99.
+
+("C:\Program Files\MiKTeX 2.9\tex/latex/graphics-def\pdftex.def"
+File: pdftex.def 2018/01/08 v1.0l Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen103
+\Gin@req@width=\dimen104
+)
+\decalage=\dimen105
+ (Allain_Louis_TP6-7_Image_compte_rendu.aux)
+\openout1 = `Allain_Louis_TP6-7_Image_compte_rendu.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+
+("C:\Program Files\MiKTeX 2.9\tex/context/base/mkii\supp-pdf.mkii"
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count88
+\scratchdimen=\dimen106
+\scratchbox=\box27
+\nofMPsegments=\count89
+\nofMParguments=\count90
+\everyMPshowfont=\toks16
+\MPscratchCnt=\count91
+\MPscratchDim=\dimen107
+\MPnumerator=\count92
+\makeMPintoPDFobject=\count93
+\everyMPtoPDFconversion=\toks17
+) ("C:\Program Files\MiKTeX 2.9\tex/latex/oberdiek\epstopdf-base.sty"
+Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
+
+("C:\Program Files\MiKTeX 2.9\tex/generic/oberdiek\infwarerr.sty"
+Package: infwarerr 2016/05/16 v1.4 Providing info/warning/error messages (HO)
+)
+("C:\Program Files\MiKTeX 2.9\tex/latex/oberdiek\grfext.sty"
+Package: grfext 2016/05/16 v1.2 Manage graphics extensions (HO)
+
+("C:\Program Files\MiKTeX 2.9\tex/generic/oberdiek\kvdefinekeys.sty"
+Package: kvdefinekeys 2016/05/16 v1.4 Define keys (HO)
+
+("C:\Program Files\MiKTeX 2.9\tex/generic/oberdiek\ltxcmds.sty"
+Package: ltxcmds 2016/05/16 v1.23 LaTeX kernel commands for general use (HO)
+)))
+("C:\Program Files\MiKTeX 2.9\tex/latex/oberdiek\kvoptions.sty"
+Package: kvoptions 2016/05/16 v3.12 Key value format for package options (HO)
+
+("C:\Program Files\MiKTeX 2.9\tex/generic/oberdiek\kvsetkeys.sty"
+Package: kvsetkeys 2016/05/16 v1.17 Key value parser (HO)
+
+("C:\Program Files\MiKTeX 2.9\tex/generic/oberdiek\etexcmds.sty"
+Package: etexcmds 2016/05/16 v1.6 Avoid name clashes with e-TeX commands (HO)
+
+("C:\Program Files\MiKTeX 2.9\tex/generic/oberdiek\ifluatex.sty"
+Package: ifluatex 2016/05/16 v1.4 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+))))
+("C:\Program Files\MiKTeX 2.9\tex/generic/oberdiek\pdftexcmds.sty"
+Package: pdftexcmds 2019/07/25 v0.30 Utility functions of pdfTeX for LuaTeX (HO)
+
+("C:\Program Files\MiKTeX 2.9\tex/generic/oberdiek\ifpdf.sty"
+Package: ifpdf 2018/09/07 v3.3 Provides the ifpdf switch
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+)
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 438.
+Package grfext Info: Graphics extension search list:
+(grfext)             [.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 456.
+)
+LaTeX Font Info:    Try loading font information for U+msa on input line 41.
+ ("C:\Program Files\MiKTeX 2.9\tex/latex/amsfonts\umsa.fd"
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 41.
+ ("C:\Program Files\MiKTeX 2.9\tex/latex/amsfonts\umsb.fd"
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+<img_reelle.png, id=1, 279.0425pt x 281.05pt>
+File: img_reelle.png Graphic file (type png)
+<use img_reelle.png>
+Package pdftex.def Info: img_reelle.png  used on input line 59.
+(pdftex.def)             Requested size: 145.11052pt x 146.1597pt.
+<chimpanze_zomm.jpg, id=3, 100.375pt x 100.375pt>
+File: chimpanze_zomm.jpg Graphic file (type jpg)
+<use chimpanze_zomm.jpg>
+Package pdftex.def Info: chimpanze_zomm.jpg  used on input line 65.
+(pdftex.def)             Requested size: 145.11052pt x 145.1326pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 85--86
+
+ []
+
+[1
+
+{C:/Users/Power Media/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <./img_reelle.png> <./chimpanze_zomm.jpg>]
+<res128.png, id=13, 316.18124pt x 281.05pt>
+File: res128.png Graphic file (type png)
+<use res128.png>
+Package pdftex.def Info: res128.png  used on input line 87.
+(pdftex.def)             Requested size: 145.11052pt x 128.98865pt.
+<res64.png, id=14, 309.155pt x 281.05pt>
+File: res64.png Graphic file (type png)
+<use res64.png>
+Package pdftex.def Info: res64.png  used on input line 88.
+(pdftex.def)             Requested size: 145.11052pt x 131.92197pt.
+<res32.png, id=15, 309.155pt x 281.05pt>
+File: res32.png Graphic file (type png)
+<use res32.png>
+Package pdftex.def Info: res32.png  used on input line 91.
+(pdftex.def)             Requested size: 145.11052pt x 131.92197pt.
+<res16.png, id=16, 309.155pt x 281.05pt>
+File: res16.png Graphic file (type png)
+<use res16.png>
+Package pdftex.def Info: res16.png  used on input line 92.
+(pdftex.def)             Requested size: 145.11052pt x 131.92197pt.
+
+[2 <./res128.png> <./res64.png> <./res32.png> <./res16.png>]
+<hist_cumul.png, id=24, 382.42876pt x 264.99pt>
+File: hist_cumul.png Graphic file (type png)
+<use hist_cumul.png>
+Package pdftex.def Info: hist_cumul.png  used on input line 136.
+(pdftex.def)             Requested size: 145.11052pt x 100.54764pt.
+<hist_norm.png, id=25, 379.4175pt x 264.99pt>
+File: hist_norm.png Graphic file (type png)
+<use hist_norm.png>
+Package pdftex.def Info: hist_norm.png  used on input line 137.
+(pdftex.def)             Requested size: 145.11052pt x 101.34824pt.
+<chg_cont.png, id=26, 376.40625pt x 281.05pt>
+File: chg_cont.png Graphic file (type png)
+<use chg_cont.png>
+Package pdftex.def Info: chg_cont.png  used on input line 152.
+(pdftex.def)             Requested size: 145.11052pt x 108.35252pt.
+<filtre_cont.png, id=27, 330.23375pt x 281.05pt>
+File: filtre_cont.png Graphic file (type png)
+<use filtre_cont.png>
+Package pdftex.def Info: filtre_cont.png  used on input line 164.
+(pdftex.def)             Requested size: 145.11052pt x 123.4994pt.
+<filtre_gauss.png, id=28, 279.0425pt x 281.05pt>
+File: filtre_gauss.png Graphic file (type png)
+<use filtre_gauss.png>
+Package pdftex.def Info: filtre_gauss.png  used on input line 170.
+(pdftex.def)             Requested size: 145.11052pt x 146.1597pt.
+ [3 <./hist_cumul.png> <./hist_norm.png> <./chg_cont.png> <./filtre_cont.png>]
+<filtre_moy.png, id=36, 279.0425pt x 281.05pt>
+File: filtre_moy.png Graphic file (type png)
+<use filtre_moy.png>
+Package pdftex.def Info: filtre_moy.png  used on input line 208.
+(pdftex.def)             Requested size: 145.11052pt x 146.1597pt.
+ [4 <./filtre_gauss.png> <./filtre_moy.png>]
+<chimpanze.jpg, id=42, 256.96pt x 256.96pt>
+File: chimpanze.jpg Graphic file (type jpg)
+<use chimpanze.jpg>
+Package pdftex.def Info: chimpanze.jpg  used on input line 226.
+(pdftex.def)             Requested size: 145.11052pt x 145.11209pt.
+<img_amp.png, id=43, 316.18124pt x 281.05pt>
+File: img_amp.png Graphic file (type png)
+<use img_amp.png>
+Package pdftex.def Info: img_amp.png  used on input line 232.
+(pdftex.def)             Requested size: 145.11052pt x 128.98865pt.
+<img_phase.png, id=44, 316.18124pt x 281.05pt>
+File: img_phase.png Graphic file (type png)
+<use img_phase.png>
+Package pdftex.def Info: img_phase.png  used on input line 233.
+(pdftex.def)             Requested size: 145.11052pt x 128.98865pt.
+<ifft_amp.png, id=45, 316.18124pt x 281.05pt>
+File: ifft_amp.png Graphic file (type png)
+<use ifft_amp.png>
+Package pdftex.def Info: ifft_amp.png  used on input line 239.
+(pdftex.def)             Requested size: 145.11052pt x 128.98865pt.
+<ifft_phase.png, id=46, 316.18124pt x 281.05pt>
+File: ifft_phase.png Graphic file (type png)
+<use ifft_phase.png>
+Package pdftex.def Info: ifft_phase.png  used on input line 240.
+(pdftex.def)             Requested size: 145.11052pt x 128.98865pt.
+File: chimpanze.jpg Graphic file (type jpg)
+<use chimpanze.jpg>
+Package pdftex.def Info: chimpanze.jpg  used on input line 253.
+(pdftex.def)             Requested size: 145.11052pt x 145.11209pt.
+ [5 <./chimpanze.jpg> <./img_amp.png> <./img_phase.png> <./ifft_amp.png> <./ifft_phase.png>]
+<fil_pb_conv.png, id=54, 322.20375pt x 281.05pt>
+File: fil_pb_conv.png Graphic file (type png)
+<use fil_pb_conv.png>
+Package pdftex.def Info: fil_pb_conv.png  used on input line 268.
+(pdftex.def)             Requested size: 145.11052pt x 126.57854pt.
+<fil_ph_conv.png, id=55, 324.21124pt x 281.05pt>
+File: fil_ph_conv.png Graphic file (type png)
+<use fil_ph_conv.png>
+Package pdftex.def Info: fil_ph_conv.png  used on input line 273.
+(pdftex.def)             Requested size: 145.11052pt x 125.79375pt.
+<fil_pb_fou.png, id=56, 316.18124pt x 281.05pt>
+File: fil_pb_fou.png Graphic file (type png)
+<use fil_pb_fou.png>
+Package pdftex.def Info: fil_pb_fou.png  used on input line 286.
+(pdftex.def)             Requested size: 145.11052pt x 128.98865pt.
+ [6 <./fil_pb_conv.png> <./fil_ph_conv.png>]
+<fil_ph_fou.png, id=62, 324.21124pt x 281.05pt>
+File: fil_ph_fou.png Graphic file (type png)
+<use fil_ph_fou.png>
+Package pdftex.def Info: fil_ph_fou.png  used on input line 291.
+(pdftex.def)             Requested size: 145.11052pt x 125.79375pt.
+ [7 <./fil_pb_fou.png> <./fil_ph_fou.png>] (Allain_Louis_TP6-7_Image_compte_rendu.aux) ) 
+Here is how much of TeX's memory you used:
+ 1631 strings out of 492895
+ 23888 string characters out of 3133459
+ 84633 words of memory out of 3000000
+ 5520 multiletter control sequences out of 15000+200000
+ 12265 words of font info for 48 fonts, out of 3000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 41i,6n,25p,306b,317s stack positions out of 5000i,500n,10000p,200000b,50000s
+<C:/Program Files/MiKTeX 2.9/fon
+ts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program
+ Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/c
+mtt12.pfb>
+Output written on Allain_Louis_TP6-7_Image_compte_rendu.pdf (7 pages, 837502 bytes).
+PDF statistics:
+ 83 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 500000)
+ 106 words of extra memory for PDF output out of 10000 (max. 10000000)
+
