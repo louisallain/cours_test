@@ -2,11 +2,10 @@ class Sudoku(startConfig_ : Array[Array[Int]]) {
 
   var model : Array[Array[Int]] = startConfig_
 
-  // TODO : construire une liste de solutions et pas seulement la première solution trouvée
-  def solver() : List[Array[Array[Int]]] = {
+  def solver() : Array[Array[Int]] = {
 
-    this.fillXY(0, 0)
-    List()
+    this.fillXY()
+    this.model
   }
 
   def generateRandomGrid(nbClues : Int) : Unit = {
@@ -21,7 +20,11 @@ class Sudoku(startConfig_ : Array[Array[Int]]) {
     }
   }
 
-  def fillXY(x_ : Int, y_ : Int): Boolean = {
+  def fillXY(): Unit = {
+    this.fillXYUtils(0, 0)
+  }
+
+  def fillXYUtils(x_ : Int, y_ : Int): Boolean = {
 
     var ret = false
     val numbers = 1 to 9
@@ -32,8 +35,8 @@ class Sudoku(startConfig_ : Array[Array[Int]]) {
 
       if(this.model(x_)(y_) != 0) {
 
-        if(x_ == 8) ret = fillXY(0, y_ + 1)
-        else ret = fillXY(x_ + 1, y_)
+        if(x_ == 8) ret = fillXYUtils(0, y_ + 1)
+        else ret = fillXYUtils(x_ + 1, y_)
       }
       else {
 
@@ -48,8 +51,8 @@ class Sudoku(startConfig_ : Array[Array[Int]]) {
 
             this.model(x_)(y_) = nb
 
-            if(x_ == 8) ret = fillXY(0, y_ + 1)
-            else ret = fillXY(x_ + 1, y_)
+            if(x_ == 8) ret = fillXYUtils(0, y_ + 1)
+            else ret = fillXYUtils(x_ + 1, y_)
 
             if (!ret) this.model(x_)(y_) = 0
           }
