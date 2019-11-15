@@ -54,4 +54,4 @@ echo Using OPENJMS_HOME: %OPENJMS_HOME%
 echo Using JAVA_HOME:    %JAVA_HOME%
 echo Using CLASSPATH:    %CLASSPATH%
 
-%_RUNJAVAC% -g -classpath "%CLASSPATH%" *.java
+%_RUNJAVAC% -g -classpath "%CLASSPATH%" *.java -d ../bin
