@@ -6,6 +6,19 @@ import scala.reflect.ClassTag
 
 object Sudoku {
 
+  // Q1
+  val table : $[$[Int]] = $(
+    $(5, 3, 0, 0, 7, 0, 0, 0, 0),
+    $(6, 0, 0, 1, 9, 5, 0, 0, 0),
+    $(0, 9, 8, 0, 0, 0, 0, 6, 0),
+    $(8, 0, 0, 0, 6, 0, 0, 0, 3),
+    $(4, 0, 0, 8, 0, 3, 0, 0, 1),
+    $(7, 0, 0, 0, 2, 0, 0, 0, 6),
+    $(0, 6, 0, 0, 0, 0, 2, 8, 0),
+    $(0, 0, 0, 4, 1, 9, 0, 0, 5),
+    $(0, 0, 0, 0, 8, 0, 0, 7, 9)
+  )
+
   // Q2
   def TwoDimArrayToString[T:ClassTag](a_ : $[$[T]]) : String = {
     a_.map(_.mkString(" ")).mkString("\n")
@@ -57,31 +70,116 @@ object Sudoku {
     (0 until 9).map(v => (v/3 + xBlock, v%3 + yBlock))
   }
 
+  def parcours_5(i_ : Int = 0): Unit = {
+
+    val (x, y) = Sudoku.parcours_1(i_)
+    (x, y) match {
+      case(9, 0) => println("Travail terminé.")
+      case(x, y) => {
+        println(s"($x, $y) : ")
+        val xBlock = x -(x % 3)
+        val yBlock = y -(y % 3)
+        def indicesAVoir(j_ : Int) = List((x, j_), (j_, y), (j_ / 3 + xBlock, j_ % 3 + yBlock))
+        println((0 until 9).flatMap(indicesAVoir).toSet)
+        Sudoku.parcours_5(i_ + 1)
+      }
+    }
+  }
+
+  def parcours_7(i_ : Int = 0): Unit = {
+
+    val (x, y) = Sudoku.parcours_1(i_)
+    (x, y) match {
+      case(9, 0) => println("Travail terminé.")
+      case(x, y) => {
+        println(s"($x, $y) : ")
+        val xBlock = x -(x % 3)
+        val yBlock = y -(y % 3)
+        def nombresDejaPris(j_ : Int) = List(table(x)(j_), table(j_)(y), table(j_ / 3 + xBlock)(j_ % 3 + yBlock))
+        println("Deja pris : " + (0 until 9).flatMap(nombresDejaPris).toSet)
+        Sudoku.parcours_7(i_ + 1)
+      }
+    }
+  }
+
+  def parcours_9(i_ : Int = 0): Unit = {
+
+    val (x, y) = Sudoku.parcours_1(i_)
+    (x, y) match {
+      case(9, 0) => println("Travail terminé.")
+      case(x, y) => {
+        println(s"($x, $y) : ")
+        val xBlock = x -(x % 3)
+        val yBlock = y -(y % 3)
+        def nombresDejaPris(j_ : Int) = List(table(x)(j_), table(j_)(y), table(j_ / 3 + xBlock)(j_ % 3 + yBlock))
+        val dejaPris = (0 until 9).flatMap(nombresDejaPris).toSet
+        val aEssayer = (0 to 9).diff(dejaPris.toSeq)
+
+        println("A essayer : " + aEssayer)
+        Sudoku.parcours_9(i_ + 1)
+      }
+    }
+  }
+
+  def parcours_11(t_ : Array[Array[Int]], i_ : Int = 0) : Option[Array[Array[Int]]] = {
+
+    val (x, y) = (i_ / 9, i_ % 9)
+    (x, y) match {
+      case(9, 0) => Some(t_)
+      case(x, y) => {
+        parcours_11(t_.updated(x, t_(x).updated(y, i_)), i_ + 1)
+      }
+    }
+  }
+
+  /**
+   * Solution sudoku ; fonctionel
+   * @param t_ sudoku
+   * @param i_ n° case
+   * @return solution
+   */
+  def parcours_12(t_ : Array[Array[Int]], i_ : Int = 0) : Option[Array[Array[Int]]] = {
+
+    val (x, y) = (i_ / 9, i_ % 9)
+    (x, y) match {
+
+      case(9, 0) => {
+        Some(t_)
+      } // renvoie le résultat qui est le tableau courant t_
+      case(x, y) if t_(x)(y) != 0 => Sudoku.parcours_12(t_, i_ + 1) // case déjà occupée : on passe à la case suivante, inutile de modifier celle-ci
+      case(x, y) => { // sinon, on est sur une case et on va devoir essayer plusieurs numéros
+
+        val xBlock = x -(x % 3)
+        val yBlock = y -(y % 3)
+        def nombresDejaPris(j_ : Int) = List(t_(x)(j_), t_(j_)(y), t_(j_ / 3 + xBlock)(j_ % 3 + yBlock))
+        val dejaPris = (0 until 9).flatMap(nombresDejaPris).toSet
+        val aEssayer = (0 to 9).diff(dejaPris.toSeq)
+        def placer(v_ : Int) = parcours_12(t_.updated(x, t_(x).updated(y, v_)), i_ + 1)
+
+        if (aEssayer.isEmpty) None // pas de solution (rien à essayer)
+        else {
+          val s = aEssayer.map(placer).filter(_ != None)
+          if(s.length > 0) s(0) else None
+        }
+      }
+    }
+  }
+
+  def anagramme(m_ : String) : Array[String] = {
+
+    val aEssayer = List("m", "o", "t")
+    aEssayer.map()
+  }
+
   def main(args: Array[String]): Unit = {
 
-    // Q1
-    val table : $[$[Int]] = $(
-      $(5, 3, 0, 0, 7, 0, 0, 0, 0),
-      $(6, 0, 0, 1, 9, 5, 0, 0, 0),
-      $(0, 9, 8, 0, 0, 0, 0, 6, 0),
-      $(8, 0, 0, 0, 6, 0, 0, 0, 3),
-      $(4, 0, 0, 8, 0, 3, 0, 0, 1),
-      $(7, 0, 0, 0, 2, 0, 0, 0, 6),
-      $(0, 6, 0, 0, 0, 0, 2, 8, 0),
-      $(0, 0, 0, 4, 1, 9, 0, 0, 5),
-      $(0, 0, 0, 0, 8, 0, 0, 7, 9)
-    )
+    // SUDOKU
+    parcours_12(table) match {
+      case Some(res) => println("12: \n"+ res.map( _.mkString(" ") ).mkString("\n"))
+      case None => println("pas de solution")
+    }
 
-    // Q2
-    println(Sudoku.TwoDimArrayToString(table) + "\n")
+    // ANAGRAMME
 
-    // Q3
-    val ntable = Sudoku.replaceByInTwoDimArray(table, (4, 5), -1)
-    println(Sudoku.TwoDimArrayToString(ntable) + "\n")
-
-    // Q4
-    Sudoku.parcours_2()
-
-    println(Sudoku.getCoordsOfBlock((8, 8)))
   }
 }
