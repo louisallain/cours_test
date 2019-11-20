@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.exolab.jms.administration.AdminConnectionFactory;
+import org.exolab.jms.administration.JmsAdminServerIfc;
+
 import javax.jms.*;
 
 /**
@@ -19,6 +22,7 @@ import javax.jms.*;
  * Il s'agit de l’entité conservant les données relatives à chaque compte et appliquant les
  * opérations sur ce compte.
  * Cet objet se connecte évidemment au MOM OpenJMS afin de traiter toutes ces informations.
+ * Cette classe se charge également de créer la file et le topic nécessaire à l'application.
  */
 public class Gerant {
     
@@ -46,6 +50,7 @@ public class Gerant {
 
     /**
      * Créer un un objet Gerant avec une liste de comptes vide.
+     * Créer également la file "operations" et le topic "etatCompte" nécessaire à l'application.
      * Initialise également la connexion au MOM Open
      */
     public Gerant() {
@@ -55,6 +60,25 @@ public class Gerant {
 
             Properties prop = new Properties();
             prop.load(input);
+
+            // création des files et topics nécessaires à l'application
+            JmsAdminServerIfc admin = AdminConnectionFactory.create(
+                prop.getProperty("louis.inf2165.banque.ADMIN_URL"),
+                prop.getProperty("louis.inf2165.banque.ADMIN_USERNAME"),
+                prop.getProperty("louis.inf2165.banque.ADMIN_PASSWORD")
+            );
+            String queue = prop.getProperty("louis.inf2165.banque.OPERATIONS_QUEUE_NAME");
+            Boolean isQueue = Boolean.TRUE;
+            if (!admin.addDestination(queue, isQueue)) {
+                System.err.println("Impossible de créer ce topic (exist-il déjà ?) : " + queue);
+            }
+
+            String topic = prop.getProperty("louis.inf2165.banque.ACCOUNT_STATE_TOPIC_NAME");
+            isQueue = Boolean.FALSE;
+            if (!admin.addDestination(topic, isQueue)) {
+                System.err.println("Impossible de créer ce topic (exist-il déjà ?) : " + topic);
+            }
+            admin.close();
 
 
             this.context = new InitialContext();
@@ -145,7 +169,7 @@ public class Gerant {
      * On ajoute également des propriétés permettant de filter les messages du genre : 
      *      [
      *       {"dateCreation", date_creation_compte},
-     *       {"solde", solde_compte}
+     *       {"idClient", nom_client_compte}
      *      ]
      * Ainsi toutes les informations permettant de représenter un compte sont précisées. L'historique des opérations du comptes 
      * ne sont pas transmises pour des raisons de performances.
@@ -161,7 +185,7 @@ public class Gerant {
             message.setLongProperty("dateCreation", compte.getDate().getTime());
             message.setIntProperty("solde", compte.getSolde());
             message.setInt("numCompte", compte.getNumCompte());
-            message.setInt("solde", compte.getSolde());
+            message.setString("idClient", compte.getIdClient().getNomClient());
             sender.send(message);
             System.out.println("Envoye nouvel état du compte : " + compte.toString());
         } catch (JMSException exception) {

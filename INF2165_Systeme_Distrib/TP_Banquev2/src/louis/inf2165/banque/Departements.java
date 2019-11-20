@@ -91,8 +91,9 @@ public class Departements {
                 try {
                     Message message = abonneDecouverts.receive();
                     if (message instanceof MapMessage) {
-                        MapMessage text = (MapMessage) message;
-                        System.out.println("Recu decouvert");
+                        MapMessage mapMessage = (MapMessage) message;
+                        String[] args = {mapMessage.getString("idClient"), String.valueOf(mapMessage.getInt("numCompte")), "-10"};
+                        Client.main(args); // invoque la méthode principale de la classe Client afin d'exécuter l'opération définie ci-dessus
                     } else if (message != null) {
                         System.out.println("Le message reçu n'est pas un MapMessage.");
                     }
@@ -120,8 +121,8 @@ public class Departements {
                 try {
                     Message message = abonneInvestissements.receive();
                     if (message instanceof MapMessage) {
-                        MapMessage text = (MapMessage) message;
-                        System.out.println("Recu investissement");
+                        MapMessage mapMessage = (MapMessage) message;
+                        System.out.println("Mail envoyé à " + mapMessage.getString("idClient") + " pour une proposition d'investissements.");
                     } else if (message != null) {
                         System.out.println("Le message reçu n'est pas un MapMessage.");
                     }
