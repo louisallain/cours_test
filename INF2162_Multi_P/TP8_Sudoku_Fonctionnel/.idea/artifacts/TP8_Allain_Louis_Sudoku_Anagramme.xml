@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="TP8_Allain_Louis_Sudoku_Anagramme">
+    <output-path>$PROJECT_DIR$/out/artifacts/TP8_Allain_Louis_Sudoku_Anagramme</output-path>
+    <root id="archive" name="TP8_Allain_Louis_Sudoku_Anagramme.jar">
+      <element id="archive" name="TP7.jar">
+        <element id="module-output" name="TP7" />
+      </element>
+      <element id="library" level="application" name="scala-sdk-2.13.1" />
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>

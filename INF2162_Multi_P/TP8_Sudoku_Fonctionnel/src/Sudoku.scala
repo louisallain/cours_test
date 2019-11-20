@@ -165,10 +165,13 @@ object Sudoku {
     }
   }
 
-  def anagramme(m_ : String) : Array[String] = {
-
-    val aEssayer = List("m", "o", "t")
-    aEssayer.map()
+  def permute(m_ : String) : List[String] = {
+    m_ match {
+      case(m_) if(m_.length == 1) => List(m_)
+      case(m_) => {
+        m_.map(l1 => permute(m_.toSeq.diff(l1.toString).toString).map(reste => l1+reste)).toList.flatten
+      }
+    }
   }
 
   def main(args: Array[String]): Unit = {
@@ -180,6 +183,8 @@ object Sudoku {
     }
 
     // ANAGRAMME
-
+    println(permute("aka"))
+    println(permute("food"))
+    println(permute("cloaque"))
   }
 }
