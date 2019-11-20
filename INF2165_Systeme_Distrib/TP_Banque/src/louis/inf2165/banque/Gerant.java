@@ -7,6 +7,14 @@ import javax.naming.NamingException;
 import java.util.Set;
 import java.util.HashSet;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
+import org.exolab.jms.administration.AdminConnectionFactory;
+import org.exolab.jms.administration.JmsAdminServerIfc;
+
 import javax.jms.*;
 
 /**
@@ -14,6 +22,7 @@ import javax.jms.*;
  * Il s'agit de l’entité conservant les données relatives à chaque compte et appliquant les
  * opérations sur ce compte.
  * Cet objet se connecte évidemment au MOM OpenJMS afin de traiter toutes ces informations.
+ * Cette classe se charge également de créer la file et le topic nécessaire à l'application.
  */
 public class Gerant {
     
@@ -31,32 +40,62 @@ public class Gerant {
      */
     private Context context;
     /**
-     * L'objet destination pour JMS.
+     * La file "operations" de l'application bancaire.
      */
-    private Destination dest;
+    private Destination operationsQueue;
+    /**
+     * Le Topic "etatCompte" de l'application bancaire.
+     */
+    private Destination etatCompteTopic;
 
     /**
      * Créer un un objet Gerant avec une liste de comptes vide.
+     * Créer également la file "operations" et le topic "etatCompte" nécessaire à l'application.
      * Initialise également la connexion au MOM Open
      */
     public Gerant() {
 
         this.comptes = new HashSet<Compte>();
-        try {
+        try (InputStream input = new FileInputStream("config.properties")) {
+
+            Properties prop = new Properties();
+            prop.load(input);
+
+            // création des files et topics nécessaires à l'application
+            JmsAdminServerIfc admin = AdminConnectionFactory.create(
+                prop.getProperty("louis.inf2165.banque.ADMIN_URL"),
+                prop.getProperty("louis.inf2165.banque.ADMIN_USERNAME"),
+                prop.getProperty("louis.inf2165.banque.ADMIN_PASSWORD")
+            );
+            String queue = prop.getProperty("louis.inf2165.banque.OPERATIONS_QUEUE_NAME");
+            Boolean isQueue = Boolean.TRUE;
+            if (!admin.addDestination(queue, isQueue)) {
+                System.err.println("Impossible de créer ce topic (exist-il déjà ?) : " + queue);
+            }
+
+            String topic = prop.getProperty("louis.inf2165.banque.ACCOUNT_STATE_TOPIC_NAME");
+            isQueue = Boolean.FALSE;
+            if (!admin.addDestination(topic, isQueue)) {
+                System.err.println("Impossible de créer ce topic (exist-il déjà ?) : " + topic);
+            }
+            admin.close();
+
 
             this.context = new InitialContext();
-            ConnectionFactory factory = (ConnectionFactory) this.context.lookup("CF"); // TODO : changer par un système partageant les noms
-            
-            this.dest = (Destination) this.context.lookup("operations"); // TODO : changer par un système partageant les noms
+            ConnectionFactory factory = (ConnectionFactory) this.context.lookup(prop.getProperty("louis.inf2165.banque.CONNECTION_FACTORY_NAME"));   
+            this.operationsQueue = (Destination) this.context.lookup(prop.getProperty("louis.inf2165.banque.OPERATIONS_QUEUE_NAME"));
+            this.etatCompteTopic = (Destination) this.context.lookup(prop.getProperty("louis.inf2165.banque.ACCOUNT_STATE_TOPIC_NAME"));
             this.connexion = factory.createConnection();
             Session session = this.connexion.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            MessageConsumer receiver = session.createConsumer(this.dest);
+            MessageConsumer receiver = session.createConsumer(this.operationsQueue);
             receiver.setMessageListener(new OperationsListener(this));
             this.connexion.start();
         } catch (JMSException exception) {
             exception.printStackTrace();
         } catch (NamingException exception) {
             exception.printStackTrace();
+        } catch(IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -68,42 +107,6 @@ public class Gerant {
 
         this();
         this.comptes = comptes;
-        try {
-
-            this.context = new InitialContext();
-            ConnectionFactory factory = (ConnectionFactory) this.context.lookup("CF"); // TODO : changer par un système partageant les noms
-            
-            this.dest = (Destination) this.context.lookup("operations"); // TODO : changer par un système partageant les noms
-            this.connexion = factory.createConnection();
-
-            this.connexion.start();
-        } catch (JMSException exception) {
-            exception.printStackTrace();
-        } catch (NamingException exception) {
-            exception.printStackTrace();
-        }
-    }
-
-    /**
-     * Lance les traitements du gérant.
-     * Les principaux traitements sont l'écoute de la file "operations" et 
-     * l'envoie des états des soldes sur le topic "etatCompte".
-     */
-    public void launch() {
-        
-        try {
-            while(true) {
-
-                // TODO : envoie sur le topic "etatCompte" l'état des comptes.
-                System.out.println("etatCompte"); // simule un traitement en attendant
-    
-                Thread.sleep(1000);
-            }
-        } catch(InterruptedException e) {
-            this.closeAll();
-            e.printStackTrace();
-
-        }
     }
 
     /**
@@ -153,6 +156,41 @@ public class Gerant {
         if(tmpC == null) System.out.println("Aucun compte ne correspond à ce numéro de compte.");
         
         return tmpC;
+    }
+
+    /**
+     * Publie sur le topic "etatCompte" l'état d'un compte.
+     * Ce n'est pas l'objet Compte qui est publié mais seulement les informations représentant ce compte.
+     * Ces informations sont transmises via un MapMessage dont le corps contient une table du genre : 
+     *      [
+     *       {"numCompte", numero_du_compte},
+     *       {"solde", solde_du_compte}
+     *      ]
+     * On ajoute également des propriétés permettant de filter les messages du genre : 
+     *      [
+     *       {"dateCreation", date_creation_compte},
+     *       {"idClient", nom_client_compte}
+     *      ]
+     * Ainsi toutes les informations permettant de représenter un compte sont précisées. L'historique des opérations du comptes 
+     * ne sont pas transmises pour des raisons de performances.
+     * @param compte le compte dont les informations doivent être publiées sur le topic "etatCompte".
+     */
+    public void publishEtatCompte(Compte compte) {
+        
+        try {
+            
+            Session session = this.connexion.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            MessageProducer sender = session.createProducer(this.etatCompteTopic);
+            MapMessage message = session.createMapMessage();
+            message.setLongProperty("dateCreation", compte.getDate().getTime());
+            message.setIntProperty("solde", compte.getSolde());
+            message.setInt("numCompte", compte.getNumCompte());
+            message.setString("idClient", compte.getIdClient().getNomClient());
+            sender.send(message);
+            System.out.println("Envoye nouvel état du compte : " + compte.toString());
+        } catch (JMSException exception) {
+            exception.printStackTrace();
+        }
     }
 
     /**

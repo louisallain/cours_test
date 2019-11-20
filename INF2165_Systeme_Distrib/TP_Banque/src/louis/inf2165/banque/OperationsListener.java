@@ -32,7 +32,7 @@ public class OperationsListener implements MessageListener {
 
                 ObjectMessage objMsg = (ObjectMessage) message;
                 Operation op = (Operation) objMsg.getObject();
-                int numCompte = Math.toIntExact(objMsg.getLongProperty("numCompte"));
+                int numCompte = objMsg.getIntProperty("numCompte");
                 Compte compte = this.gerant.getCompte(numCompte);
                 
                 if(compte != null) {
@@ -42,6 +42,9 @@ public class OperationsListener implements MessageListener {
                     // applique l'opération reçu sur le compte concerné
                     compte.applyOperation(op);
                     System.out.println("Opération appliquée, nouveau solde : " + String.valueOf(compte.getSolde()));
+
+                    // appel la méthode permettant d'envoyer le nouvel état du compte sur le topic "etatCompte"
+                    this.gerant.publishEtatCompte(compte);
                 } else {
                     System.out.println("Compte inconnu.");
                 }

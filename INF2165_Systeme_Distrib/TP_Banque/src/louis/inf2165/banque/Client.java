@@ -4,6 +4,11 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import javax.jms.*;
 
 /**
@@ -28,9 +33,9 @@ public class Client {
      */
     private Context context;
     /**
-     * L'objet destination pour JMS.
+     * La file "operations" de l'application bancaire.
      */
-    private Destination dest;
+    private Destination operationsQueue;
 
     /**
      * Créer un nouvel objet Client.
@@ -42,18 +47,22 @@ public class Client {
         
         this.nomClient = nomClient;
 
-        try {
+        try (InputStream input = new FileInputStream("config.properties")) {
+
+            Properties prop = new Properties();
+            prop.load(input);
 
             this.context = new InitialContext();
-            ConnectionFactory factory = (ConnectionFactory) this.context.lookup("CF"); // TODO : changer par un système partageant les noms
-            
-            this.dest = (Destination) this.context.lookup("operations"); // TODO : changer par un système partageant les noms
+            ConnectionFactory factory = (ConnectionFactory) this.context.lookup(prop.getProperty("louis.inf2165.banque.CONNECTION_FACTORY_NAME"));   
+            this.operationsQueue = (Destination) this.context.lookup(prop.getProperty("louis.inf2165.banque.OPERATIONS_QUEUE_NAME"));
             this.connexion = factory.createConnection();
             this.connexion.start();
         } catch (JMSException exception) {
             exception.printStackTrace();
         } catch (NamingException exception) {
             exception.printStackTrace();
+        } catch(IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -102,10 +111,10 @@ public class Client {
         try {
             
             Session session = this.connexion.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            MessageProducer sender = session.createProducer(this.dest);
+            MessageProducer sender = session.createProducer(this.operationsQueue);
             ObjectMessage message = session.createObjectMessage(op);
             message.setStringProperty("idClient", this.nomClient);
-            message.setLongProperty("numCompte", numCompte);
+            message.setIntProperty("numCompte", numCompte);
             sender.send(message);
             System.out.println("Envoye : " + op.toString());
         } catch (JMSException exception) {
