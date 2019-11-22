@@ -1,0 +1,52 @@
+#!/bin/bash
+
+if (( $# != 1 )) ; then
+    echo Usage: "mkbiblio monfichier.bib"
+    echo "Construit un fichier PDF de bibliographie en français à partir d'un fichier bibtex (.bib)"
+    echo "Le fichier PDF créé portera le même nom que le fichier .bib et sera écrit"
+    echo "dans le même répertoire."
+    echo "Le fichier de style plain-fr.bst doit être dans le même répertoire que mkbiblio."
+    exit 1
+fi
+
+bibfullname=$(realpath "$1")
+srcdir=$(dirname "$bibfullname")
+bstfullname=$(realpath "$(dirname $0)/plain-fr.bst")
+bibshortname=$(basename "$bibfullname")
+rootname=${bibshortname%%.bib}
+
+if [[ ${rootname}.bib != $bibshortname ]] ; then
+    echo "Le fichier de bibliographie doit être suffixé .bib"
+    exit 1
+fi
+
+if [[ "$bibshortname" =~ \  ]] ; then
+   echo "Le nom de fichier de bibliographie ne doit pas contenir d'espace."
+   exit 1
+fi
+
+if [ ! -e "$bibfullname" ] ; then
+    echo "Fichier bibtex introuvable : $bibfullname"
+    exit 2
+fi
+
+if [ ! -e "$bstfullname" ] ; then
+    echo "Fichier de style introuvable : $bstfullname"
+    exit 2
+fi
+
+tmpdir=/tmp/mkbiblio.$$
+mkdir $tmpdir
+cd $tmpdir
+
+cp "$bibfullname" "$bstfullname" .
+
+echo '\documentclass[a4paper,french]{report}\usepackage[margin=2cm]{geometry}\usepackage[frenchb]{babel}\usepackage{times}\usepackage[utf8]{inputenc}\pagestyle{empty}\begin{document}\nocite{*}\bibliography{'"$rootname"'}{}\bibliographystyle{./plain-fr}\thispagestyle{empty}\end{document}' > ${rootname}.tex
+
+latex ${rootname}.tex &> /dev/null
+bibtex ${rootname}
+pdflatex ${rootname}.tex
+
+mv -f ${rootname}.pdf "$srcdir/"
+
+\rm -rf $tmpdir
