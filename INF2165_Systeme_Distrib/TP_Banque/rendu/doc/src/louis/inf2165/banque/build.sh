@@ -1,6 +1,6 @@
 #!/bin/sh
 # -----------------------------------------------------------------------------
-# Run script for the OpenJMS examples
+# Build script for the OpenJMS examples
 #
 # Required Environment Variables
 #
@@ -10,7 +10,7 @@
 # 
 #   OPENJMS_HOME    Points to the OpenJMS installation directory.
 #
-# $Id: run.sh,v 1.1 2005/06/13 14:42:26 tanderson Exp $
+# $Id: build.sh,v 1.1 2005/06/13 14:42:25 tanderson Exp $
 # -----------------------------------------------------------------------------
 
 # OS specific support.  $var _must_ be set to either true or false.
@@ -27,15 +27,15 @@ fi
 
 if [ -z "$JAVA_HOME" ]; then
   echo "The JAVA_HOME environment variable is not set."
-  echo "This is required to run the examples."
+  echo "This is required to build the examples."
   exit 1
 fi
 if [ ! -r "$JAVA_HOME"/bin/java ]; then
   echo "The JAVA_HOME environment variable is not set correctly."
-  echo "This is required to run the examples."
+  echo "This is required to build the examples."
   exit 1
 fi
-_RUNJAVA="$JAVA_HOME"/bin/java
+_RUNJAVAC="$JAVA_HOME"/bin/javac
 
 
 # Guess OPENJMS_HOME if it is not set
@@ -56,12 +56,11 @@ if [ -z "$OPENJMS_HOME" ]; then
   OPENJMS_HOME=`cd "$PRGDIR/../.." ; pwd`
 elif [ ! -r "$OPENJMS_HOME"/lib/openjms-0.7.7-beta-1.jar ]; then
   echo "The OPENJMS_HOME environment variable is not set correctly."
-  echo "This is required to run the examples."
+  echo "This is required to build the examples."
   exit 1
 fi
 
-CLASSPATH=./:"$OPENJMS_HOME"/lib/openjms-0.7.7-beta-1.jar
-
+CLASSPATH="$OPENJMS_HOME"/lib/openjms-0.7.7-beta-1.jar:"$OPENJMS_HOME"/lib/jms-1.1.jar:"$OPENJMS_HOME"/lib/jndi-1.2.1.jar
 
 # For Cygwin, switch paths to Windows format before running java
 if $cygwin; then
@@ -70,24 +69,11 @@ if $cygwin; then
   CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
 fi
 
-POLICY_FILE="$OPENJMS_HOME"/config/openjms.policy
-
 # Execute the requested command
 
 echo "Using OPENJMS_HOME: $OPENJMS_HOME"
 echo "Using JAVA_HOME:    $JAVA_HOME"
 echo "Using CLASSPATH:    $CLASSPATH"
 
-if [ "$#" != "" ]; then
-  MAINCLASS=$1
-  shift
-  exec "$_RUNJAVA" -classpath "$CLASSPATH" \
-      -Djava.security.manager -Djava.security.policy="$POLICY_FILE" \
-      $MAINCLASS "$@"
+$_RUNJAVAC -g -classpath "$CLASSPATH" *.java -d ../../../../bin
 
-else
-
-  echo "usage: run.sh (classname)"
-  exit 1
-
-fi

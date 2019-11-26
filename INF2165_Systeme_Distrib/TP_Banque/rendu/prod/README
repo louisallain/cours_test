@@ -1,0 +1,31 @@
+. Il tout d'abord que OpenJMS soit correctement installé.
+
+. Avant le lancement d'un des programmes, veuillez vérifier dans le fichier "config.properties" que la valeur du paramètre "louis.inf2165.banque.CONNECTION_FACTORY_NAME"
+corresponde bien avec la configurations de OpenJMS.
+
+. Pour modifier les paramètres par défaut du serveur JNDI, il faut modifier le fichier "jndi.properties" qui se trouve dans l'archive "Allain_Louis_Banque.jar".
+
+. Il faut également que le serveur JNDI et le serveur OpenJMS soients lancé.
+
+. Pour lancer le Gerant, un Client ou les Departements il faut lancer respectivement les scripts Gerant.sh, Client.sh ou Departements.sh si vous êtes
+sur linux. Ou bien Gerant.bat, Client.bat ou Departements.bat si vous êtes sur windows.
+
+. Pour qu'un Client envoie une opération il faut qu'il soit ajouté à la liste des clients/comptes connus. Par défaut, le gérant ajoute deux clients et quatre comptes 
+dont les informations sont indiquées dans la console au lancement du Gerant.
+
+. Pour tester rapidement l'application, nous pouvons, par exemple, exécuter ces commandes sur linux :
+
+    # Lance le gérant
+    > ./Gerant.sh
+
+    # Lance les départements
+    > ./Departements.sh
+
+    # Effectue une série d'opération montrant les fonctionnalités de l'application
+    > ./Client.sh louis 1 15000
+    > ./Client.sh louis 2 -300
+    > ./Client.sh agathe 10 100
+    > ./Client.sh agathe 10 - 101
+
+    !(1) : Si vous êtes sur windows, il faut rempalcer les .sh par les .bat fournis.
+    !(2) : Remarque, lancer les départements est optionnel.

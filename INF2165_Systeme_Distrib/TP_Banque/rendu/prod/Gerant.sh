@@ -1,0 +1,2 @@
+# Exécute la méthode princpale de la classe Gerant de l'applicatoin bancaire.
+java -classpath $OPENJMS_HOME/lib/openjms-0.7.7-beta-1.jar:$OPENJMS_HOME/lib/jms-1.1.jar:$OPENJMS_HOME/lib/jndi-1.2.1.jar:Allain_Louis_Banque.jar louis.inf2165.banque.Gerant
