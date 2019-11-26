@@ -1,0 +1,13 @@
+. TP Résolution de labyrinthes avec Scala et Java
+
+. Pour lancer la version Scala :
+	> ./launchLabyScala.sh
+
+. Pour lancer la version Java :
+	> ./launchLabyJava.sh
+
+. Dans les deux cas, l'exécution montre l'exécution d'une résolution d'un labyrinthe.
+
+. L'exécution ne montre pas la résolution de tous les labyrinthes. Ceci se trouve dans le fichier Allain_Louis_TP9_Exemples_execution.pdf
+
+. Au cas où l'affichage ne se ferait pas correctement, il faut que la fenêtre de la console soit suffisemment grande.

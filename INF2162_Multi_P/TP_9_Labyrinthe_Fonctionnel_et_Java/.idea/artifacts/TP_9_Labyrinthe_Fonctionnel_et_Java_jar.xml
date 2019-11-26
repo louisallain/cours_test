@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="TP_9_Labyrinthe_Fonctionnel_et_Java:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/TP_9_Labyrinthe_Fonctionnel_et_Java_jar</output-path>
+    <root id="archive" name="TP_9_Labyrinthe_Fonctionnel_et_Java.jar">
+      <element id="module-output" name="TP_9_Labyrinthe_Fonctionnel_et_Java" />
+      <element id="extracted-dir" path="C:/Program Files (x86)/scala/lib/scala-library.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/Program Files (x86)/scala/lib/scala-reflect.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
