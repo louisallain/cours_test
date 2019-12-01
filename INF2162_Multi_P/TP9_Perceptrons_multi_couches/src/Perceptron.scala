@@ -57,7 +57,7 @@ class Perceptron(couches_ : Array[Int]) {
           val h : Int = c + 1 // indice de la couche suivante
           var somme : Double = 0
           for(i <- 0 until couches_(h)) { // pour chaque neurone de la couche suivante
-            somme = somme + this.dI(h)(i) + this.poids(c)(i)(n)
+            somme = somme + this.dI(h)(i) * this.poids(c)(i)(n)
           }
           this.dI(c)(n) = somme * Perceptron.fp(this.inputI(c)(n))
         }
@@ -81,8 +81,7 @@ class Perceptron(couches_ : Array[Int]) {
 
     ex_.foreach{
       case (X(entree), Y(sortieSouhaitee)) => {
-        this(entree)
-        this.retroPropag(entree, sortieSouhaitee)
+        this.retroPropag(this(entree), sortieSouhaitee)
       }
     }
   }
@@ -113,8 +112,22 @@ object  Perceptron {
 
   def main(args: Array[String]): Unit = {
 
-    val p : Perceptron = Perceptron(1, 2, 1);
-    for(i <- 0 until 10000) p.apprendreUneFois(List( (X($(1.0, 1.0)), Y($(1.0))) ))
-    p.outputsI(2).map(println)
+    val tolerance = 0.01
+    val dataAnd = List[Tuple2[X,Y]]((X($[Double](0,0,1)),Y($[Double](0))),(X($[Double](0,1,1)),Y($[Double](0))),(X($[Double](1,0,1)),Y($[Double](0))),(X($[Double](1,1,1)),Y($[Double](1))))
+    val perceptron = Perceptron(3,1)
+    var nbIt = 0
+    var err = 1.0
+    println("Start")
+    while(err > tolerance){
+      err = Math.abs(perceptron.erreur(dataAnd))
+      perceptron.apprendreUneFois(dataAnd)
+      nbIt = nbIt + 1
+      println(err)
+    }
+    println(s"Done, nbIt : $nbIt")
+    println(perceptron($[Double](0,0,1)).toList)
+    println(perceptron($[Double](0,1,1)).toList)
+    println(perceptron($[Double](1,0,1)).toList)
+    println(perceptron($[Double](1,1,1)).toList)
   }
 }
