@@ -1,4 +1,5 @@
 import scala.{Array => $}
+import scala.util.Random
 
 case class X(x_ : Array[Double]) // entree
 case class Y(y_ : Array[Double]) // sortie
@@ -33,14 +34,15 @@ class Perceptron(couches_ : Array[Int]) {
     for(c <- 1 until couches_.length) {// chaque couche
       for (n <- 0 until couches_(c)) { // chaque neurone
 
-        this.inputI(c)(n) = Perceptron.prodScal(this.poids(c - 1)(n), this.outputsI(c - 1))
+        this.inputI(c)(n) = Perceptron.prodScal(this.outputsI(c - 1), this.poids(c - 1)(n))
         this.outputsI(c)(n) = Perceptron.f(this.inputI(c)(n))
       }
     }
 
-    this.outputsI(couches_.length - 1)
+    this.outputsI.last
   }
 
+  // NE MARCHE PAS
   def retroPropag(observe_ : Array[Double], souhaite_ : Array[Double], pas_ : Double = 0.1): Unit = {
 
     val iCSortie = couches_.length-1 // indice de la couche de sortie
@@ -79,19 +81,37 @@ class Perceptron(couches_ : Array[Int]) {
 
   def apprendreUneFois(ex_ : List[Tuple2[X, Y]]): Unit = {
 
-    ex_.foreach{
+    Random.shuffle(ex_).foreach{
       case (X(entree), Y(sortieSouhaitee)) => {
         this.retroPropag(this(entree), sortieSouhaitee)
       }
     }
   }
+
+  def apprendre(donnees_ : List[Tuple2[X,Y]], tolerance_ : Double) : Unit = {
+
+    var nbIt = 0
+    var err = 1.0
+    println("Start")
+    while(nbIt < 10000){
+      err = Math.abs(erreur(donnees_))
+      apprendreUneFois(donnees_)
+      nbIt = nbIt + 1
+      print(s"\rErreur : $err")
+    }
+    println(s"\nDone, nbIt : $nbIt")
+  }
 }
 
 object  Perceptron {
 
-  def f(x_ : Double) : Double = 1/(1 + Math.exp(-x_))
+  /* Tangente hyperbolique */
+  def f(x_ : Double) : Double = (Math.exp(x_) - Math.exp(-x_)) / (Math.exp(x_) + Math.exp(-x_))
+  def fp(x_ : Double) : Double = (1 + f(x_)) * (1 - f(x_))
 
-  def fp(x_ : Double) : Double = f(x_) * (1-f(x_))
+  /* Simgoïde */
+  //def f(x_ : Double) : Double = 1/(1 + Math.exp(-x_))
+  //def fp(x_ : Double) : Double = f(x_) * (1-f(x_))
 
   def prodScal(t1_ : Array[Double], t2_ : Array[Double]) : Double = {
     require(t1_.length == t2_.length, "Les vecteurs doivent être de la même taille.")
@@ -112,22 +132,17 @@ object  Perceptron {
 
   def main(args: Array[String]): Unit = {
 
-    val tolerance = 0.01
-    val dataAnd = List[Tuple2[X,Y]]((X($[Double](0,0,1)),Y($[Double](0))),(X($[Double](0,1,1)),Y($[Double](0))),(X($[Double](1,0,1)),Y($[Double](0))),(X($[Double](1,1,1)),Y($[Double](1))))
-    val perceptron = Perceptron(3,1)
-    var nbIt = 0
-    var err = 1.0
-    println("Start")
-    while(err > tolerance){
-      err = Math.abs(perceptron.erreur(dataAnd))
-      perceptron.apprendreUneFois(dataAnd)
-      nbIt = nbIt + 1
-      println(err)
-    }
-    println(s"Done, nbIt : $nbIt")
-    println(perceptron($[Double](0,0,1)).toList)
-    println(perceptron($[Double](0,1,1)).toList)
-    println(perceptron($[Double](1,0,1)).toList)
-    println(perceptron($[Double](1,1,1)).toList)
+    val AND = List[Tuple2[X,Y]]((X($[Double](0,0)),Y($[Double](0))),(X($[Double](0,1)),Y($[Double](0))),(X($[Double](1,0)),Y($[Double](0))),(X($[Double](1,1)),Y($[Double](1))))
+    val OR = List[Tuple2[X,Y]]((X($[Double](0,0)),Y($[Double](0))),(X($[Double](0,1)),Y($[Double](1))),(X($[Double](1,0)),Y($[Double](1))),(X($[Double](1,1)),Y($[Double](1))))
+    val XOR = List[Tuple2[X,Y]]((X($[Double](0,0,1)),Y($[Double](-1))),(X($[Double](0,1,1)),Y($[Double](1))),(X($[Double](1,0,1)),Y($[Double](1))),(X($[Double](1,1,1)),Y($[Double](-1))))
+
+
+    var perceptron = Perceptron(3,3,1)
+    perceptron.apprendre(XOR, 0.01)
+
+    println("0,0 : " + perceptron($[Double](0,0,1)).toList.mkString(""))
+    println("0,1 : " + perceptron($[Double](0,1,1)).toList.mkString(""))
+    println("1,0 : " + perceptron($[Double](1,0,1)).toList.mkString(""))
+    println("1,1 : " + perceptron($[Double](1,1,1)).toList.mkString(""))
   }
 }
