@@ -42,27 +42,24 @@ class Perceptron(couches_ : Array[Int]) {
     this.outputsI.last
   }
 
-  // NE MARCHE PAS
   def retroPropag(observe_ : Array[Double], souhaite_ : Array[Double], pas_ : Double = 0.1): Unit = {
 
-    val iCSortie = couches_.length-1 // indice de la couche de sortie
+    // couche de sortie
+    for(n <- 0 until couches_(couches_.length-1)){
+      this.dI(couches_.length-1)(n) = 2 * (observe_(n)-souhaite_(n)) * Perceptron.fp(this.inputI(couches_.length-1)(n))
+      for(j <- 0 until couches_(couches_.length-2)) this.poids(couches_.length-2)(n)(j) = this.poids(couches_.length-2)(n)(j) - (pas_ * this.dI(couches_.length-1)(n) * this.outputsI(couches_.length-2)(j))
+    }
 
-    for(c <- 1 until couches_.length) { // chaque couche
+    // couches cachées
+    for(c <- 1 until couches_.length-1) { // chaque couche
       for (n <- 0 until couches_(c)) { // chaque neurone
 
-        // calcul du dI
-        if(c == iCSortie) { // cas particulier de la couche de sortie
-
-          this.dI(c)(n) = 2*(observe_(n) - souhaite_(n))*Perceptron.fp(this.inputI(c)(n))
-        } else {
-
-          val h : Int = c + 1 // indice de la couche suivante
-          var somme : Double = 0
-          for(i <- 0 until couches_(h)) { // pour chaque neurone de la couche suivante
-            somme = somme + this.dI(h)(i) * this.poids(c)(i)(n)
-          }
-          this.dI(c)(n) = somme * Perceptron.fp(this.inputI(c)(n))
+        val h : Int = c + 1 // indice de la couche suivante
+        var somme : Double = 0
+        for(i <- 0 until couches_(h)) { // pour chaque neurone de la couche suivante
+          somme = somme + this.dI(h)(i) * this.poids(c)(i)(n)
         }
+        this.dI(c)(n) = somme * Perceptron.fp(this.inputI(c)(n))
 
         // correction du poids
         for(j <- 0 until couches_(c-1)) { // pour chaque neurone de la couche précédente
@@ -90,16 +87,16 @@ class Perceptron(couches_ : Array[Int]) {
 
   def apprendre(donnees_ : List[Tuple2[X,Y]], tolerance_ : Double) : Unit = {
 
-    var nbIt = 0
+    var nbIts = 0
     var err = 1.0
-    println("Start")
-    while(nbIt < 10000){
+
+    while(nbIts < 10000) {
+
       err = Math.abs(erreur(donnees_))
       apprendreUneFois(donnees_)
-      nbIt = nbIt + 1
-      print(s"\rErreur : $err")
+      nbIts = nbIts + 1
     }
-    println(s"\nDone, nbIt : $nbIt")
+    println(s"Fini :\nErreur : $err \nItérations : $nbIts")
   }
 }
 
@@ -130,12 +127,9 @@ object  Perceptron {
     new Perceptron(couches_.toArray)
   }
 
-  def main(args: Array[String]): Unit = {
+  def testXOR() : Unit = {
 
-    val AND = List[Tuple2[X,Y]]((X($[Double](0,0)),Y($[Double](0))),(X($[Double](0,1)),Y($[Double](0))),(X($[Double](1,0)),Y($[Double](0))),(X($[Double](1,1)),Y($[Double](1))))
-    val OR = List[Tuple2[X,Y]]((X($[Double](0,0)),Y($[Double](0))),(X($[Double](0,1)),Y($[Double](1))),(X($[Double](1,0)),Y($[Double](1))),(X($[Double](1,1)),Y($[Double](1))))
     val XOR = List[Tuple2[X,Y]]((X($[Double](0,0,1)),Y($[Double](-1))),(X($[Double](0,1,1)),Y($[Double](1))),(X($[Double](1,0,1)),Y($[Double](1))),(X($[Double](1,1,1)),Y($[Double](-1))))
-
 
     var perceptron = Perceptron(3,3,1)
     perceptron.apprendre(XOR, 0.01)
@@ -144,5 +138,48 @@ object  Perceptron {
     println("0,1 : " + perceptron($[Double](0,1,1)).toList.mkString(""))
     println("1,0 : " + perceptron($[Double](1,0,1)).toList.mkString(""))
     println("1,1 : " + perceptron($[Double](1,1,1)).toList.mkString(""))
+  }
+
+  def testAND() : Unit = {
+
+    val AND = List[Tuple2[X,Y]]((X($[Double](0,0,1)),Y($[Double](-1))),(X($[Double](0,1,1)),Y($[Double](-1))),(X($[Double](1,0,1)),Y($[Double](-1))),(X($[Double](1,1,1)),Y($[Double](1))))
+
+    var perceptron = Perceptron(3,3,1)
+    perceptron.apprendre(AND, 0.01)
+
+    println("0,0 : " + perceptron($[Double](0,0,1)).toList.mkString(""))
+    println("0,1 : " + perceptron($[Double](0,1,1)).toList.mkString(""))
+    println("1,0 : " + perceptron($[Double](1,0,1)).toList.mkString(""))
+    println("1,1 : " + perceptron($[Double](1,1,1)).toList.mkString(""))
+  }
+
+  def testOR() : Unit = {
+
+    val OR = List[Tuple2[X,Y]]((X($[Double](0,0,1)),Y($[Double](-1))),(X($[Double](0,1,1)),Y($[Double](1))),(X($[Double](1,0,1)),Y($[Double](1))),(X($[Double](1,1,1)),Y($[Double](1))))
+
+    var perceptron = Perceptron(3,3,1)
+    perceptron.apprendre(OR, 0.01)
+
+    println("0,0 : " + perceptron($[Double](0,0,1)).toList.mkString(""))
+    println("0,1 : " + perceptron($[Double](0,1,1)).toList.mkString(""))
+    println("1,0 : " + perceptron($[Double](1,0,1)).toList.mkString(""))
+    println("1,1 : " + perceptron($[Double](1,1,1)).toList.mkString(""))
+  }
+
+  def main(args: Array[String]): Unit = {
+
+    println("NB : le nombre d'itérations est fixées à 10 000.")
+
+    println("Test du XOR : ")
+    testXOR();
+    println("\n")
+
+    println("Test du AND : ")
+    testAND();
+    println("\n")
+
+    println("Test du OR : ")
+    testOR();
+    println("\n")
   }
 }
