@@ -1,3 +1,5 @@
+import java.io.FileWriter
+
 import scala.{Array => $}
 import scala.util.Random
 
@@ -89,13 +91,19 @@ class Perceptron(couches_ : Array[Int]) {
 
     var nbIts = 0
     var err = 1.0
+    val fw = new FileWriter("erreur.dat", true)
 
     while(nbIts < 10000) {
 
-      err = Math.abs(erreur(donnees_))
-      apprendreUneFois(donnees_)
-      nbIts = nbIts + 1
+      try {
+        err = Math.abs(erreur(donnees_))
+        apprendreUneFois(donnees_)
+        nbIts = nbIts + 1
+        fw.append(nbIts + " ")
+        fw.append(err + "\n")
+      }
     }
+    fw.close()
     println(s"Fini :\nErreur : $err \nItérations : $nbIts")
   }
 }
@@ -131,7 +139,7 @@ object  Perceptron {
 
     val XOR = List[Tuple2[X,Y]]((X($[Double](0,0,1)),Y($[Double](-1))),(X($[Double](0,1,1)),Y($[Double](1))),(X($[Double](1,0,1)),Y($[Double](1))),(X($[Double](1,1,1)),Y($[Double](-1))))
 
-    var perceptron = Perceptron(3,3,1)
+    var perceptron = Perceptron(3,4,1)
     perceptron.apprendre(XOR, 0.01)
 
     println("0,0 : " + perceptron($[Double](0,0,1)).toList.mkString(""))
@@ -168,18 +176,27 @@ object  Perceptron {
 
   def main(args: Array[String]): Unit = {
 
+    var dataSin = List[Tuple2[X,Y]]()
+    ()
+
+
+
+    for(i <- -6.28 to 6.28 by 0.1){
+      dataSin = (X($[Double](i,1)),Y($[Double](s(i)))) :: dataSin
+    }
+
+    val fw = new FileWriter("sin.dat", true)
+
+    for(i <- -6.28 to 6.28 by 0.1){
+      fw.append(i + " ")
+      fw.append(Math.sin(i) + "\n")
+    }
+    fw.close()
+
     println("NB : le nombre d'itérations est fixées à 10 000.")
 
     println("Test du XOR : ")
     testXOR();
-    println("\n")
-
-    println("Test du AND : ")
-    testAND();
-    println("\n")
-
-    println("Test du OR : ")
-    testOR();
     println("\n")
   }
 }
