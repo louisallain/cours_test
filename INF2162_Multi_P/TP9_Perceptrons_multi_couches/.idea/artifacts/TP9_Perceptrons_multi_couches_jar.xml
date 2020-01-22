@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="TP9_Perceptrons_multi_couches:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/TP9_Perceptrons_multi_couches_jar</output-path>
+    <root id="archive" name="TP9_Perceptrons_multi_couches.jar">
+      <element id="module-output" name="TP9_Perceptrons_multi_couches" />
+      <element id="extracted-dir" path="C:/Program Files (x86)/scala/lib/scala-library.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/Program Files (x86)/scala/lib/scala-reflect.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
