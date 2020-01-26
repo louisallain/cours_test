@@ -44,23 +44,29 @@ for i in range(0, 1000000):
     
 random.shuffle(tab_desordonne)
 
+"""
 # Sequentielle sur tableau ordonne
 tmp_debut = time.clock()
-print(recherche_seq(tab_ordonne, 900000))
+print(recherche_seq(tab_ordonne, 2000000))
 tmp_fin = time.clock()
 print("Temps exec :")
 print(tmp_fin - tmp_debut)
-      
+"""
+
+"""
 # Sequentielle sur tableau desordonne
 tmp_debut = time.clock()
-print(recherche_seq(tab_desordonne, 1))
+print(recherche_seq(tab_desordonne, 2000000))
 tmp_fin = time.clock() 
 print("Temps exec :")
 print(tmp_fin - tmp_debut)
+"""
 
+"""
 # Dichotomique
 tmp_debut = time.clock()
-print(recherche_dich(tab_ordonne, 900000))
+print(recherche_dich(tab_ordonne, 2000000))
 tmp_fin = time.clock() 
 print("Temps exec :")
 print(tmp_fin - tmp_debut)
+"""

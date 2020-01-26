@@ -38,15 +38,88 @@ def somme_elements_matrice(M):
         for j in range(len(M[i])):
             acc = acc + M[i][j]
     return acc
-            
 
-# Initialise des matrices remplis aléatoirement avec certaines des valeures à 0
-A = np.empty((10, 10))
+# Algorithme qui prend en argument deux matrices et retourne la matrice
+# produit.
+
+def m_mul_matrix(Ma, Mb):
+    
+    if(np.size(Ma, 1) != np.size(Mb, 0)):
+        print("Les matrices ne sont pas compatibles pour le produit.")
+        return []
+    
+    result = np.zeros(shape=(len(Ma), len(Mb[0])))
+    
+    for i in range(len(Ma)): # nombre de ligne de A
+        for j in range(len(Mb[0])): # nombre de colonne de B
+            for k in range (len(Ma[0])): # nombre de colonne de A
+                result[i][j] += Ma[i][k]*Mb[k][j]
+               
+    return result  
+
+# Multiplie deux matrices qui sont sous la représentation d'un tableau
+# à deux dimensions
+def mul_matrice_1dim(Ma, Mb):
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+# Initialise des matrices (sous chacune des représentation) remplies aléatoirement avec certaines des valeures à 0
+A = np.empty((300, 300))
 for i in range(len(A)):
     for j in range(len(A[i])):
-        A[i][j] = random.randint(0, 10)
+        A[i][j] = random.randint(0, 9)
+
+A_1dim = donne_representation_tableau_1dim(A)
         
 # Tests
-A_1dim = donne_representation_tableau_1dim(A)
-print(somme_elements_matrice_1dim(A_1dim))
-print(somme_elements_matrice(A))
+
+# Affiche le pourcentage de 0 dans la matrice
+print("Pourcentage de 0 dans la matrice : ")
+print((1 - len(A_1dim) / (len(A)*len(A))) * 100)
+
+
+tmp_debut = time.clock()
+m_mul_matrix(A, A)
+tmp_fin = time.clock()
+print("Temps exec matrice normale :")
+print(tmp_fin - tmp_debut)
+
+"""
+tmp_debut = time.clock()
+somme_elements_matrice(A)
+tmp_fin = time.clock()
+print("Temps exec matrice 1dim :")
+print(tmp_fin - tmp_debut)
+"""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
