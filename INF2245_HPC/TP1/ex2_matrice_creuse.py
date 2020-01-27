@@ -6,6 +6,7 @@ Created on Wed Jan 22 15:24:19 2020
 @author: e1602246
 """
 
+import time
 import numpy as np
 import random
 
@@ -60,19 +61,18 @@ def m_mul_matrix(Ma, Mb):
 # Multiplie deux matrices qui sont sous la représentation d'un tableau
 # à deux dimensions
 def mul_matrice_1dim(Ma, Mb):
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+    if len(Ma) == len(Mb):
+        ret = []
+        for i in range(len(Ma)):
+            ret.append((Ma[i][0], Ma[i][1],(Mb[i][2] * Mb[i][2])))
+        return ret
+    else:
+        return False
     
 
 # Initialise des matrices (sous chacune des représentation) remplies aléatoirement avec certaines des valeures à 0
-A = np.empty((300, 300))
+A = np.empty((1000, 1000))
 for i in range(len(A)):
     for j in range(len(A[i])):
         A[i][j] = random.randint(0, 9)
@@ -86,19 +86,20 @@ print("Pourcentage de 0 dans la matrice : ")
 print((1 - len(A_1dim) / (len(A)*len(A))) * 100)
 
 
+"""
 tmp_debut = time.clock()
 m_mul_matrix(A, A)
 tmp_fin = time.clock()
 print("Temps exec matrice normale :")
 print(tmp_fin - tmp_debut)
-
 """
+
 tmp_debut = time.clock()
 somme_elements_matrice(A)
 tmp_fin = time.clock()
 print("Temps exec matrice 1dim :")
 print(tmp_fin - tmp_debut)
-"""
+
 
 
 
