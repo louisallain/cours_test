@@ -1,0 +1,394 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 8 mars 2018, 11:42:15
+    Author     : maheo
+*/
+
+body {
+    font-family:sans-serif;
+    font-size:11pt;
+    padding-bottom:6px;
+    background-color:  slategrey; 
+}
+
+.status-bar {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    margin-bottom:6px;
+}
+
+.connect {
+    display:flex;
+    flex-direction: row;
+}
+
+.connect-status {
+   font-size:140%;
+   margin-left:4px;
+   cursor:pointer;
+}
+.connect-address {
+   background-color: aliceblue;
+   font-size:80%; 
+   margin-top:2px;
+   margin-bottom:2px;
+}
+
+.title {
+   color:gold;
+   font-size:110%;
+   padding-left:4px;
+   padding-top:3px;
+}
+
+.myid {
+    color:whitesmoke;
+    margin-left:8px;
+    font-size:120%;
+}
+
+.peer {
+    background:gold;
+    padding-right:4px;
+    padding-left:4px;
+    margin-left:3px;
+}
+.section {
+  padding-bottom: 5px; 
+  border-radius: 5px;
+  border:  1px solid grey;
+  background-color: #d9e9f2;
+  overflow: visible;
+}
+
+
+.sec-title {
+   padding-bottom:6px;
+}
+
+.subtitle {
+   padding-top:6px;
+   font-style: italic;
+}
+
+.sec-content {
+   display:flex;
+   flex-direction: column;
+}
+
+
+.payload {
+ flex-basis:49%;
+ padding: 2px;
+ /*border:  1px solid orange; */
+ float:left;  
+}
+
+
+/*
+* =======================================================================
+* Menu
+*/
+.hamburger {
+    font-size:150%;
+    color :  gold;
+    cursor:pointer;
+}
+
+.menu {
+    position: relative;
+    display: inline-block;
+}
+
+.menu-content  {
+    display: none;
+    position: absolute;
+    background-color: gold;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.menu-item {
+    border: 1px solid gold;
+    font-size:80%;
+    padding: 3px;
+}
+
+
+.menu-item:hover {
+    border: 1px solid gray;
+    cursor:pointer;
+}
+/*
+* =======================================================================
+* Descriptor (pub and sub)
+*/
+.desc {
+  flex-basis:50%;
+  float:left;  
+  padding: 2px;
+  /*border:  1px solid red; */
+  display:flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+/*
+* ------------------------------------------------------------------------
+* Descriptor input
+*/
+.desc-input {
+    width: 100%; 
+    /*border:  1px solid purple; */
+    display:flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+}
+
+.keyfield {
+   flex-basis: 34%;
+   white-space: nowrap;
+   overflow-x: hidden; 
+   overflow-y:auto; 
+   text-overflow: ellipsis;
+}
+
+.valuefield {
+   flex-basis: 66%;
+   white-space: nowrap;
+   overflow-x: hidden; 
+   overflow-y:auto; 
+   text-overflow: ellipsis;  
+}
+ 
+.buttonfield {
+  flex-basis: 20px;
+   text-align: center;
+   background-color: lightgrey;
+   padding:0 0 0 0;  
+   cursor:pointer;
+}
+
+
+/*
+* ------------------------------------------------------------------------
+* Descriptor tab (pub and sub))
+*/
+.desc-tab {
+   width:100%; 
+   font-size : 90%;
+   display:flex;
+   flex-direction: column;
+   flex-wrap: nowrap;
+}
+
+.desc-row {
+   width:100%; 
+   display: flex; 
+   flex-wrap: nowrap;
+   flex-direction: row;
+   padding: 1px 0px 0px 0px;
+}
+
+.keycell {
+   flex-basis: 34%;
+   background-color:cornsilk;
+   padding-left: 2px;  
+   white-space: nowrap;
+   overflow-x: hidden; 
+   overflow-y:auto; 
+   text-overflow: ellipsis;
+}
+
+.valuecell {
+   flex-basis: 66%;
+   background-color: lemonchiffon;
+   padding-left: 2px; 
+   white-space: nowrap;
+   overflow-x: hidden; 
+   overflow-y:auto; 
+   text-overflow: ellipsis;
+}
+ 
+.buttoncell {
+   flex-basis: 20px;
+   font-size: 70%;
+   text-align: center;
+   background-color: lightgrey;
+   padding:0 0 0 0;  
+   margin: 0 0 0 0;
+   cursor:pointer;
+}
+
+/*
+* ------------------------------------------------------------------------
+* Subscription
+*/
+
+.set-subs {
+  flex-basis:49%;
+  padding: 2px;
+ /*border:  1px solid kaki; */
+  float:left;  
+}
+
+.short-list {
+ width:100%;
+ display : flex;
+ flex-direction: column;
+ flex-wrap: nowrap;
+ /*border:  1px solid blue; */
+}
+
+
+.list-elt {
+    width:100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    /*border:  1px solid olivedrab; */
+    /*background-color: rosybrown;*/
+    padding: 0 0 0 0; 
+}
+
+.list-elt-tab { 
+   flex-basis:100%; 
+   font-size : 80%;
+   display:flex;
+   flex-direction: column;
+   flex-wrap: nowrap;
+   margin-bottom: 2px;  
+   border:  1px solid gray;
+}
+.list-elt-button {
+   flex-basis: 20px;
+   font-size: 70%;
+   text-align: center;
+   background-color: lightgrey;
+   padding:0 0 0 0;  
+   margin-bottom: 2px; 
+   cursor:pointer;
+}
+
+
+
+/*
+* ------------------------------------------------------------------------
+* Reception
+*/
+
+
+.long-list {
+ width: 99%;
+ padding-left: 2px;
+ /*border:  1px solid violet; */
+ display:flex;
+ flex-direction: column;
+ flex-wrap: nowrap;
+}
+
+.recep-list-elt {
+    width:100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    background-color: linen;
+    padding:0px 0px 0px 0px;
+    margin-bottom: 2px;  
+    border:  1px solid gray;
+}
+
+.recep-list-tab { 
+    flex-basis:40%;
+    font-size:80%;
+    display:flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    margin-bottom: 2px;  
+    border:  1px solid gray;
+}
+
+.date {
+   flex-basis:10em; 
+   font-family: monospace;
+   font-size:65%;
+}
+
+.recep-payload-text {
+    width:47%;
+    font-size: 80%;
+    /*background-color:pink;*/
+    padding : 2px;     
+}
+
+.recep-payload-file {
+    width:47%;
+    margin: auto;
+    text-align:center;
+    padding:0 2px 0 2px;     
+}
+
+
+.recep-payload-file a {
+    text-decoration:none;
+    font-size : 80%;
+}
+
+
+.file-button {
+    padding : 0px 4px;
+    margin : 1px 1px;
+    border-width: 1px;
+}
+ 
+.payloadfield {
+    width:100%;
+    font-size: 70%;
+    /*background-color:pink;*/
+    padding:0 0 0 0;     
+}
+
+
+.choosefield {
+    width:100%;
+    max-width:100%;
+    font-size: 80%;
+    background-color:powderblue;
+    padding:0 0 0 0;     
+}
+
+.pathfield {
+    width:100%;
+    max-width:100%;
+    font-size: 80%;
+    border: 1px solid plum;
+    background-color:lavenderblush;
+    padding:0 0 0 0;     
+}
+
+
+
+/*
+* Main buttons
+*/
+
+.action {
+   float:right;
+   border-radius: 5px;
+    background-color:  lightgreen;
+    cursor:pointer;
+}
+
+.collapse-btn {
+    font-size : 80%;
+    float:left;
+    padding-right:3px;
+    padding-left:3px;
+    cursor:pointer;
+    
+}

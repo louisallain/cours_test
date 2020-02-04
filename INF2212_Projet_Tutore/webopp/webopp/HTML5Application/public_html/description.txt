@@ -1,0 +1,1 @@
+Application whose objective is to demonstrate opportunistic content-based publication/subscription with DoDWAN.

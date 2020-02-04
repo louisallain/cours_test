@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>WebOpp</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="webopp.css">
+        <link rel="icon" type="image/png" href="webopp.png" />
+    </head>
+    <body>
+
+        <!-- ===================== STATUS BAR ============================ -->   
+        <div class="status-bar" id="status">
+            <div class="connect">
+              <div class="menu">
+                <div class="hamburger" id="hamburger">≡</div>
+                <div class="menu-content" id="main-menu">
+                    <div class="menu-item" id="mi-clear-pub-list">Clear publications</div>
+                    <div class="menu-item" id="mi-clear-subs-list">Clear subscriptions</div>
+                    <div class="menu-item" id="mi-clear-recep-list">Clear receptions</div>
+                    <div class="menu-item" id="mi-clear-all">Clear all and quit</div>
+                </div>
+              </div>
+              <span class="title">WEBOPP</span>
+              <span id="my-id-content" class="myid"></span>
+            </div>
+            <div class="connect">
+                <input class="connect-address" id="connect-address" type="text" size=10 placeholder="Server address...">
+                <div class="connect-status" id="connect-status">■</div>
+            </div>
+        </div>
+        <!-- ===================== PEERS ============================ -->   
+        <div class="section" id="peer-sec">
+            <div class="sec-title">
+                <strong>Peers</strong>
+                <!-- --------------------button---------------------- -->
+                <div id="peer-collapse" class="collapse-btn">▲</div> 
+            </div>
+            <div id="peer-content"></div>
+        </div>
+        <br>
+        <!-- ===================== PUBLISH ============================ -->   
+        <div class="section" id="pub-sec">
+            <div class="sec-title">
+                <strong>Publication</strong>
+                <!-- --------------------button---------------------- -->
+                <div id="pub-collapse" class="collapse-btn">▲</div> 
+                <button class="action" id="pub-button">Publish</button> 
+            </div>
+            <div class="sec-content" id="pub-content">
+                <!-- --------------------descriptor---------------------- -->
+                <div id="pub-desc" class="desc">
+                    <div class="subtitle">Descriptor</div>
+                    <div id="pub-desc-input" class="desc-input">  
+                        <input class="keyfield"  id="pub-input-key" type="text" name="key" placeholder="key...">
+                        <input class="valuefield" id="pub-input-value" type="text" name="value" placeholder="value...">
+                        <button class="buttonfield" id="pub-add-row" type="button">+</button> 
+                    </div>
+                    <div class="desc-tab" id="pub-desc-tab">
+                    </div>
+                </div>    
+                <!-- --------------------payload---------------------- -->
+                <div id="pub-textpayload" class="payload">
+                    <div class="subtitle">Payload</div>
+                    <div>
+                        <textarea id="pub-textpayload-input" class="payloadfield" name="payload" rows="4"  placeholder="Type text here, or choose a file..."> 
+                        </textarea>
+                    </div>
+                    <div>
+                        <input id="pub-file" type ="file" class="choosefield"> 
+                    </div>
+                </div>
+                <!-- --------------------list---------------------- -->
+                <div class="subtitle">Published messages</div>
+                <div id="pub-list" class="long-list" ></div>
+            </div>
+
+        </div>
+        <br>
+        <!-- =====================SUBSCRIBE ============================ -->
+        <div class="section" id="subs-sec">
+            <div class="sec-title">
+                <strong>Subscription</strong>
+                <!-- --------------------button---------------------- -->
+                <div id="subs-collapse" class="collapse-btn">▲</div> 
+                <button id="subs-button" class="action">Subscribe</button>        
+            </div>
+            <div class="sec-content" id="subs-content">
+                <!-- --------------------descriptor---------------------- -->
+                <div id="subs-desc" class="desc">
+                    <div class="subtitle">Descriptor</div>
+                    <div id="subs-desc-input" class="desc-input">
+                        <input class="keyfield" id="subs-input-key" type="text" name="key" placeholder="key...">
+                        <input class="valuefield" id="subs-input-value" type="text" name="value" placeholder="value...">
+                        <input class="buttonfield" id="subs-add-row" type="button" value="+">
+                    </div>
+                    <div class="desc-tab" id="subs-desc-tab"></div>
+
+                </div>
+                <div class="set-subs">
+                  <div class="subtitle">Set subscriptions</div>
+                  <!-- --------------------list---------------------- -->
+                  <div class="short-list" id="subs-list" ></div>   
+                </div>
+            </div>
+        </div>
+        <br>
+        <!-- =====================RECEPTION ============================ -->
+        <div class="section" id="recep-sec">
+            <div class="sec-title">
+                <strong>Reception</strong>
+                <!-- --------------------button---------------------- -->
+                <div id="recep-collapse" class="collapse-btn">▲</div> 
+            </div>
+            <div class="sec-content" id="recep-content">
+                <!-- --------------------list---------------------- -->
+                <div id="recep-list" class="long-list" ></div>
+            </div>
+        </div>
+        <script src="./dom.js" type="module"></script> 
+        <!-- <script src="./dist/webopp.js"></script> -->
+    </body>
+</html>
