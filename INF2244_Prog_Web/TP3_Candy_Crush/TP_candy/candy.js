@@ -170,11 +170,13 @@ class Modele {
         // exécute la méthode de callback si besoin
         if(callback) callback(coords)
         
+        // fait tomber la colonne
         let col = colonneDe(this.donnees, y)
         if(x > 0) {
           let tmp = col.slice(0, x)
           col.splice(1, tmp.length, ...tmp) 
         }
+        // remplace le 0 créé parce que la colonne est tombée par un nouveau bonbon
         col[0] = getRandomInt(5) + 1
 
         // remplace la colonne
@@ -253,10 +255,16 @@ class Vue {
    */
   dessineUnBonbonA(bonbon, x, y) {
 
-    bonbon.image.onload = () => {
-      let t = this.tailleBonbon
-      this.canevas.getContext('2d').drawImage(bonbon.image, x , y, t, t)
+    let t = this.tailleBonbon
+    if(!bonbon.image.complete) {
+      bonbon.image.onload = () => {
+        this.canevas.getContext('2d').drawImage(bonbon.image, y, x, t, t)
+      }
+    } else {
+      this.canevas.getContext('2d').drawImage(bonbon.image, y, x, t, t)
     }
+
+    
   }
 
   /**
@@ -267,7 +275,7 @@ class Vue {
   effaceUnBonbon(x, y) {
     let t = this.tailleBonbon
     this.canevas.getContext('2d').fillStyle = "gray"
-    this.canevas.getContext('2d').fillRect(x, y, t, t)
+    this.canevas.getContext('2d').fillRect(y, x, t, t)
   }
 
   /**
@@ -276,43 +284,59 @@ class Vue {
    * @param {Array} colonne les données de la colonne à faire descendre
    */
   descendColonne(y, colonne) {
-
+      
+    for(let i in colonne) {
+      
+      
+      if(colonne[i] == 0) {
+        console.log(i)
+        for(let j = i; ; (j-1) >= 0) {
+          
+          if((j-1) >= 0) {
+            this.bougeBonbon(j-1, y, j, y, 10, 100)
+            j = j - 1
+          } else break;
+        }
+      }
+    }
   }
 
   /**
-   * 
+   * Bouge un bonbon
    * @param {Number} x0 x de départ
    * @param {Number} y0 y de départ
    * @param {Number} x1 x d'arrivée
    * @param {Number} x2 y d'arrivée
    * @param {Number} pas le nombre de pixel par pas (<= tailleBonbon)
+   * @param {Number} vitesse la vitesse en ms entre chaque pas
    */
-  bougeBonbon(x0, y0, x1, y1, pas) {
+  bougeBonbon(x0, y0, x1, y1, pas, vitesse) {
     
     this.canevas.getContext('2d').fillStyle = "gray"
     let t = this.tailleBonbon
     let bonbon = new Bonbon(this.modele.donnees[x0][y0], t)
     let currX = x0 * t
     let currY = y0 * t
+    let that = this
     if(pas > t) pas = t
-
+  
     let interId = setInterval(() => {
+
       
       // efface à la position courante
-      this.effaceUnBonbon(currX, currY)
+      that.effaceUnBonbon(currX, currY)
 
       // dessine à la position suivante
       if(x0 != x1) currX = currX + pas
       if(y0 != y1) currY = currY + pas
-      if(currX >= (x1 * t) && currY >= y1 * t) {
-        console.log((x1 * t))
-        this.dessineUnBonbonA(bonbon, x1 * t, y1 * t)
+      if(currX >= (x1 * t) && currY >= (y1 * t)) {
+        that.dessineUnBonbonA(bonbon, x1 * t, y1 * t)
         clearInterval(interId)
       } else {
-        console.log("ok")
-        this.dessineUnBonbonA(bonbon, currX, currY)
+        that.dessineUnBonbonA(bonbon, currX, currY)
       }
-    }, 100)
+      
+    }, vitesse)
   }
 }
 
@@ -325,11 +349,21 @@ var tailleBonbon = 50
 
 var vue = new Vue(modele, canevas, tailleBonbon)
 
-var tmpColonne = [1, 1, 0, 1, 1]
-
+/*
 var bonbon1 = new Bonbon(1, tailleBonbon)
-vue.dessineUnBonbonA(bonbon1, 1 * tailleBonbon, 1 * tailleBonbon)
+vue.dessineUnBonbonA(bonbon1, 0 * tailleBonbon, 2 * tailleBonbon)
+*/
 
-setTimeout(() => {
-  vue.bougeBonbon(1, 1, 1, 2, 10)
-}, 1000)
+//vue.metAJourAPartirDuModele()
+/*setTimeout(() => {
+  vue.effaceUnBonbon(1*tailleBonbon, 2*tailleBonbon)
+}, 100)*/
+
+//vue.bougeBonbon(0, 0, 0, 1, 10, 100)
+
+vue.modele.donnees[2][1] = 0
+vue.modele.donnees[3][1] = 0
+vue.metAJourAPartirDuModele()
+let tmpColonne = colonneDe(vue.modele.donnees, 1)
+vue.descendColonne(1, tmpColonne)
+
