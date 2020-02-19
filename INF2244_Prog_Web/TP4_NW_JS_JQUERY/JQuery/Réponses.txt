@@ -1,0 +1,32 @@
+1.
+Avec JS : document.getElementById("montexte").value
+Avec JQuery : $("#montexte").val()
+
+2.
+Ok.
+
+3.
+Avec JQuery : 
+var newDoc = document.open("text/html", "replace");
+newDoc.write(myString);
+newDoc.close();
+
+4.
+$("#ladiv").text("Hello world!")
+
+5.
+$("#ladiv").html("<b>Hello world!</b>")
+
+6.
+$("#ladiv").text("<b>Hello world!</b>")
+
+7.
+$("#ladiv").hide(1000)
+$("#ladiv").show(1000)
+
+8.
+$("#ladiv").addClass('red')
+$("#ladiv").attr('class', 'red')
+
+9.
+$("#ladiv").insertAfter("#ladiv2")
