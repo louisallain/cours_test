@@ -2,26 +2,37 @@
 
   overflow: hidden;
   background-color: chartreuse;
-  width: 1000px;
-  height: 500px;
-  overflow: hidden;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 10vh;
+  width: 870px;
+  height: 480px;
+  margin: 20px;
+	padding: 20px;
 }
 
-.imgG {
-  position: relative;
-  height: 480px;
+#img-c {
   width: 470px;
-  margin-top: 10px;
+}
+
+.partie-gauche {
   float: left;
 }
 
 .central {
-  position: static;
-  height: 480px;
-  width: 470px;
-  top: 10px;
-  left: 265px;
+  position: absolute;
+  left: 248px;
+  z-index: 2;
 }
+
+.partie-droite {
+  float: right;
+}
+
+.gauche, .droite {
+  position: relative;
+  z-index: 3
+}
+
+.partie {
+  width: 100px;
+	overflow: hidden;
+}
+
