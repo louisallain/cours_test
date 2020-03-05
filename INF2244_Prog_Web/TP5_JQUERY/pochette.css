@@ -1,0 +1,27 @@
+.scene {
+
+  overflow: hidden;
+  background-color: chartreuse;
+  width: 1000px;
+  height: 500px;
+  overflow: hidden;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10vh;
+}
+
+.imgG {
+  position: relative;
+  height: 480px;
+  width: 470px;
+  margin-top: 10px;
+  float: left;
+}
+
+.central {
+  position: static;
+  height: 480px;
+  width: 470px;
+  top: 10px;
+  left: 265px;
+}
