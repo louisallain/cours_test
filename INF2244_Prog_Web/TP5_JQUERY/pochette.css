@@ -1,0 +1,38 @@
+.scene {
+
+  overflow: hidden;
+  background-color: chartreuse;
+  width: 870px;
+  height: 480px;
+  margin: 20px;
+	padding: 20px;
+}
+
+#img-c {
+  width: 470px;
+}
+
+.partie-gauche {
+  float: left;
+}
+
+.central {
+  position: absolute;
+  left: 248px;
+  z-index: 2;
+}
+
+.partie-droite {
+  float: right;
+}
+
+.gauche, .droite {
+  position: relative;
+  z-index: 3
+}
+
+.partie {
+  width: 100px;
+	overflow: hidden;
+}
+
