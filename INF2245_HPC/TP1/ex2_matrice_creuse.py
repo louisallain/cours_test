@@ -57,18 +57,6 @@ def m_mul_matrix(Ma, Mb):
                 result[i][j] += Ma[i][k]*Mb[k][j]
                
     return result  
-
-# Multiplie deux matrices qui sont sous la représentation d'un tableau
-# à deux dimensions
-def mul_matrice_1dim(Ma, Mb):
-
-    if len(Ma) == len(Mb):
-        ret = []
-        for i in range(len(Ma)):
-            ret.append((Ma[i][0], Ma[i][1],(Mb[i][2] * Mb[i][2])))
-        return ret
-    else:
-        return False
     
 
 # Initialise des matrices (sous chacune des représentation) remplies aléatoirement avec certaines des valeures à 0
