@@ -1,0 +1,30 @@
+
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="index.css"/>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <form id="contact" action="" method="post">
+        <h3>ADN MASTER 3000</h3>
+        <h4>Calculer la distance entre deux chaines d'ADN</h4>
+        <fieldset>
+          <input id="user-key" placeholder="Clef utilisateur" type="text" tabindex="1" required="required" autofocus="autofocus"/>
+        </fieldset>
+        <fieldset>
+          <input id="ADN-A" placeholder="Chaine d'ADN A" type="text" tabindex="2" required="required" autofocus="autofocus"/>
+        </fieldset>
+        <fieldset>
+          <input id="ADN-B" placeholder="Chaine d'ADN B" type="text" tabindex="3" required="required" autofocus="autofocus"/>
+        </fieldset>
+        <fieldset>
+          <button id="distance-submit" name="submit" type="submit" data-submit="Envoi en cours...">Calculer la distance</button>
+        </fieldset>
+        <h4 id="nb-rq">Nombre de requêtes totale :</h4>
+        <p id="res-json"></p>
+      </form>
+    </div>
+    <script src="index.js"></script>
+  </body>
+</html>

@@ -1,0 +1,22 @@
+
+html
+    head
+        link(rel="stylesheet", type="text/css", href="index.css")
+        script(src="https://code.jquery.com/jquery-3.4.1.min.js")
+        
+    body
+        div.container
+            form#contact(action="" method="post")
+                h3 ADN MASTER 3000
+                h4 Calculer la distance entre deux chaines d'ADN
+                fieldset
+                    input#user-key(placeholder="Clef utilisateur", type="text", tabindex="1", required, autofocus)
+                fieldset
+                    input#ADN-A(placeholder="Chaine d'ADN A", type="text", tabindex="2", required, autofocus)
+                fieldset
+                    input#ADN-B(placeholder="Chaine d'ADN B", type="text", tabindex="3", required, autofocus)
+                fieldset
+                    button#distance-submit(name="submit", type="submit", data-submit="Envoi en cours...") Calculer la distance
+                h4#nb-rq Nombre de requêtes totale :
+                p#res-json
+        script(src="index.js")
