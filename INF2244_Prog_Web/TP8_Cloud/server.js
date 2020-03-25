@@ -2,6 +2,7 @@ var cors = require('cors')
 const levenshtein = require('js-levenshtein')
 const express = require('express')
 const app = express()
+const port = process.env.PORT || 5000 
 
 getDate = () => {
 
@@ -13,6 +14,8 @@ getDate = () => {
 }
 
 const ADN_regex = /^[CAGT]+$/
+
+// liste des clefs utilisateurs
 var users_keys_nb_rq = {
     "alan1234" : 0,
     "bertrand4567" : 0,
@@ -30,8 +33,15 @@ setInterval(() => {
 
 // Routes Express
 
-app.use(cors());
+app.use(cors())
+app.use(express.static('public'))
 
+// page d'index
+app.get('/', function (req, res) {
+    res.sendFile("index.html")
+})
+
+// nombre de visiteurs
 app.get('/visiteurs', function (req, res) {
     res.send(`Nombre de requêtes total : ${nb_rq_total}`)
 })
@@ -110,6 +120,6 @@ app.get('/*', function (req, res) {
     })
 })
 
-app.listen(3000, function () {
+app.listen(port, function () {
     console.log('ADN MASTER 3000 Listening on port 3000 !')
 })
