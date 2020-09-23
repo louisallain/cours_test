@@ -1,0 +1,17 @@
+3.a : Nombre de restaurants à Manhattan
+db.tp9.find({borough: "Manhattan"}).count()
+=> 25359
+
+3.c : Nombre de pizzeria à Manhattan
+db.tp9.find({borough: "Manhattan", cuisine: "Pizza"}).count()
+=> 339
+
+3.d : Nombre de restaurants Français dans le Bronx 
+db.tp9.find({borough: "Bronx", cuisine: "French"}).count()
+=> 1
+
+3.e : Nombre de pizzeria à Manhattan notée A
+db.tp9.find({borough: "Manhattan", cuisine: "Pizza", "grades.grade": "A" }).count()
+=> 327
+
+
