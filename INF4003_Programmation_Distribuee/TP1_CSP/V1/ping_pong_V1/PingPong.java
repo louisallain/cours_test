@@ -3,13 +3,13 @@
  * @author F. Raimbault
  * @date septembre 2019
  */
-package ping_pong_V0;
+package ping_pong_V1;
 
 import java.util.concurrent.Semaphore;
 
-import csp_V0.ConcurrentProcess;
-import csp_V0.Message;
-import csp_V0.MessageHandler;
+import csp_V1.ConcurrentProcess;
+import csp_V1.Message;
+import csp_V1.MessageHandler;
 
 /**
  * Classe contenant le code : 
@@ -113,10 +113,10 @@ public class PingPong{
       }
     } catch (NumberFormatException e) {
       System.err.println("incorrect parameter(s): "+e);
-      System.err.println(e+"\nusage: PingPong config_filename process_no iterations_nb");
+      System.err.println(e+"\nusage: PingPong config_filename process_no");
     } catch (ArrayIndexOutOfBoundsException e){
       System.err.println("incorrect parameter(s): "+e);
-      System.err.println("\nusage: PingPong config_filename process_no interations_nb");
+      System.err.println("\nusage: PingPong config_filename process_no");
     }
   }
 

@@ -1,4 +1,4 @@
-package csp_V0;
+package csp_V1;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -18,6 +19,8 @@ public final class ConcurrentProcess extends ThreadLoop {
     private AtomicInteger rcv_msg_cnt;
     private AtomicBoolean ready;
     private AtomicInteger snd_msg_cnt;
+    private CountDownLatch neighbour_awaited;
+    private ConcurrentHashMap<Integer, SyncState> sync_state_table;
 
     public ConcurrentProcess(int id, String name, int offset) {
         
@@ -29,11 +32,18 @@ public final class ConcurrentProcess extends ThreadLoop {
         this.rcv_msg_cnt = new AtomicInteger(0);
         this.snd_msg_cnt = new AtomicInteger(0);
         this.ready = new AtomicBoolean(false);
+        this.neighbour_awaited = new CountDownLatch(this.getNeighbourCount());
+        this.sync_state_table = new ConcurrentHashMap<>(); 
     }
 
     public ConcurrentProcess(int id, String name) {
 
         this(id, name, 1);
+    }
+
+    private void resetNeighbouringStateCounter() {
+
+        this.neighbour_awaited = new CountDownLatch(this.getNeighbourCount());
     }
 
     public final int getMyId() {
@@ -78,6 +88,7 @@ public final class ConcurrentProcess extends ThreadLoop {
             this.neighbouring.read(filename);
         } catch(IOException ioe) {
             this.printErr("[ConcurrentProcess : readNeighbouring] Error while reading neighbouring file.");
+            ioe.printStackTrace();
         }
     }
 
@@ -86,7 +97,7 @@ public final class ConcurrentProcess extends ThreadLoop {
         try {
             this.printOut(msg);
             new BufferedReader(new InputStreamReader(System.in)).readLine();
-            this.trace("unblocked");
+            this.printOut("unblocked");
             this.ready.set(true); 
         } catch(IOException ioe) {
             this.printErr("[ConcurrentProcess : waitNeighbouring)] Error");
@@ -104,13 +115,17 @@ public final class ConcurrentProcess extends ThreadLoop {
     public final void sendMessage(Message msg) {
         
         msg.setSourceId(this.my_id);
+        int dest_id = msg.getDestinationId();
+
         try {
-            int dest_id = msg.getDestinationId();
-            DatagramPacket dp = new DatagramPacket(msg.toBytes(), msg.getContent().length(), this.neighbouring.getOutputAddress(dest_id), this.neighbouring.getOutputPort(dest_id));
-            this.neighbouring.getOutputSocket(dest_id).send(dp);
-            this.printOut("Message sent : " + this.neighbouring.getOutputAddress(dest_id).toString());
+
+            byte[] sendBuf = msg.toBytes();
+            DatagramPacket packet = new DatagramPacket(sendBuf, sendBuf.length, this.neighbouring.getOutputAddress(dest_id), this.neighbouring.getOutputPort(dest_id));
+            int bytesCount = packet.getLength();
+            this.neighbouring.getOutputSocket(dest_id).send(packet);
+            this.trace("Message sent to : " + this.neighbouring.getOutputAddress(dest_id).toString() + ":" + this.neighbouring.getOutputPort(dest_id));
         } catch(IOException ioe) {
-            this.printErr("[ConcurrentProcess : sendMessage)] " + ioe);
+            ioe.printStackTrace();
         }
         
     }
@@ -126,13 +141,13 @@ public final class ConcurrentProcess extends ThreadLoop {
     void beforeLoop() {
 
         this.neighbouring.open();
-        this.waitNeighbouring("ConcurrentProcess : beforeLoop] Waiting for synchronize.");
+        this.waitNeighbouring("[ConcurrentProcess : beforeLoop] Waiting for synchronize.");
     }
 
     void inLoop() {
 
         try {
-            ConcurrentProcess.sleep(1000);
+            Thread.sleep(1000);
         } catch(InterruptedException ie) {
             this.printErr("[ConcurrentProcess : inLoop)] " + ie);
         }

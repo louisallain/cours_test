@@ -21,27 +21,30 @@ public final class MessageListener extends ThreadLoop {
 
     public void inLoop() {
 
-        byte[] buffer = new byte[Message.CONTENT_MAX_SIZE];
-        DatagramPacket udpData = new DatagramPacket(buffer, Message.CONTENT_MAX_SIZE);
+        byte[] buffer = new byte[4096];
+        DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+        int bytesLong = packet.getLength();
+
         try {
-            this.socket.receive(udpData);
-            Message msg = Message.fromBytes(udpData.getData(), udpData.getLength());
+
+            this.socket.receive(packet);
+            Message msg = Message.fromBytes(buffer, bytesLong);
             this.process.receiveMessage(msg);
         } 
         catch(SocketTimeoutException ste) {
-            this.process.printErr("[MessageListener : inLoop] Error timeout.");
+            //this.process.printErr("[MessageListener : inLoop] Error timeout.");
         }
         catch(PortUnreachableException pue) {
-            this.process.printErr("[MessageListener : inLoop] Error port unreachable.");
+            pue.printStackTrace();
         }
         catch(IllegalBlockingModeException ibme) {
-            this.process.printErr("[MessageListener : inLoop] Error illegal blocking mode.");
+            ibme.printStackTrace();
         }
         catch(ClassNotFoundException cne) {
-            this.process.printErr("[MessageListener : inLoop] Error class not found.");
+            cne.printStackTrace();
         }
         catch(IOException ioe) {
-            this.process.printErr("[MessageListener : inLoop] Error IO.");
+            ioe.printStackTrace();
         }
     }
 

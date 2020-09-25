@@ -1,9 +1,10 @@
 package csp_V0;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
@@ -36,22 +37,24 @@ public class Message extends Object implements Serializable {
 
     public static Message fromBytes(byte[] bytes, int length) throws IOException, ClassNotFoundException, ClassCastException {
 
-        
-        Message ret;
-        ObjectInput oin = new ObjectInputStream(new ByteArrayInputStream(bytes, 0, length));
-        ret = (Message) oin.readObject();
+        ByteArrayInputStream bains = new ByteArrayInputStream(bytes);
+        ObjectInputStream oin = new ObjectInputStream(new BufferedInputStream(bains));
+        Message ret = (Message) oin.readObject();
+        oin.close();
 
         return ret;
     }
 
     public byte[] toBytes() throws IOException {
         
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutput oout = new ObjectOutputStream(bos);
-        oout.writeObject(this);
-        byte ret[] = bos.toByteArray();
-        oout.close();
-        bos.close();
+        ByteArrayOutputStream bos = new ByteArrayOutputStream(4096);
+        ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(bos));
+        oos.flush();
+        oos.writeObject(this);
+        oos.flush();
+
+        byte[] ret = bos.toByteArray();
+        oos.close();
 
         return ret;
     }
