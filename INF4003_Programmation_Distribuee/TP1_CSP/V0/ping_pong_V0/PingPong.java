@@ -72,7 +72,7 @@ public class PingPong{
 
       @Override
       synchronized public void onMessage(Message msg) {
-        System.out.println("onMessage PING")
+        System.out.println("onMessage PING");
         process.printOut("received message "+msg);
         pong_received.release();
       }
