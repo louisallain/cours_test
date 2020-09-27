@@ -3,13 +3,9 @@
  * @author F. Raimbault
  * @date septembre 2019
  */
-package ping_pong_V1;
+package csp_V1;
 
 import java.util.concurrent.Semaphore;
-
-import csp_V1.ConcurrentProcess;
-import csp_V1.Message;
-import csp_V1.MessageHandler;
 
 /**
  * Classe contenant le code : 

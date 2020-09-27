@@ -19,8 +19,8 @@ public final class ConcurrentProcess extends ThreadLoop {
     private AtomicInteger rcv_msg_cnt;
     private AtomicBoolean ready;
     private AtomicInteger snd_msg_cnt;
-    private CountDownLatch neighbour_awaited;
-    private ConcurrentHashMap<Integer, SyncState> sync_state_table;
+    CountDownLatch neighbour_awaited;
+    ConcurrentHashMap<Integer, SyncState> sync_state_table;
 
     public ConcurrentProcess(int id, String name, int offset) {
         
@@ -32,18 +32,13 @@ public final class ConcurrentProcess extends ThreadLoop {
         this.rcv_msg_cnt = new AtomicInteger(0);
         this.snd_msg_cnt = new AtomicInteger(0);
         this.ready = new AtomicBoolean(false);
-        this.neighbour_awaited = new CountDownLatch(this.getNeighbourCount());
-        this.sync_state_table = new ConcurrentHashMap<>(); 
+        this.sync_state_table = new ConcurrentHashMap<>();
+        this.addMessageListener(SyncState.SYNC_TAG, new SyncMessageHandler(this));
     }
 
     public ConcurrentProcess(int id, String name) {
 
         this(id, name, 1);
-    }
-
-    private void resetNeighbouringStateCounter() {
-
-        this.neighbour_awaited = new CountDownLatch(this.getNeighbourCount());
     }
 
     public final int getMyId() {
@@ -85,22 +80,59 @@ public final class ConcurrentProcess extends ThreadLoop {
     public final void readNeighbouring(String filename) {
 
         try {
+            
             this.neighbouring.read(filename);
+            this.trace("Neighbouring read");
         } catch(IOException ioe) {
             this.printErr("[ConcurrentProcess : readNeighbouring] Error while reading neighbouring file.");
             ioe.printStackTrace();
         }
+
+        // Initialise la table des synchros
+        for (int id : this.getNeighbourSet()) {
+            this.sync_state_table.put(id, SyncState.NOTHING_SND_NOTHING_RCV); 
+        }
+
+        // Initialise nombre de voisins en attente, init = tous les voisins
+        this.neighbour_awaited = new CountDownLatch(this.sync_state_table.size()); 
+        this.trace("Nombre de voisins en attente : " + this.neighbour_awaited.getCount());
     }
 
-    private final void waitNeighbouring(String msg) {
+    public final void waitNeighbouring(String msg) {
         
+        this.printOut(msg);
+        this.waitNeighbouring();        
+    }
+
+    public final void waitNeighbouring() {
+        
+        this.sync_state_table.forEach((k, v) -> {
+
+            if(v == SyncState.NOTHING_SND_NOTHING_RCV || v == SyncState.NOTHING_SND_READY_RCV) {
+
+                Message msg = new Message(k, SyncState.SYNC_TAG, SyncState.SYNC_MSG_READY);
+                msg.setSourceId(this.getMyId());
+
+                // On renvoie le message près tant que l'état du voisin n'a pas changé. 
+                // i.e. tant qu'on a pas reçu l'ack dans la méthode SyncMessageHandler.onMessage
+                this.printOut("Processus / etat : " + k + " / " + this.sync_state_table.get(k));
+                this.printOut("Taille  : " + this.sync_state_table.size());
+                while(this.sync_state_table.get(k) != SyncState.ACK_SND_READY_RCV) {
+                    
+                    this.sendMessage(msg);
+                }
+
+                // Met à jour l'état du processus :
+                this.sync_state_table.put(k, SyncState.READY_SND_NOTHING_RCV);
+                this.trace("Ready sent to process num " + k);
+            }
+        });
+
         try {
-            this.printOut(msg);
-            new BufferedReader(new InputStreamReader(System.in)).readLine();
-            this.printOut("unblocked");
-            this.ready.set(true); 
-        } catch(IOException ioe) {
-            this.printErr("[ConcurrentProcess : waitNeighbouring)] Error");
+            this.neighbour_awaited.await();
+            this.ready.set(true);            
+        } catch(InterruptedException ie) {
+            ie.printStackTrace();
         }
     }
 
@@ -114,16 +146,15 @@ public final class ConcurrentProcess extends ThreadLoop {
 
     public final void sendMessage(Message msg) {
         
-        msg.setSourceId(this.my_id);
+        msg.setSourceId(this.getMyId());
         int dest_id = msg.getDestinationId();
 
         try {
-
             byte[] sendBuf = msg.toBytes();
             DatagramPacket packet = new DatagramPacket(sendBuf, sendBuf.length, this.neighbouring.getOutputAddress(dest_id), this.neighbouring.getOutputPort(dest_id));
             int bytesCount = packet.getLength();
             this.neighbouring.getOutputSocket(dest_id).send(packet);
-            this.trace("Message sent to : " + this.neighbouring.getOutputAddress(dest_id).toString() + ":" + this.neighbouring.getOutputPort(dest_id));
+            //this.trace("Message sent to : " + this.neighbouring.getOutputAddress(dest_id).toString() + ":" + this.neighbouring.getOutputPort(dest_id));
         } catch(IOException ioe) {
             ioe.printStackTrace();
         }
@@ -155,5 +186,10 @@ public final class ConcurrentProcess extends ThreadLoop {
 
     void afterLoop() {
         this.neighbouring.close();
+    }
+
+    private void resetNeighbouringStateCounter() {
+
+        this.neighbour_awaited = new CountDownLatch(this.getNeighbourCount());
     }
 }
