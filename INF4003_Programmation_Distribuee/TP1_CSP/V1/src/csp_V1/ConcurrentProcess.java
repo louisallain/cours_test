@@ -98,12 +98,58 @@ public final class ConcurrentProcess extends ThreadLoop {
         this.trace("Nombre de voisins en attente : " + this.neighbour_awaited.getCount());
     }
 
+    void resetNeighbouringStateCounter() {
+
+        if(this.neighbour_awaited == null || this.neighbour_awaited.getCount() == 0) {
+            this.neighbour_awaited = new CountDownLatch(this.neighbouring.size());
+        }
+    }
+
     public final void waitNeighbouring(String msg) {
         
         this.printOut(msg);
         this.waitNeighbouring();        
     }
 
+    public final void waitNeighbouring() {
+
+        synchronized(this.sync_state_table) {
+
+            this.resetNeighbouringStateCounter();
+
+            for(Integer id : this.neighbouring.getIdentities()) {
+
+                SyncState state = this.sync_state_table.get(id);
+
+                if(state == null) {
+                    state = SyncState.NOTHING_SND_NOTHING_RCV;
+                    this.sync_state_table.put(id, state);
+                }
+
+                this.trace("Processus / etat : " + id + " / " + state);
+                this.trace("Taille  : " + this.sync_state_table.size());
+
+                if(state == SyncState.NOTHING_SND_NOTHING_RCV) {
+                    this.sendMessage(new Message(id, SyncState.SYNC_TAG, SyncState.SYNC_MSG_READY));
+                    this.trace("Ready sent to process num " + id);
+                    this.sync_state_table.put(id, SyncState.READY_SND_NOTHING_RCV);
+                }  
+                else if(state == SyncState.NOTHING_SND_READY_RCV) {
+                    this.sendMessage(new Message(id, SyncState.SYNC_TAG, SyncState.SYNC_MSG_ACK));
+                    this.trace("ACK sent to process num " + id);
+                    this.sync_state_table.put(id, SyncState.ACK_SND_READY_RCV);
+                }
+            }
+        }
+
+        try {
+            this.neighbour_awaited.await();
+        } catch(InterruptedException ie) {
+            ie.printStackTrace();
+        }
+    }
+
+    /*
     public final void waitNeighbouring() {
         
         this.sync_state_table.forEach((k, v) -> {
@@ -135,6 +181,7 @@ public final class ConcurrentProcess extends ThreadLoop {
             ie.printStackTrace();
         }
     }
+    */
 
     public final Set<Integer> getNeighbourSet() {
         return this.neighbouring.getIdentities();
@@ -154,6 +201,7 @@ public final class ConcurrentProcess extends ThreadLoop {
             DatagramPacket packet = new DatagramPacket(sendBuf, sendBuf.length, this.neighbouring.getOutputAddress(dest_id), this.neighbouring.getOutputPort(dest_id));
             int bytesCount = packet.getLength();
             this.neighbouring.getOutputSocket(dest_id).send(packet);
+            this.snd_msg_cnt.getAndIncrement();
             //this.trace("Message sent to : " + this.neighbouring.getOutputAddress(dest_id).toString() + ":" + this.neighbouring.getOutputPort(dest_id));
         } catch(IOException ioe) {
             ioe.printStackTrace();
@@ -167,6 +215,7 @@ public final class ConcurrentProcess extends ThreadLoop {
     
     void receiveMessage(Message msg) {
         this.listener_map.get(msg.getTag()).onMessage(msg);
+        this.rcv_msg_cnt.getAndIncrement();
     }
 
     void beforeLoop() {
@@ -186,10 +235,5 @@ public final class ConcurrentProcess extends ThreadLoop {
 
     void afterLoop() {
         this.neighbouring.close();
-    }
-
-    private void resetNeighbouringStateCounter() {
-
-        this.neighbour_awaited = new CountDownLatch(this.getNeighbourCount());
     }
 }
