@@ -50,10 +50,12 @@ class SyncMessageHandler extends Object implements MessageHandler {
                     this.process.trace("ACK sent to process num " + sourceId);
                     this.process.sync_state_table.put(sourceId, SyncState.ACK_SND_ACK_RCV);
                     this.process.neighbour_awaited.countDown();
+                    this.process.trace("countDown 1");
                 }
                 else if(state == SyncState.ACK_SND_READY_RCV) {
                     this.process.sync_state_table.put(sourceId, SyncState.ACK_SND_ACK_RCV);
                     this.process.neighbour_awaited.countDown();
+                    this.process.trace("countDown 2");
                 }
 
                 this.process.trace("Number of process awaited " + this.process.neighbour_awaited.getCount());

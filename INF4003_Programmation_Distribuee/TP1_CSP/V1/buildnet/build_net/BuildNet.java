@@ -68,6 +68,7 @@ public class BuildNet {
       }
     });
     process.startLoop();
+
     for(int pid:process.getNeighbourSet()){
       try {
         process.printOut("sending hello to "+pid);
@@ -81,6 +82,9 @@ public class BuildNet {
     } catch (InterruptedException ignore) {
     }
     //process.printOut(process.getRcvMsgCnt()+" sync messages received, "+process.getSndMsgCnt()+" sync messages sent");
+
+    process.waitNeighbouring("Simulate new synchronization");
+
     process.exitLoop();
     process.printOut(process.getRcvMsgCnt()+" messages received, "+process.getSndMsgCnt()+" messages sent");
     process.printOut("exiting");    

@@ -94,14 +94,13 @@ public final class ConcurrentProcess extends ThreadLoop {
         }
 
         // Initialise nombre de voisins en attente, init = tous les voisins
-        this.neighbour_awaited = new CountDownLatch(this.sync_state_table.size()); 
-        this.trace("Nombre de voisins en attente : " + this.neighbour_awaited.getCount());
+        this.resetNeighbouringStateCounter();
     }
 
     void resetNeighbouringStateCounter() {
 
         if(this.neighbour_awaited == null || this.neighbour_awaited.getCount() == 0) {
-            this.neighbour_awaited = new CountDownLatch(this.neighbouring.size());
+            this.neighbour_awaited = new CountDownLatch(this.sync_state_table.size());
         }
     }
 
@@ -116,6 +115,8 @@ public final class ConcurrentProcess extends ThreadLoop {
         synchronized(this.sync_state_table) {
 
             this.resetNeighbouringStateCounter();
+
+            this.trace("Number of process awaited " + this.neighbour_awaited.getCount());
 
             for(Integer id : this.neighbouring.getIdentities()) {
 
@@ -147,6 +148,15 @@ public final class ConcurrentProcess extends ThreadLoop {
         } catch(InterruptedException ie) {
             ie.printStackTrace();
         }
+
+        // Réinitialisation des structures de données
+        synchronized(this.sync_state_table) {
+            this.resetNeighbouringStateCounter();
+            this.sync_state_table.clear();
+            this.trace("Synchronizing data cleared");
+        }
+
+        this.trace("Synchronizing done.");
     }
 
     /*
@@ -221,7 +231,7 @@ public final class ConcurrentProcess extends ThreadLoop {
     void beforeLoop() {
 
         this.neighbouring.open();
-        this.waitNeighbouring("[ConcurrentProcess : beforeLoop] Waiting for synchronize.");
+        this.waitNeighbouring("Waiting for synchronize.");
     }
 
     void inLoop() {
