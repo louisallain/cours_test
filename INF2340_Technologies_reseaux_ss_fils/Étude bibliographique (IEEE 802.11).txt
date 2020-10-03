@@ -1,0 +1,103 @@
+L'objectif de ce travail d'étude bibliographique est de vous familiariser avec la structure des documents de standardisation IEEE, et d'apprendre à y rechercher des informations. Dans le même temps il s'agit aussi ici d'extraire des informations marquantes du standard 802.11 et des amendements associés.
+
+
+1. Ouvrez pour le consulter le document PDF décrivant le standard IEEE 802.11, dans sa version publiée en 1999.
+
+2. Commencez par vous faire une idée d'ensemble de la structure générale de ce document, en observant bien comment il est organisé (intitulé, contributeurs, vue d'ensemble, chapitres principaux et annexes...).
+
+3. Lisez attentivement les sections 1.1, 1.2, 5.1, et 5.2 du document.
+
+4. En parcourant librement le document, identifiez quelles sont les types de couche physique définies dans ce document et, pour chacune d'entre elles, quelles en sont les principales caractéristiques (plages de fréquences, bandes passantes, débit...).
+
+5. Recherchez dans le document quelles sont les fonctionnalités définies comme étant optionnelles dans le standard 802.11.
+
+6. Ouvrez à présent le document PDF décrivant l'amendement IEEE 802.11b, et observez comment ce document (beaucoup plus court que le précédent) est construit comme apportant des modifications au standard 802.11 initial.
+
+7. Recherchez quelles sont les apports majeurs de l'amendement 802.11b par rapport à 802.11.
+
+8. Même exercice en consultant les amendements 802.11a et 802.11g.
+
+9. En consultant les amendements 802.11d, 802.11e, 802.11h, 802.11i, et 802.11p, identifiez quelle est la vocation de chacun de ces amendements.
+
+10. Recherchez dans le document 802.11 quel est le traitement spécifique réservé aux trames diffusées (i.e. émises en mode broadcast ou multicast). Le mécanisme RTS/CTS est-il utilisé dans ce cas ? Le mécanisme d'acquittement est-il utilisé ? Le mécanisme de fragmentation/réassemblage est-il utilisé ?...
+
+11. Ouvrez le document IEEE 802.11, et lisez très attentivement (et essayez de comprendre !) les chapitres 8.1 et 8.2 qui présentent les mécanismes sur lesquels reposent l'authentification et le chiffrement dans ce standard.
+
+12. Ouvrez le document IEEE 802.11e, et en lisant le chapitre 5.2.5 efforcez vous de vous faire une idée générale de la façon dont les mécanismes décrits ici doivent permettre de supporter la qualité de service au niveau MAC dans un réseau 802.11.
+(Vous pourriez avoir besoin de survoler le reste du document pour y trouver les définitions du vocabulaire spécifique utilisé dans le chapitre 5.2.5.)
+
+13. Ouvrez le document IEEE 802.11p, et en lisant notamment les chapitres 5.1.2, 5.2.7, et 20.1 efforcez vous d'identifier quels sont les objectifs visés par cet amendement, et les contraintes fixées pour sa mise en oeuvre.
+
+
+Réponses :
+
+4. 
+	-> Partie 14 : FHSS PHY specification for the 2.4 GHz band : 
+
+	   Bande de fréquence utilisée : 2.4 GHz (voir partie 14.6.3 pour les détails des bande de fréquence selon les régions)
+	   Cannaux utilisés lors des sauts de fréquence : exemple : 79 pour les USA et l'Europe (voir 14.6.4 pour les détails selon les régions)
+	   Bande passante (limite de vitesse à laquelle les données sont transférées) : 1 Mbit/s ou 2 Mbit/s
+	   Débit (vitesse à laquelle les données sont transférées) : 
+
+	-> Partie 15 : DSSS PHY specification for the 2.4 GHz band : 
+
+	   Bande de fréquence utilisée : 2.4 GHz (voir partie 15.4.6.2 pour les détails des canaux utilisés par région)
+	   Bande passante (limite de vitesse à laquelle les données sont transférées) : 1 Mbit/s ou 2 Mbit/s
+	   Débit (vitesse à laquelle les données sont transférées) : 
+
+	-> Partie 16 : Infrared (IR) PHY specification
+
+	   Bande passante (limite de vitesse à laquelle les données sont transférées) : 1 Mbit/s ou 2 Mbit/s
+
+
+5. 
+	-> Fonctionnalités optionnelles décrites dans 802.11 :
+
+	   . La bande passante de 2 Mbit/s est optionnelle dans le cas de l'implémentation par infra-rouge ou par saut de fréquence (FHSS) de la couche physique.
+	     Note : cette bande de passante de 2 Mbit/s n'est pas optionnelle dans l'implémentation DSSS de la couche physique.
+	   . L'algorithme de cryptographie WEP (Wired Equivalent Privacy) est optionnel.
+	   . Le mode PCF (Point Coordination Function) où un point d'accès (AP) coordonne ses stations est optionnel.
+
+
+6.
+	-> Comment le document 802.11b apporte des modifications au documents 802.11 :
+	  
+	   Les instructions de modifications sont indiqués en "italique gras".
+	   Le documents repasse sur chaque partie duquel il modifie, ajoute ou supprime des éléments.
+
+
+7.
+	-> Modifications majeures apportées par le documents 802.11b au document 802.11 :
+	   
+	   . HR-DSSS (High-Rate DSSS) avec modulation CCK (Complementary Code Keying) ou PBCC (Packet Binary Convolutionnal Code).
+ 	   . Support des bande passante de 5.5 Mbit/S et 11 Mbit/s avec HR-DSSS.
+
+8.
+	-> Modifications majeures apportées par le documents 802.11a au document 802.11 :
+	   
+	   . Bande de fréquence 5 GHz supportée en modulation OFDM (Orthogonal Frequency Division Multiplexing) pour atteindre un débit théorique maximal de 54 Mbit/s.
+ 	   . Support des bande passante de 6, 9, 12, 18, 24, 36, 48 et 54 Mbit/s (ajustement automatique en fonction de la qualité du signal).
+
+	-> Modifications majeures apportées par le documents 802.11g au document 802.11 :
+
+
+9.
+	-> Vocation de l'amendement 802.11d :
+	   . Permet à un point d'accès de fournir des informations à des stations leurs permettant de configurer leurs transmissions radio selon la région géographique où elles se trouvent.
+	   . Un des bénéfices pourvus par cette amendement est la capacité d'un station à changer de région géographique (donc de configuration facilement).
+	
+	-> Vocation de l'amendement 802.11e :
+  	   . Permet de différencier les trames selon leur importance (notamment lié au transport de la voix, de la vidéo et de l'audio).
+	   . Par exemple, il est possible de hiérarchiser les trames selon leur "type" ; Ex : vidéo > email.
+
+	-> Vocation de l'amendement 802.11h : 
+	   . Fournit les mécanismes DFS (Dynamic Frequency Selection) et TPC (Transmission Power Control) pour la bande de fréquence des 5GHz en Europe.
+	   . Ces mécanismes sont utilisés pour repérer les canaux les moins utilisés et pour ajuster la puissance d'émission en fonction de la portée des mobiles.
+
+	-> Vocation de l'amendement 802.11i :
+	   . Fournit un système de sécurité plus avancé que WEP qui était obsolète.
+	   . Définit TKIP (Temporal Key Integrity Protocol) qui est un système dans lequel on met en place un échange de clefs entre les stations mobiles et les points d'accès.
+	   . Chiffrement AES (Advanced Encryption Standard) au lieu de RC4.
+	-> Vocation de l'amendement 802.11p :
+	   . Ajout d'accès sans fil dans un environnement routier.
+	   . Inclus les échanges de données entre véhicules circulant à haute vitesse et entre les véhicules et les infrastructures routières.
