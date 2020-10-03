@@ -51,7 +51,7 @@ public class Broadcast{
   public Broadcast(int id, String filename, int base_port) {
     this.id= id;
     process= new ConcurrentProcess(id, "node",base_port);
-    process.setTrace(false);
+    process.setTrace(true);
     process.readNeighbouring(filename);
     process.startLoop();
     spanning_tree= new SpanningTree(process);
@@ -60,9 +60,9 @@ public class Broadcast{
       
       @Override
       public void onMessage(Message msg) {
-        process.printOut("receive msg "+msg.getContent());
+        process.printOut("receive msg "+msg.getContent() + " from " + msg.getSourceId());
         for (int succ:spanning_tree.getSuccessors()){
-          process.sendMessage(new Message(succ, BROADCAST_TAG, "hello from root"));
+          process.sendMessage(new Message(succ, BROADCAST_TAG, "hello from root = " + spanning_tree.getRoot()));
         }
         message_broadcasted.release();// on peut terminer maintenant
       }
