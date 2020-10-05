@@ -15,63 +15,64 @@ class SpanningMessageHandler extends Object implements MessageHandler {
     }
 
     @Override
-    public void onMessage(Message msg) {
+    synchronized public void onMessage(Message msg) {
 
         this.process.trace("Spanning msg receive");
 
         int sourceId = msg.getSourceId();
         String content = msg.getContent();
 
-        if(content.equals(SpanningTree.ACK_DEJA_VU) || content.equals(SpanningTree.ACK_TERMINE)) {
-
-            this.process.trace("Spanning ACK");
-            if(content.equals(SpanningTree.ACK_DEJA_VU)) {
-                this.process.trace("Spanning ACK_DEJA_VU");
-                // succ = succ - {j}
-                Set<Integer> tmp = new HashSet<>(this.spanningTree.getSuccessors());
-                tmp.remove(sourceId);
-                this.spanningTree.setSuccessors(tmp);
-            }
-
-            this.spanningTree.setNbAck(this.spanningTree.getNbAck() - 1);
-            if(this.spanningTree.getNbAck() == 0) {
-
-                this.process.trace("Root = " + this.spanningTree.getRoot());
-                if(msg.getDestinationId() == this.spanningTree.getRoot()) {
-                    this.process.trace(this.spanningTree.toString());
-                    this.spanningTree.makeDoneCountDown.countDown();
-                } 
-                else {
-                    this.process.sendMessage(new Message(this.spanningTree.getFather(), SpanningTree.SPANNING_TAG, SpanningTree.ACK_TERMINE));
-                }
-            }
-        }
         // Lors de la réception de (traverser)
-        else if(content.equals(SpanningTree.TRAVERSER)) {
+        if(content.equals(SpanningTree.TRAVERSER)) {
+
             this.process.trace("Spanning TRAVERSER");
-            if(this.spanningTree.isMarked()) {
+
+            if(this.spanningTree.getMarked() == true) {
+
                 this.process.trace("DEJA VU " + this.process.getMyId());
                 this.process.sendMessage(new Message(sourceId, SpanningTree.SPANNING_TAG, SpanningTree.ACK_DEJA_VU));
             }
             else {
                 
-                
-                this.spanningTree.setMarked(true);
-                this.spanningTree.setFather(sourceId);
+                this.spanningTree.marked.set(true);
+                this.spanningTree.father.set(sourceId);
                 // succ = voisins - {j}
-                Set<Integer> tmp = new HashSet<>(this.process.getNeighbourSet());
-                tmp.remove(sourceId);
-                this.spanningTree.setSuccessors(tmp);
+                this.spanningTree.successors.addAll(this.process.getNeighbourSet());
+                this.spanningTree.successors.remove(sourceId);
 
                 if(this.spanningTree.getSuccessors().isEmpty()) {
                     this.process.sendMessage(new Message(sourceId, SpanningTree.SPANNING_TAG, SpanningTree.ACK_TERMINE));
                 }
                 else {
 
-                    this.spanningTree.setNbAck(this.spanningTree.getSuccessorCount());
+                    this.spanningTree.nbAck.set(this.spanningTree.getSuccessorCount());
                     for(Integer id : this.spanningTree.getSuccessors()) {
                         this.process.sendMessage(new Message(id, SpanningTree.SPANNING_TAG, SpanningTree.TRAVERSER));
                     }
+                }
+            }
+        }
+
+        else if(content.equals(SpanningTree.ACK_DEJA_VU) || content.equals(SpanningTree.ACK_TERMINE)) {
+
+            this.process.trace("Spanning ACK");
+            
+            if(content.equals(SpanningTree.ACK_DEJA_VU)) {
+                this.process.trace("Spanning ACK_DEJA_VU");
+                // succ = succ - {j}
+                this.spanningTree.successors.remove(sourceId);
+            }
+
+            this.spanningTree.nbAck.decrementAndGet();
+            if(this.spanningTree.nbAck.get() == 0) {
+
+                if(this.spanningTree.getFather() == -1) {
+                    this.process.printOut("Parcours terminé");
+                    this.process.printOut(this.spanningTree.toString());
+                } 
+                else {
+                    if(this.spanningTree.getFather() != -1) this.process.printOut(this.spanningTree.toString());
+                    this.process.sendMessage(new Message(this.spanningTree.getFather(), SpanningTree.SPANNING_TAG, SpanningTree.ACK_TERMINE));
                 }
             }
         }

@@ -38,7 +38,7 @@ public class BuildNet {
   public BuildNet(int id, String filename) {
     
     process_terminated= new Semaphore(0);
-    process= new ConcurrentProcess(id,"BuildNet",12222);
+    process= new ConcurrentProcess(id,"BuildNet", 12231);
     process.readNeighbouring(filename);
     awaited_neigbours= process.getNeighbourSet(); 
     process.printOut("running");
@@ -82,8 +82,6 @@ public class BuildNet {
     } catch (InterruptedException ignore) {
     }
     //process.printOut(process.getRcvMsgCnt()+" sync messages received, "+process.getSndMsgCnt()+" sync messages sent");
-
-    process.waitNeighbouring("Simulate new synchronization");
 
     process.exitLoop();
     process.printOut(process.getRcvMsgCnt()+" messages received, "+process.getSndMsgCnt()+" messages sent");

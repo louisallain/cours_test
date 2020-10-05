@@ -1,4 +1,4 @@
-localhost : 1 : 7002 : localhost : 2 : 7012
-localhost : 1 : 7004 : localhost : 3 : 7014
-localhost : 2 : 7005 : localhost : 3 : 7015
-localhost : 2 : 7006 : localhost : 4 : 7016
+localhost : 0 : 7002 : localhost : 1 : 7012
+localhost : 0 : 7004 : localhost : 2 : 7014
+localhost : 1 : 7005 : localhost : 2 : 7015
+localhost : 1 : 7006 : localhost : 3 : 7016

@@ -62,14 +62,13 @@ public class Broadcast{
       public void onMessage(Message msg) {
         process.printOut("receive msg "+msg.getContent() + " from " + msg.getSourceId());
         for (int succ:spanning_tree.getSuccessors()){
-          process.sendMessage(new Message(succ, BROADCAST_TAG, "hello from root = " + spanning_tree.getRoot()));
+          process.sendMessage(new Message(succ, BROADCAST_TAG, "hello "));
         }
         message_broadcasted.release();// on peut terminer maintenant
       }
     });
     // construction de l'arbre recouvrant
     spanning_tree.make();
-    process.printOut("spanning tree: "+spanning_tree.toString());
     process.printOut("msg sent= "+process.getSndMsgCnt()+
                    ", msg received= "+process.getRcvMsgCnt());
   }
@@ -78,10 +77,10 @@ public class Broadcast{
    * Diffusion d'un message de HELLO par le noeud racine
    * @see java.lang.Thread#run()
    */
-  public void broadcast(){
+  public void broadcast(String content){
     if (process.getMyId()==0){ // diffusion d'un message à tous les noeuds
       for (int succ:spanning_tree.getSuccessors()){
-        process.sendMessage(new Message(succ, BROADCAST_TAG, "hello from root"));
+        process.sendMessage(new Message(succ, BROADCAST_TAG, content));
         process.exitLoop();
         process.printOut("finished");
       }
@@ -106,7 +105,7 @@ public class Broadcast{
     String filename= args[0];
     int my_id= Integer.parseInt(args[1]); 
     int base_port= (args.length>2) ? Integer.parseInt(args[2]):0;
-    new Broadcast(my_id,filename,base_port).broadcast();
+    new Broadcast(my_id,filename,base_port).broadcast("hello from root");
   }
 
 }
