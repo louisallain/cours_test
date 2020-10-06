@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns="http://bonjour" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ax21="http://bonjour/xsd" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" targetNamespace="http://bonjour">
+    <wsdl:types>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://bonjour/xsd">
+            <xs:complexType name="Personne">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="age" type="xs:int"/>
+                    <xs:element minOccurs="0" name="nom" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="prenom" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax22="http://bonjour/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://bonjour">
+            <xs:import namespace="http://bonjour/xsd"/>
+            <xs:element name="setLang">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="args0" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="disBonjourToutLeMonde">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="disBonjourToutLeMondeResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="disBonjour">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="args0" nillable="true" type="ax22:Personne"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="disBonjourResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax22:Personne"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="disBonjourToutLeMondeRequest">
+        <wsdl:part name="parameters" element="ns:disBonjourToutLeMonde"/>
+    </wsdl:message>
+    <wsdl:message name="disBonjourToutLeMondeResponse">
+        <wsdl:part name="parameters" element="ns:disBonjourToutLeMondeResponse"/>
+    </wsdl:message>
+    <wsdl:message name="disBonjourRequest">
+        <wsdl:part name="parameters" element="ns:disBonjour"/>
+    </wsdl:message>
+    <wsdl:message name="disBonjourResponse">
+        <wsdl:part name="parameters" element="ns:disBonjourResponse"/>
+    </wsdl:message>
+    <wsdl:message name="setLangRequest">
+        <wsdl:part name="parameters" element="ns:setLang"/>
+    </wsdl:message>
+    <wsdl:portType name="BonjourServicePortType">
+        <wsdl:operation name="disBonjourToutLeMonde">
+            <wsdl:input message="ns:disBonjourToutLeMondeRequest" wsaw:Action="urn:disBonjourToutLeMonde"/>
+            <wsdl:output message="ns:disBonjourToutLeMondeResponse" wsaw:Action="urn:disBonjourToutLeMondeResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="disBonjour">
+            <wsdl:input message="ns:disBonjourRequest" wsaw:Action="urn:disBonjour"/>
+            <wsdl:output message="ns:disBonjourResponse" wsaw:Action="urn:disBonjourResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="setLang">
+            <wsdl:input message="ns:setLangRequest" wsaw:Action="urn:setLang"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="BonjourServiceSoap11Binding" type="ns:BonjourServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="disBonjourToutLeMonde">
+            <soap:operation soapAction="urn:disBonjourToutLeMonde" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="disBonjour">
+            <soap:operation soapAction="urn:disBonjour" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="setLang">
+            <soap:operation soapAction="urn:setLang" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="BonjourServiceSoap12Binding" type="ns:BonjourServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="disBonjourToutLeMonde">
+            <soap12:operation soapAction="urn:disBonjourToutLeMonde" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="disBonjour">
+            <soap12:operation soapAction="urn:disBonjour" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="setLang">
+            <soap12:operation soapAction="urn:setLang" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="BonjourServiceHttpBinding" type="ns:BonjourServicePortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="disBonjourToutLeMonde">
+            <http:operation location="disBonjourToutLeMonde"/>
+            <wsdl:input>
+                <mime:content type="application/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="application/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="disBonjour">
+            <http:operation location="disBonjour"/>
+            <wsdl:input>
+                <mime:content type="application/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="application/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="setLang">
+            <http:operation location="setLang"/>
+            <wsdl:input>
+                <mime:content type="application/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="BonjourService">
+        <wsdl:port name="BonjourServiceHttpSoap11Endpoint" binding="ns:BonjourServiceSoap11Binding">
+            <soap:address location="http://localhost:8080/axis2/services/BonjourService"/>
+        </wsdl:port>
+        <wsdl:port name="BonjourServiceHttpSoap12Endpoint" binding="ns:BonjourServiceSoap12Binding">
+            <soap12:address location="http://localhost:8080/axis2/services/BonjourService"/>
+        </wsdl:port>
+        <wsdl:port name="BonjourServiceHttpEndpoint" binding="ns:BonjourServiceHttpBinding">
+            <http:address location="http://localhost:8080/axis2/services/BonjourService"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

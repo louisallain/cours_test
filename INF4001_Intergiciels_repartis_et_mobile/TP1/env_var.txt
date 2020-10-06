@@ -1,0 +1,4 @@
+export JAVA_HOME="/usr/lib/jvm/java-1.11.0-openjdk-amd64/"
+export JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.262.b10-0.el7_8.x86_64"
+export AXIS2_HOME="$HOME/axis2-1.7.9/"
+export            CLASSPATH="$CLASSPATH:"`echo            $AXIS2_HOME/lib/*.jar            |            tr            '            '            ':'`
