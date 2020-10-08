@@ -28,9 +28,9 @@ public class NetworkSize {
      */
     int nbSuccs;
 
-    public NetworkSize(String filename, int basePort) {
+    public NetworkSize(int id, String filename, int basePort) {
 
-        this.process = new ConcurrentProcess(id, "node",base_port);
+        this.process = new ConcurrentProcess(id, "node",basePort);
         this.process.setTrace(true);
         this.process.readNeighbouring(filename);
         this.process.startLoop();
@@ -50,12 +50,14 @@ public class NetworkSize {
 
                 process.printOut("receive msg "+msg.getContent() + " from " + msg.getSourceId());
 
+                int nbSuccsRcv = Integer.parseInt(msg.getContent());
+
                 nbTot.set(nbTot.get() + nbSuccs);
                 if(spanning_tree.getFather() == -1) { // si le noeud est la racine
                     process.printOut("Total number of nodes = " + nbTot);
                 }   
                 else {
-                    process.sendMessage(new Message(spanning_tree.father, NetworkSize.NETWORK_SIZE_TAG, nbTot.get()));
+                    process.sendMessage(new Message(spanning_tree.father.get(), NetworkSize.NETWORK_SIZE_TAG, String.valueOf(nbTot.get())));
                 }
             }
         });
@@ -66,7 +68,7 @@ public class NetworkSize {
      */
     synchronized public void computeSize() {
 
-        this.process.sendMessage(new Message(this.spanning_tree.father, NetworkSize.NETWORK_SIZE_TAG, this.nbSuccs));
+        this.process.sendMessage(new Message(this.spanning_tree.father.get(), NetworkSize.NETWORK_SIZE_TAG, String.valueOf(this.nbSuccs)));
         this.process.exitLoop();
         this.process.printOut("finished");
     }

@@ -69,6 +69,7 @@ public class Broadcast{
     });
     // construction de l'arbre recouvrant
     spanning_tree.make();
+    
     process.printOut("msg sent= "+process.getSndMsgCnt()+
                    ", msg received= "+process.getRcvMsgCnt());
   }

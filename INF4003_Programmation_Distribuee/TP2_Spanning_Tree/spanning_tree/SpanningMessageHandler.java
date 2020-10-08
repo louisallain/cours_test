@@ -15,7 +15,7 @@ class SpanningMessageHandler extends Object implements MessageHandler {
     }
 
     @Override
-    synchronized public void onMessage(Message msg) {
+    public void onMessage(Message msg) {
 
         this.process.trace("Spanning msg receive");
 
@@ -66,12 +66,14 @@ class SpanningMessageHandler extends Object implements MessageHandler {
             this.spanningTree.nbAck.decrementAndGet();
             if(this.spanningTree.nbAck.get() == 0) {
 
+                this.spanningTree.doneMake.countDown();
+
                 if(this.spanningTree.getFather() == -1) {
                     this.process.printOut("Parcours terminé");
-                    this.process.printOut(this.spanningTree.toString());
+                    //this.process.printOut(this.spanningTree.toString());
                 } 
                 else {
-                    if(this.spanningTree.getFather() != -1) this.process.printOut(this.spanningTree.toString());
+                    //if(this.spanningTree.getFather() != -1) this.process.printOut(this.spanningTree.toString());
                     this.process.sendMessage(new Message(this.spanningTree.getFather(), SpanningTree.SPANNING_TAG, SpanningTree.ACK_TERMINE));
                 }
             }

@@ -29,6 +29,8 @@ public class SpanningTree {
      */
     AtomicInteger nbAck;
 
+    CountDownLatch doneMake;
+
     /**
      * Tag d'un message SpanningTree
      */
@@ -52,6 +54,7 @@ public class SpanningTree {
     public SpanningTree(ConcurrentProcess process) {
 
         this.process = process;
+        this.doneMake = new CountDownLatch(1);
 
         // Initialisation de l'algo de l'arbre couvrant
         this.marked = new AtomicBoolean(false);
@@ -87,23 +90,27 @@ public class SpanningTree {
 
             // Lors de la décision de lancer un parcours :
             this.marked.set(true);
-            synchronized(this.successors) {
-                this.successors.addAll(this.process.getNeighbourSet());
-            }
+            this.successors.addAll(this.process.getNeighbourSet());
             this.nbAck.set(this.getSuccessorCount());
             for(Integer id : (Set<Integer>)this.process.getNeighbourSet()) {
                 this.process.sendMessage(new Message(id, SpanningTree.SPANNING_TAG, SpanningTree.TRAVERSER));
             }
         }
+
+        try {
+            this.doneMake.await();
+        } catch(InterruptedException ie) {
+            ie.printStackTrace();
+        }
     }
 
     public String toString() {
 
-        String ret = "current node = " + this.process.getMyId() + " father = " + this.getFather() + " childs = {";
-        synchronized(this.successors) {
-            for(Integer id : this.getSuccessors()) {
-                ret += id + ",";
-            }
+        String ret;
+        ret = "current node = " + this.process.getMyId() + " father = " + this.getFather() + " nbSuccs = " + this.getSuccessors().size() + " childs = {";
+        
+        for(Integer id : this.getSuccessors()) {
+            ret += id + ",";
         }
         ret += "}";
 
