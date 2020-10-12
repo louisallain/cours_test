@@ -1,0 +1,1 @@
+dsh -r ssh -M -f /etc/dsh/machines.list killall java

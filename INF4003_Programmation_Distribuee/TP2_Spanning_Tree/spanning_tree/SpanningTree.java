@@ -83,7 +83,7 @@ public class SpanningTree {
     }
 
     public void make() {
-
+        
         this.process.waitNeighbouring("Waiting for other process at Spanningtree:make");
         
         if(this.process.getMyId() == 0) {
@@ -102,6 +102,7 @@ public class SpanningTree {
         } catch(InterruptedException ie) {
             ie.printStackTrace();
         }
+        this.process.printOut(this.toString());
     }
 
     public String toString() {
