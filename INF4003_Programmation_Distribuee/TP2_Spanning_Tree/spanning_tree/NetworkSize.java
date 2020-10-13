@@ -1,6 +1,8 @@
 package spanning_tree;
 
 import csp_V1.*;
+
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.*;
 
 public class NetworkSize {
@@ -28,45 +30,28 @@ public class NetworkSize {
      */
     private int nbSuccs;
 
+    CountDownLatch blck;
+
     public NetworkSize(int id, String filename, int basePort) {
 
         this.process = new ConcurrentProcess(id, "node",basePort);
-        this.process.setTrace(false);
+        this.process.setTrace(true);
         this.process.readNeighbouring(filename);
         this.process.startLoop();
         spanning_tree = new SpanningTree(this.process);
-        this.nbTot = 0;
 
         // construction de l'arbre recouvrant
         this.spanning_tree.make();
+
         this.process.trace("NOEUD = " + this.spanning_tree.toString());
 
         this.nbSuccs = this.spanning_tree.getSuccessorCount();
+        this.blck = new CountDownLatch(nbSuccs);
+        this.nbTot = this.nbSuccs;
 
         if(spanning_tree.getFather() == -1) { // si le noeud courant est la racine
-            this.nbTot = this.nbSuccs + 1; // ses fils + lui même
+            this.nbTot += 1; // ses fils + lui même
         }
-
-                // Ajout du handler des messages permettant de calculer la taille du réseau
-                this.process.addMessageListener(NetworkSize.NETWORK_SIZE_TAG, new MessageHandler() {
-      
-                    @Override
-                    synchronized public void onMessage(Message msg) {
-        
-                        process.trace("NETWORKSIZE receive msg "+msg.getContent() + " from " + msg.getSourceId());
-        
-                        int nbSuccsRcv = Integer.parseInt(msg.getContent());
-        
-                        if(spanning_tree.getFather() == -1) { // si le noeud courant est la racine alors on met à jour nbTot
-                            nbTot += nbSuccsRcv;
-                            process.trace("NBTOT = " + nbTot);
-                        }   
-                        else { // sinon on fait monter l'info
-                            process.trace("Remonte : " + nbSuccsRcv + " to " + spanning_tree.father.get());
-                            process.sendMessage(new Message(spanning_tree.father.get(), NetworkSize.NETWORK_SIZE_TAG, String.valueOf(nbSuccsRcv)));
-                        }
-                    }
-                });
     }
 
     /**
@@ -74,8 +59,36 @@ public class NetworkSize {
      */
     public void computeSize() {
 
+
+        // Ajout du handler des messages permettant de calculer la taille du réseau
+        this.process.addMessageListener(NetworkSize.NETWORK_SIZE_TAG, new MessageHandler() {
+
+            @Override
+            synchronized public void onMessage(Message msg) {
+
+                blck.countDown(); // décrémente le nombre de fils qui doit m'envoyer leur sous total
+                process.trace("NETWORKSIZE receive msg "+msg.getContent() + " from " + msg.getSourceId());
+            
+
+                int nbSuccsRcv = Integer.parseInt(msg.getContent());
+                nbTot += nbSuccsRcv;
+
+                if(spanning_tree.getFather() == -1) { // si le noeud courant est la racine alors fini et on affiche
+                    process.printOut("NBTOT = " + nbTot);
+                }             
+            }
+        });
+
         this.process.waitNeighbouring("Waiting for other process at NetworkSize:computeSize");
-        this.process.sendMessage(new Message(this.spanning_tree.father.get(), NetworkSize.NETWORK_SIZE_TAG, String.valueOf(this.nbSuccs)));
+        
+        try {
+            this.blck.await();
+        } catch(InterruptedException ie) {
+            ie.printStackTrace();
+        }
+        
+        if(this.spanning_tree.father.get() != -1) this.process.sendMessage(new Message(this.spanning_tree.father.get(), NetworkSize.NETWORK_SIZE_TAG, String.valueOf(this.nbTot))); // nb fils + moi
+
         this.process.exitLoop();
         this.process.printOut("finished");
     }
@@ -97,6 +110,6 @@ public class NetworkSize {
     int base_port= (args.length>2) ? Integer.parseInt(args[2]):0;
     NetworkSize ns = new NetworkSize(my_id, filename, base_port);
     ns.computeSize();
-    new Broadcast(my_id,filename,base_port+1000).broadcast("TOTAL NUMBER OF NODES = " + ns.getNbNode());
+    //new Broadcast(my_id,filename,base_port+1000).broadcast("TOTAL NUMBER OF NODES = " + ns.getNbNode());
     }
 }

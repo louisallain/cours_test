@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CSP_JAR=$HOME/Documents/INF4003_Programmation_Distribuee/TP2_Spanning_Tree/CSP_Prof/CSP_Prof.jar
+CSP_JAR=$HOME/Documents/INF4003_Programmation_Distribuee/TP2_Spanning_Tree/CSP_Perso.jar
 APP_JAR=$HOME/Documents/INF4003_Programmation_Distribuee/TP2_Spanning_Tree/build/spanning_tree.jar
 MAIN_CLASS=spanning_tree.NetworkSize
 CONF_FILE=$HOME/Documents/INF4003_Programmation_Distribuee/TP2_Spanning_Tree/spanning_tree/conf-broadcast.txt
