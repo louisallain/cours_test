@@ -1,5 +1,6 @@
 import React from 'react';
 import * as firebase from '../utils/firebase_config';
+import './ConnectionPage.css'
 
 class ConnectionPage extends React.Component {
 
@@ -34,17 +35,13 @@ class ConnectionPage extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="loginContainer">
+
         <form action="">
-          <label>
-            Email de l'administrateur :
-            <input type="text" name="email" onChange={(event) => this.setState({email : event.target.value})}/>
-          </label>
-          <label>
-            Mot de passe :
-            <input type="password" name="password" onChange={(event) => this.setState({passwordText : event.target.value})}/>
-          </label>
+          <input type="text" name="email" placeholder="Admin email" onChange={(event) => this.setState({email : event.target.value})}/>
+          <input type="password" name="password" placeholder="Mot de passe" onChange={(event) => this.setState({passwordText : event.target.value})}/>
         </form>
+
         <button onClick={this.handleLoginButton}>
             Valider
         </button>

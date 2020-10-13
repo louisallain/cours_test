@@ -30,7 +30,7 @@ class MainContainer extends React.Component {
     if(!this.state.user) { // admin non connecté
       return (
         <div>
-          <ConnectionPage/>
+          <ConnectionPage />
         </div>
       );
     } 
