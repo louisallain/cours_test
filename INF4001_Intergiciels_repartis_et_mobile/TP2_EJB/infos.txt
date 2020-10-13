@@ -1,0 +1,13 @@
+# Ajouter au .bashrc :
+
+# Nécessaire au TP2_EJB de INF4001
+export JAVA_HOME="/home/forum/m2info/INF4001/JDK/jdk-7-oracle-x64"
+export JBOSS_HOME="$HOME/jboss-5.0.1.GA"
+export CLASSPATH="$CLASSPATH:$JBOSS_HOME/client/jbossall-client.jar:$JBOSS_HOME/common/lib/jboss-ejb3-ext-api.jar:"
+
+# Exécuter pour valider les modifs :
+source .bashrc
+
+# NE PAS OUBLIER DE COMPILER LES SOURCES AVEC LA VERSION 7 DE JAVA :
+$JAVA_HOME/bin/javac
+
