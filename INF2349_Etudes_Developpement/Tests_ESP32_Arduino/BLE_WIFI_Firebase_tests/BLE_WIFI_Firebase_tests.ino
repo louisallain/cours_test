@@ -11,8 +11,8 @@
 
 #define FIREBASE_HOST "https://gestionnairesallesparempreinte.firebaseio.com"
 #define FIREBASE_AUTH "HZ1pVMKT8OF0AKqnkIqx42eP4HISpECCwngS78Bl"
-#define WIFI_SSID "louis"
-#define WIFI_PASSWORD "louisdu56"
+#define WIFI_SSID "Bbox-80CDC60A"
+#define WIFI_PASSWORD "7y2uDWWK92utNXdCpq"
 
 FirebaseData firebaseData;
 
@@ -31,7 +31,6 @@ class MyCallbacks: public BLECharacteristicCallbacks {
         }
         Serial.println();
 
-  
         std::string retValue = "Sent " + value;
         pCharacteristic->setValue(retValue); 
       }
@@ -81,7 +80,8 @@ void setup() {
 }
 
 void loop() {
-  
+
+    
     if (Firebase.getInt(firebaseData, "/test/int")) {
 
     //if (firebaseData.dataType() == "int")) {
@@ -91,6 +91,7 @@ void loop() {
   } else {
     Serial.println(firebaseData.errorReason());
   }
+  
 
   delay(3000);
 }
