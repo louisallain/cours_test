@@ -32,7 +32,13 @@ class CustomToolbar extends React.Component {
                     <button type="button" onClick={this.navigate.bind(null, navigate.NEXT)}>Suivant</button>
                 </span>
                 <span className="rbc-toolbar-label">{label}</span>
+                {this.props.changesSaved ? 
+                <button type="button" disabled style={{backgroundColor: "grey"}}>Sauvegardé !</button>
+                :
+                <button type="button" style={{backgroundColor: "#42f575"}} onClick={this.props.saveEventsOnDB}>Sauvegarder</button>
+                }
                 <span className="rbc-btn-group">
+                    <button type="button" onClick={this.props.downloadJSONEvents}>Télécharger le fichier des créneaux</button>
                     <button type="button" onClick={this.props.openJSONLoadModal}>Charger un fichier de créneaux</button>
                 </span>
             </div>
@@ -49,6 +55,8 @@ class EventsCalendar extends React.Component {
 
         super(props);
         this.JSONEventsFileInput = React.createRef()
+        this.keepExistingEventsCheckbox = React.createRef()
+        this.fileReader = new FileReader()
         this.state = {
             events: events,
             dayLayoutAlgorithm: 'no-overlap',
@@ -57,7 +65,28 @@ class EventsCalendar extends React.Component {
             beginningOfTheDay: new Date(1970, 1, 1, 8, 0, 0),
             endOfTheDay: new Date(1970, 1, 1, 19, 30, 0),
             showLoadJSONModal: false,
+            changesSaved: true,
         };
+
+        this.fileReader.onload = (event) => {
+            try {
+                if(this.keepExistingEventsCheckbox.current.checked === false) {
+                    this.setState({events: []})
+                }
+                JSON.parse(event.target.result).map(e => {
+                    if(e.start && e.end) {
+                        e.start = new Date(e.start)
+                        e.end = new Date(e.end)
+                        this.addEvent(e)
+                    }
+                })
+                this.handleCloseLoadJSONModal()
+            }
+            catch(e) {
+                console.log(e)
+                alert("Veuillez respecter le format des créneaux suivant : {start: instanceOf(Date), end: instanceOf(Date)}")
+            }
+        }
     } 
 
     handleOpenLoadJSONModal = () => {
@@ -68,7 +97,7 @@ class EventsCalendar extends React.Component {
         this.setState({showLoadJSONModal: false})
     }
 
-    handleSelectSlot = ({ start, end }) => {
+    addEvent = ({ start, end }) => {
 
         end.setMinutes(end.getMinutes()+(this.state.slotLengthChosen - this.state.slotLengthCalendar))
         // vérifie qu'un créneau n'en chevauche pas un autre
@@ -90,8 +119,8 @@ class EventsCalendar extends React.Component {
                         start,
                         end,
                         title,
-                    },
-                    ],
+                    },],
+                    changesSaved: false,
                 })
             } else {
                 alert("Un autre créneau existe déjà à ce moment.")
@@ -109,7 +138,26 @@ class EventsCalendar extends React.Component {
 
     handleSubmitJSONEventsFile = (evt) => {
         evt.preventDefault()
-        alert(`Fichier sélectionné - ${this.JSONEventsFileInput.current.files[0].name}`)
+        if(this.JSONEventsFileInput.current.files[0]) {
+            this.fileReader.readAsText(this.JSONEventsFileInput.current.files[0])
+        }
+        else {
+            alert("Séléectionner un fichier d'abord.")
+        }
+    }
+
+    downloadJSONEvents = () => {
+        let a = document.createElement("a");
+        let file = new Blob([JSON.stringify(this.state.events)], {type: 'text/plain'});
+        a.href = URL.createObjectURL(file);
+        a.download = "creneaux.json";
+        a.click();
+    }
+
+    saveEventsOnDB = () => {
+        console.log("Events to be saved : ", this.state.events)
+        // TODO : sauvegarder en BDD
+        this.setState({changesSaved: true})
     }
     
     render() {
@@ -128,7 +176,7 @@ class EventsCalendar extends React.Component {
                     </p>
                     <form onSubmit={this.handleSubmitJSONEventsFile}>
                         <label>Garder les créneaux existants
-                            <input type="checkbox" name="keepExistingEvents"/>
+                            <input type="checkbox" name="keepExistingEvents" ref={this.keepExistingEventsCheckbox}/>
                         </label>
                         <br/>
                         <input type="file" accept=".json" ref={this.JSONEventsFileInput} />
@@ -146,7 +194,7 @@ class EventsCalendar extends React.Component {
                     defaultDate={new Date()}
                     //onSelectEvent={event => alert(event.title)}
                     onDoubleClickEvent={this.handleRemoveEvent}
-                    onSelectSlot={this.handleSelectSlot}
+                    onSelectSlot={this.addEvent}
                     dayLayoutAlgorithm={this.state.dayLayoutAlgorithm}
                     step={15}
                     timeslots={4}
@@ -155,7 +203,13 @@ class EventsCalendar extends React.Component {
                     onSelecting={() => {return false}} // éviter "d'étirer" un évnènement avec la souris
                     slotPropGetter={(date) => {return {className: "my_slot"}}}
                     components={{
-                        toolbar: props => ( <CustomToolbar {...props} openJSONLoadModal={this.handleOpenLoadJSONModal}/>)
+                        toolbar: props => ( 
+                            <CustomToolbar 
+                                {...props} 
+                                openJSONLoadModal={this.handleOpenLoadJSONModal}
+                                downloadJSONEvents={this.downloadJSONEvents}
+                                changesSaved={this.state.changesSaved}
+                                saveEventsOnDB={this.saveEventsOnDB}/>)
                     }}
 
                 />
