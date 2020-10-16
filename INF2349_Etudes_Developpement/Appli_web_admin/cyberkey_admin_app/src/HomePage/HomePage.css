@@ -11,9 +11,10 @@
 .leftMenu {
     background-color: aqua;
     flex-grow: 1;
+    max-width: 15%;
 }
 
 .centerMain {
-    background-color: yellow;
+    background-color: white;
     flex-grow: 5;
 }
