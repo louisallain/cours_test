@@ -12,6 +12,7 @@
     "react": "^16.13.1",
     "react-big-calendar": "^0.28.1",
     "react-dom": "^16.13.1",
+    "react-modal": "^3.11.2",
     "react-scripts": "3.4.3",
     "uuid": "^8.3.1"
   },
