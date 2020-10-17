@@ -29,3 +29,11 @@ export const digestText_N_Times = async (text, N) => {
     for(let i=1; i===N; i++) tmp = await digestText(tmp)
     return tmp;
 }
+
+export const downloadFileFromText = (text, filename) => {
+    let a = document.createElement("a");
+    let file = new Blob([text], {type: 'text/plain'});
+    a.href = URL.createObjectURL(file);
+    a.download = filename;
+    a.click();
+}
