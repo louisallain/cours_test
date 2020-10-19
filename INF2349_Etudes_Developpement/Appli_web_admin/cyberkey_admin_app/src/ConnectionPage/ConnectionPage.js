@@ -37,12 +37,13 @@ class ConnectionPage extends React.Component {
     return (
       <div className="loginContainer">
 
-        <form action="">
+        <h1 className="appTitle">Application d'administration de CyberKey</h1>
+        <form className="loginForm" action="">
           <input type="text" name="email" placeholder="Admin email" onChange={(event) => this.setState({email : event.target.value})}/>
           <input type="password" name="password" placeholder="Mot de passe" onChange={(event) => this.setState({passwordText : event.target.value})}/>
         </form>
 
-        <button onClick={this.handleLoginButton}>
+        <button className="validateButton" onClick={this.handleLoginButton}>
             Valider
         </button>
       </div>

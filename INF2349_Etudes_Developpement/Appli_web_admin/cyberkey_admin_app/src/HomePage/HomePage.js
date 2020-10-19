@@ -8,8 +8,6 @@ import { v4 as uuidv4 } from 'uuid'
 
 import * as firebase from '../utils/firebase_config'
 
-import users from '../users' // TODO : récupérer cette liste depuis la BDD avec la méthod "on" pour màj automatique la liste
-
 const CALENDAR_PAGE = "calendar_page"
 const WAITING_FOR_ACCEPTATION_USERS_PAGE = "waiting_for_accpt_users_page"
 const VIP_USERS_PAGE = "vip_users_page"
