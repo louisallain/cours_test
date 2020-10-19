@@ -17,7 +17,7 @@ class ConnectionPage extends React.Component {
    */
   handleLoginButton = () => {
 
-    firebase.fbDatabase.ref('admin_email').on('value', (snapshot) => {
+    firebase.fbDatabase.ref('admin_email').once('value', (snapshot) => {
       if(this.state.email === snapshot.val()) { // si l'email saisi correspond à l'email de l'admin sauvegardé sur la bdd
         
         firebase.fbAuth.signInWithEmailAndPassword(this.state.email, this.state.passwordText).catch((error) => {

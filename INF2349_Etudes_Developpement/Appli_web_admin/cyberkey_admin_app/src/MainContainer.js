@@ -19,9 +19,12 @@ class MainContainer extends React.Component {
   } 
 
   handleLogoutButton = () => {
-    firebase.fbAuth.signOut()
-    .then(() => console.log("Admin disconnected"))
-    .catch((error) => console.error(error))
+    let c = window.confirm("Voulez-vous vous déconnecter ?")
+    if(c) {
+      firebase.fbAuth.signOut()
+      .then(() => console.log("Admin disconnected"))
+      .catch((error) => console.error(error))
+    }
   }
 
   componentDidMount = () => {

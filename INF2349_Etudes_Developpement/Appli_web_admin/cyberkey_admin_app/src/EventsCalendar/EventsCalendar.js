@@ -2,10 +2,11 @@ import React from 'react'
 import { Calendar, Views, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment'
 import 'moment/locale/fr'
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'
 import Modal from 'react-modal'
 import * as firebase from '../utils/firebase_config'
 import * as myUtils from '../utils/utils_function'
+import List from '../List/List'
 
 import './EventsCalendar.css'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
@@ -16,8 +17,6 @@ const navigate = {
     TODAY: 'TODAY',
     DATE: 'DATE',
 }
-
-var events = []
 
 // Setup the localizer by providing the moment (or globalize) Object
 // to the correct localizer.
@@ -55,8 +54,8 @@ class CustomToolbar extends React.Component {
 
 function CustomEvent(props) {
     return (
-        <div className="customEventContainer">
-            <a className="titleEvent">{props.event.title}</a>
+        <div className="customEventContainer" title="Double cliquer pour plus d'infos">
+            <p className="titleEvent">{props.event.title}</p>
             <button className="deleteEventButton" title="Supprimer ce créneau" onClick={() => props.deleteEvent(props.event)}>X</button>
         </div>
     )
@@ -71,7 +70,8 @@ class EventsCalendar extends React.Component {
         this.keepExistingEventsCheckbox = React.createRef()
         this.fileReader = new FileReader()
         this.state = {
-            events: events,
+            events: this.props.events,
+            users: this.props.users,
             dayLayoutAlgorithm: 'no-overlap',
             slotLengthCalendar: 30,
             slotLengthChosen: 105,
@@ -79,7 +79,8 @@ class EventsCalendar extends React.Component {
             endOfTheDay: new Date(1970, 1, 1, 19, 30, 0),
             showLoadJSONModal: false,
             changesSaved: true,
-            eventsRetrieved: false,
+            showShowMoreForEventModal: false,
+            usersOfTheSelectedEvent: []
         };
 
         this.fileReader.onload = (event) => {
@@ -101,11 +102,11 @@ class EventsCalendar extends React.Component {
                 alert("Veuillez respecter le format des créneaux suivant : {start: instanceOf(Date), end: instanceOf(Date)}")
             }
         }
-    } 
 
-    componentDidMount = () => {
-        this.retrieveEventsFromDB()
-    }
+        window.onbeforeunload = (e) => {
+            if(!this.state.changesSaved) return "Les changements sur les créneaux ne sont pas sauvegardés, êtes vous sûr de vouloir quitter la page ?"
+        }
+    } 
 
     handleOpenLoadJSONModal = () => {
         this.setState({showLoadJSONModal: true})
@@ -158,7 +159,16 @@ class EventsCalendar extends React.Component {
     }
 
     handleShowMoreOfTheEvent = (event) => {
-        console.log("Affiche les personnes acceptés pour ce créneaux : ", event)
+        let tmpUsers = this.state.users.filter(u => u.acceptedForEvents.includes(event.id))
+        this.setState({showShowMoreForEventModal: true, usersOfTheSelectedEvent: tmpUsers})
+    }
+
+    handleCloseShowMoreOfEventModal = () => {
+        this.setState({showShowMoreForEventModal: false})
+    }
+
+    removeAcceptedUserForThisEvent = (index) => {
+        console.log(this.state.usersOfTheSelectedEvent[index], "TODO : indiquer en BDD que cet utilisateut n'est plus autorisé pour ce créneau.")
     }
 
     handleSubmitJSONEventsFile = (evt) => {
@@ -167,7 +177,7 @@ class EventsCalendar extends React.Component {
             this.fileReader.readAsText(this.JSONEventsFileInput.current.files[0])
         }
         else {
-            alert("Séléectionner un fichier d'abord.")
+            alert("Sélectionner un fichier d'abord.")
         }
     }
 
@@ -175,7 +185,7 @@ class EventsCalendar extends React.Component {
 
         firebase.fbDatabase
             .ref("events")
-            .on("value", 
+            .once("value", 
                 (snapshot) => {
                     myUtils.downloadFileFromText(snapshot.val(), "creneaux.json")
                 }, 
@@ -183,9 +193,7 @@ class EventsCalendar extends React.Component {
             )
     }
 
-    saveEventsOnDB = () => {
-        console.log("Events to be saved : ", this.state.events)
-        
+    saveEventsOnDB = () => {        
 
         firebase.fbDatabase.ref("events").set(JSON.stringify(this.state.events), (error) => {
             if(error) {
@@ -197,105 +205,87 @@ class EventsCalendar extends React.Component {
             }
         })
     }
-
-    retrieveEventsFromDB = () => {
-        console.log("Retrieving events from db...")
-        firebase.fbDatabase
-            .ref("events")
-            .on("value", 
-                (snapshot) => {
-                    let tmpEvents = JSON.parse(snapshot.val())
-                    tmpEvents.map(e => {
-                        e.start = new Date(e.start)
-                        e.end = new Date(e.end)
-                    })
-                    this.setState({
-                        events: tmpEvents,
-                        eventsRetrieved: true,
-                    })
-                }, 
-                (error) => {
-                    console.error(error)
-                    this.setState({
-                        events: [],
-                        eventsRetrieved: false,
-                    })
-                }
-            )
-    }
     
     render() {
+        return (
+            <div className="calendarContainer">
+                {/* Modal servant à charger un fichier de créneaux JSON */}
+                <Modal 
+                    isOpen={this.state.showLoadJSONModal}
+                    contentLabel="Load JSON custom events"
+                    className="modal loadJSONModal">
+                    <button className="closeJSONModal" onClick={this.handleCloseLoadJSONModal}>Fermer</button>
+                    <p>
+                        Charger un fichier de créneaux JSON contenant un tableau où chaque élément contient :<br/>
+                        <code>
+                        start: instanceOf(Date) // début du créneau<br/>
+                        end : instanceOf(Date) // fin du créneau<br/>
+                        </code>
+                        Les créneaux chevauchant d'autres créneaux ne seront pas pris en compte.<br/>
+                    </p>
+                    <form onSubmit={this.handleSubmitJSONEventsFile}>
+                        <label>Garder les créneaux existants
+                            <input type="checkbox" name="keepExistingEvents" ref={this.keepExistingEventsCheckbox}/>
+                        </label>
+                        <br/>
+                        <input type="file" accept=".json" ref={this.JSONEventsFileInput} />
+                        <br />
+                        <button type="submit">Envoyer</button>
+                    </form>
+                </Modal>
+                {/* Modal utilisé lorsque l'utilisteur double clique sur un créneau */}
+                <Modal 
+                    isOpen={this.state.showShowMoreForEventModal}
+                    contentLabel="Show more of event"
+                    className="modal showMoreOfTheEventModal">
+                    <button className="closeShowMoreOfEventModal" onClick={this.handleCloseShowMoreOfEventModal}>Fermer</button>
+                    <h2>Liste des utilisateurs autorisés pour ce créneau :</h2>
+                    {this.state.usersOfTheSelectedEvent.length > 0 && 
+                    <div className="acceptedUsersListContainer">
+                        <List 
+                            items={this.state.usersOfTheSelectedEvent} 
+                            removeItem={this.removeAcceptedUserForThisEvent}/>
+                    </div>}
+                    {this.state.usersOfTheSelectedEvent === 0 && <p>Aucun utilisateur n'est enregistré pour ce créneau.</p>}
+                    
+                </Modal>
+                    {/* Calendrier des créneaux */}
+                <Calendar
+                    selectable
+                    localizer={localizer}
+                    events={this.state.events}
+                    defaultView={Views.WEEK}
+                    views={[Views.WEEK]}
+                    scrollToTime={new Date(1970, 1, 1, 6)}
+                    defaultDate={new Date()}
+                    //onSelectEvent={event => alert(event.title)}
+                    onDoubleClickEvent={this.handleShowMoreOfTheEvent}
+                    onSelectSlot={this.addEvent}
+                    dayLayoutAlgorithm={this.state.dayLayoutAlgorithm}
+                    step={15}
+                    timeslots={4}
+                    min={this.state.beginningOfTheDay}
+                    max={this.state.endOfTheDay}
+                    onSelecting={() => {return false}} // éviter "d'étirer" un évnènement avec la souris
+                    slotPropGetter={(date) => {return {className: "my_slot"}}}
+                    components={{
+                        toolbar: props => ( 
+                                <CustomToolbar 
+                                    {...props} 
+                                    openJSONLoadModal={this.handleOpenLoadJSONModal}
+                                    downloadJSONEvents={this.downloadJSONEvents}
+                                    changesSaved={this.state.changesSaved}
+                                    saveEventsOnDB={this.saveEventsOnDB}/>),
+                        event : props => (
+                                <CustomEvent
+                                {...props}
+                                deleteEvent={this.handleRemoveEvent}
+                                />)
+                    }}
 
-        if(this.state.eventsRetrieved) {
-            return (
-                <div className="calendarContainer">
-                    <Modal 
-                        isOpen={this.state.showLoadJSONModal}
-                        contentLabel="Load JSON custom events"
-                        className="loadJSONModal">
-                        <button className="closeJSONModal" onClick={this.handleCloseLoadJSONModal}>Fermer</button>
-                        <p>
-                            Charger un fichier de créneaux JSON contenant un tableau où chaque élément contient :<br/>
-                            <code>
-                            start: instanceOf(Date) // début du créneau<br/>
-                            end : instanceOf(Date) // fin du créneau<br/>
-                            </code>
-                            Les créneaux chevauchant d'autres créneaux ne seront pas pris en compte.<br/>
-                        </p>
-                        <form onSubmit={this.handleSubmitJSONEventsFile}>
-                            <label>Garder les créneaux existants
-                                <input type="checkbox" name="keepExistingEvents" ref={this.keepExistingEventsCheckbox}/>
-                            </label>
-                            <br/>
-                            <input type="file" accept=".json" ref={this.JSONEventsFileInput} />
-                            <br />
-                            <button type="submit">Envoyer</button>
-                        </form>
-                    </Modal>
-                    <Calendar
-                        selectable
-                        localizer={localizer}
-                        events={this.state.events}
-                        defaultView={Views.WEEK}
-                        views={[Views.WEEK]}
-                        scrollToTime={new Date(1970, 1, 1, 6)}
-                        defaultDate={new Date()}
-                        //onSelectEvent={event => alert(event.title)}
-                        onDoubleClickEvent={this.handleShowMoreOfTheEvent}
-                        onSelectSlot={this.addEvent}
-                        dayLayoutAlgorithm={this.state.dayLayoutAlgorithm}
-                        step={15}
-                        timeslots={4}
-                        min={this.state.beginningOfTheDay}
-                        max={this.state.endOfTheDay}
-                        onSelecting={() => {return false}} // éviter "d'étirer" un évnènement avec la souris
-                        slotPropGetter={(date) => {return {className: "my_slot"}}}
-                        components={{
-                            toolbar: props => ( 
-                                    <CustomToolbar 
-                                        {...props} 
-                                        openJSONLoadModal={this.handleOpenLoadJSONModal}
-                                        downloadJSONEvents={this.downloadJSONEvents}
-                                        changesSaved={this.state.changesSaved}
-                                        saveEventsOnDB={this.saveEventsOnDB}/>),
-                            event : props => (
-                                    <CustomEvent
-                                    {...props}
-                                    deleteEvent={this.handleRemoveEvent}
-                                    />)
-                        }}
-    
-                    />
-                </div>
-            )
-        } else {
-            return (
-                <div>
-                    <a>Chargement des créneaux...</a>
-                </div>
-            )
-        }
-        
+                />
+            </div>
+        )
     }
   }
 

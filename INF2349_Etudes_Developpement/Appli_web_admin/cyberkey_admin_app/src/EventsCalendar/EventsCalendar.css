@@ -2,9 +2,9 @@
     height: 100%;
 }
 
-.loadJSONModal {
+.modal {
     width: 50%;
-    height: 30%;
+    height: 40%;
     margin: auto;
     margin-top: 25vh;
     padding: 20px;
@@ -24,4 +24,9 @@
     position: absolute; 
     bottom: 0;
     margin-bottom: 10px;
+}
+
+.acceptedUsersListContainer {
+    height: 60%;
+    overflow: auto;
 }
