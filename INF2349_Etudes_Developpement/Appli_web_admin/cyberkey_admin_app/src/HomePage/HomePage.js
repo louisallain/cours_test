@@ -106,29 +106,31 @@ class HomePage extends React.Component {
         })
     }
 
-    denieAccessForThisUser = (index, item, ev) => {
+    denieAccessForThisUser = (index, item, ev, callback) => {
         let tmpUserIndex = this.state.users.findIndex(u => u.id === item.id)
         let tmpUser = this.state.users[tmpUserIndex]
         tmpUser.acceptedForEvents = tmpUser.acceptedForEvents.filter(e => e != ev.id)
         let tmpUsers = this.state.users;
         tmpUsers[tmpUserIndex] = tmpUser;
         this.setState({users: tmpUsers})
+        if(callback) callback()
         
         this.saveUsersStateOnDB();
     }
 
-    rejectRequestAccessForThisUser = (index, item, ev) => {
+    rejectRequestAccessForThisUser = (index, item, ev, callback) => {
         let tmpUserIndex = this.state.users.findIndex(u => u.id === item.id)
         let tmpUser = this.state.users[tmpUserIndex]
         tmpUser.requestForEvents = tmpUser.requestForEvents.filter(e => e != ev.id)
         let tmpUsers = this.state.users;
         tmpUsers[tmpUserIndex] = tmpUser;
         this.setState({users: tmpUsers})
+        if(callback) callback()
         
         this.saveUsersStateOnDB();
     }
 
-    acceptRequestAccesForThisUser = (index, item, ev) => {
+    acceptRequestAccesForThisUser = (index, item, ev, callback) => {
         let tmpUserIndex = this.state.users.findIndex(u => u.id === item.id)
         let tmpUser = this.state.users[tmpUserIndex]
         tmpUser.requestForEvents = tmpUser.requestForEvents.filter(e => e != ev.id)
@@ -136,6 +138,7 @@ class HomePage extends React.Component {
         let tmpUsers = this.state.users;
         tmpUsers[tmpUserIndex] = tmpUser;
         this.setState({users: tmpUsers})
+        if(callback) callback()
 
         this.saveUsersStateOnDB();
     }
@@ -171,7 +174,14 @@ class HomePage extends React.Component {
     switch(this.state.currentPage) {
 
         case CALENDAR_PAGE:
-            centerContent = (<EventsCalendar events={this.state.events} users={this.state.users}/>)
+            centerContent = (
+                <EventsCalendar 
+                    events={this.state.events} 
+                    users={this.state.users} 
+                    denieAcessForThisUser={this.denieAccessForThisUser}
+                    rejectRequestAccessForThisUser={this.rejectRequestAccessForThisUser}
+                    acceptRequestAccesForThisUser={this.acceptRequestAccesForThisUser}/>
+            )
             break;
         
         case WAITING_FOR_ACCEPTATION_USERS_PAGE:
@@ -236,7 +246,7 @@ class HomePage extends React.Component {
             )
             break;
 
-        default: centerContent = (<EventsCalendar/>)
+        default: centerContent = (<a>Erreur de routage</a>)
 
     }
 

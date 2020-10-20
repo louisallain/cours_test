@@ -13,6 +13,11 @@
     border-radius: 4px;
 }
 
+.listContainerShowMore {
+    height: 100%;
+    overflow: auto;
+}
+
 .customEventContainer .deleteEventButton {
     position: absolute; 
     top: 0;

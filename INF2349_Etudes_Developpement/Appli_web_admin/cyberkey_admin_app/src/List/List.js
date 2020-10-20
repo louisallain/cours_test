@@ -44,8 +44,8 @@ class TodoListItem extends React.Component {
     render() {
         return (
             <li className="list-group-item ">
-                {this.props.hasValidateButton && <button type="button" className="item-button item-button-validate" onClick={this.onClickDone}>&#10003;</button>}
-                <button type="button" className="item-button item-button-remove" onClick={this.onClickClose}>&#88;</button>
+                {this.props.hasValidateButton && <button type="button" title="Valider" className="item-button item-button-validate" onClick={this.onClickDone}>&#10003;</button>}
+                <button type="button" title="Supprimer" className="item-button item-button-remove" onClick={this.onClickClose}>&#88;</button>
                 {this.props.item.id}
             </li>
         );

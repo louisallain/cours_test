@@ -20,19 +20,22 @@
     background-color: white;
     flex-grow: 5;
     margin: 10px;
+    overflow: auto;
 }
 
 .leftMenuButton:hover {
-    background-color: #009ee8
+    background-color: rgb(97, 205, 255);
+    color: black;
 }
 
 .leftMenuButton {
     background-color: #0076AD; /* Blue */
-    border: none;
+    border: 1px solid#0076AD;
     color: white;
     padding: 15px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+    transition-duration: 0.4s;
 }

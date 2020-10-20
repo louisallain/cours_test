@@ -8,8 +8,9 @@ import * as firebase from '../utils/firebase_config'
 import * as myUtils from '../utils/utils_function'
 import List from '../List/List'
 
+import './react-big-calendar.css'
 import './EventsCalendar.css'
-import 'react-big-calendar/lib/css/react-big-calendar.css'
+
 
 const navigate = {
     PREVIOUS: 'PREV',
@@ -38,11 +39,11 @@ class CustomToolbar extends React.Component {
                 {this.props.changesSaved ? 
                 <button type="button" disabled style={{backgroundColor: "grey"}}>Sauvegardé !</button>
                 :
-                <button type="button" style={{backgroundColor: "#42f575"}} onClick={this.props.saveEventsOnDB}>Sauvegarder</button>
+                <button type="button" style={{backgroundColor: "#4CAF50"}} onClick={this.props.saveEventsOnDB}>Sauvegarder</button>
                 }
                 <span className="rbc-btn-group">
-                    <button type="button" onClick={this.props.downloadJSONEvents}>Télécharger le fichier des créneaux</button>
-                    <button type="button" onClick={this.props.openJSONLoadModal}>Charger un fichier de créneaux</button>
+                    <button type="button" onClick={this.props.downloadJSONEvents}>Télécharger les créneaux</button>
+                    <button type="button" onClick={this.props.openJSONLoadModal}>Charger des créneaux</button>
                 </span>
             </div>
         )
@@ -55,7 +56,10 @@ class CustomToolbar extends React.Component {
 function CustomEvent(props) {
     return (
         <div className="customEventContainer" title="Double cliquer pour plus d'infos">
-            <p className="titleEvent">{props.event.title}</p>
+            <p>
+                {props.usersAcceptedForThisEvent.length} accès<br/>
+                {props.usersRequestForThisEvent.length} demandes
+            </p>
             <button className="deleteEventButton" title="Supprimer ce créneau" onClick={() => props.deleteEvent(props.event)}>X</button>
         </div>
     )
@@ -71,7 +75,6 @@ class EventsCalendar extends React.Component {
         this.fileReader = new FileReader()
         this.state = {
             events: this.props.events,
-            users: this.props.users,
             dayLayoutAlgorithm: 'no-overlap',
             slotLengthCalendar: 30,
             slotLengthChosen: 105,
@@ -80,7 +83,9 @@ class EventsCalendar extends React.Component {
             showLoadJSONModal: false,
             changesSaved: true,
             showShowMoreForEventModal: false,
-            usersOfTheSelectedEvent: []
+            usersOfTheSelectedEvent: [],
+            usersRequestOfTheSelectedEvent: [],
+            selectedEvent: null,
         };
 
         this.fileReader.onload = (event) => {
@@ -108,6 +113,13 @@ class EventsCalendar extends React.Component {
         }
     } 
 
+    componentWillUnmount = () => {
+        if(this.state.changesSaved === false) {
+            let c = window.confirm("Voulez vous enregistrer les changements apportés aux créneaux ?")
+            if(c) this.saveEventsOnDB();
+        }
+    }
+
     handleOpenLoadJSONModal = () => {
         this.setState({showLoadJSONModal: true})
     }
@@ -125,8 +137,6 @@ class EventsCalendar extends React.Component {
         if(start.getHours() >= this.state.beginningOfTheDay.getHours() && end.getHours() <= this.state.endOfTheDay.getHours()) {
 
             if(isPossible) {
-
-                //const title = window.prompt('Nouveau créneau : ')
                 const title = "CyberLab dispo"
 
                 if (title)
@@ -159,16 +169,16 @@ class EventsCalendar extends React.Component {
     }
 
     handleShowMoreOfTheEvent = (event) => {
-        let tmpUsers = this.state.users.filter(u => u.acceptedForEvents.includes(event.id))
-        this.setState({showShowMoreForEventModal: true, usersOfTheSelectedEvent: tmpUsers})
+        this.setState({
+            showShowMoreForEventModal: true, 
+            usersOfTheSelectedEvent: this.props.users.filter(u => u.acceptedForEvents.includes(event.id)), 
+            usersRequestOfTheSelectedEvent: this.props.users.filter(u => u.requestForEvents.includes(event.id)), 
+            selectedEvent: event
+        })
     }
 
     handleCloseShowMoreOfEventModal = () => {
         this.setState({showShowMoreForEventModal: false})
-    }
-
-    removeAcceptedUserForThisEvent = (index) => {
-        console.log(this.state.usersOfTheSelectedEvent[index], "TODO : indiquer en BDD que cet utilisateut n'est plus autorisé pour ce créneau.")
     }
 
     handleSubmitJSONEventsFile = (evt) => {
@@ -194,7 +204,6 @@ class EventsCalendar extends React.Component {
     }
 
     saveEventsOnDB = () => {        
-
         firebase.fbDatabase.ref("events").set(JSON.stringify(this.state.events), (error) => {
             if(error) {
                 console.log(error)
@@ -203,6 +212,33 @@ class EventsCalendar extends React.Component {
                 alert("Changements sauvegardés !")
                 this.setState({changesSaved: true})
             }
+        })
+    }
+
+    handleDenyUserAccess = (index, item) => {
+        this.props.denieAcessForThisUser(index, item, this.state.selectedEvent, () => {
+            this.setState({
+                usersOfTheSelectedEvent: this.state.usersOfTheSelectedEvent.filter(u => u.id !== item.id)
+            })
+        })
+    }
+
+    handleRejectUserRequestAccess = (index, item) => {
+        this.props.rejectRequestAccessForThisUser(index, item, this.state.selectedEvent, () => {
+            this.setState({
+                usersRequestOfTheSelectedEvent: this.state.usersRequestOfTheSelectedEvent.filter(u => u.id !== item.id)
+            })
+        })
+    }
+
+    handleAcceptUserRequestAccess = (index, item) => {
+        let tmp = this.state.usersOfTheSelectedEvent
+        tmp.push(item)
+        this.props.acceptRequestAccesForThisUser(index, item, this.state.selectedEvent, () => {
+            this.setState({
+                usersOfTheSelectedEvent: tmp,
+                usersRequestOfTheSelectedEvent: this.state.usersRequestOfTheSelectedEvent.filter(u => u.id !== item.id)
+            })
         })
     }
     
@@ -238,15 +274,28 @@ class EventsCalendar extends React.Component {
                     isOpen={this.state.showShowMoreForEventModal}
                     contentLabel="Show more of event"
                     className="modal showMoreOfTheEventModal">
-                    <button className="closeShowMoreOfEventModal" onClick={this.handleCloseShowMoreOfEventModal}>Fermer</button>
-                    <h2>Liste des utilisateurs autorisés pour ce créneau :</h2>
-                    {this.state.usersOfTheSelectedEvent.length > 0 && 
-                    <div className="acceptedUsersListContainer">
-                        <List 
-                            items={this.state.usersOfTheSelectedEvent} 
-                            removeItem={this.removeAcceptedUserForThisEvent}/>
-                    </div>}
-                    {this.state.usersOfTheSelectedEvent === 0 && <p>Aucun utilisateur n'est enregistré pour ce créneau.</p>}
+                    <div className="closeShowMoreModalContainer">
+                        <button className="closeShowMoreOfEventModalButton" onClick={this.handleCloseShowMoreOfEventModal}>Fermer</button>
+                    </div>
+                    <div className="listContainerShowMore">
+                        {this.state.usersOfTheSelectedEvent.length > 0 && 
+                        <div className="usersAcceptedListContainer">
+                            <h2>Liste des utilisateurs autorisés pour ce créneau :</h2>
+                            <List 
+                                items={this.state.usersOfTheSelectedEvent} 
+                                removeItem={(index, item) => this.handleDenyUserAccess(index, item)}/>
+                        </div>}
+                        {this.state.usersRequestOfTheSelectedEvent.length > 0 &&
+                        <div className="userRequestListContainer">
+                            <h2>Liste des utilisateurs en attentes pour ce créneau :</h2>
+                            <List 
+                                items={this.state.usersRequestOfTheSelectedEvent} 
+                                hasValidateButton={true}
+                                removeItem={(index, item) => {this.handleRejectUserRequestAccess(index, item)}}
+                                validateItem={(index, item) => {this.handleAcceptUserRequestAccess(index, item)}}/>
+                        </div>
+                        }
+                    </div>
                     
                 </Modal>
                     {/* Calendrier des créneaux */}
@@ -279,6 +328,8 @@ class EventsCalendar extends React.Component {
                         event : props => (
                                 <CustomEvent
                                 {...props}
+                                usersAcceptedForThisEvent={this.props.users.filter(u => u.acceptedForEvents.includes(props.event.id))}
+                                usersRequestForThisEvent={this.props.users.filter(u => u.requestForEvents.includes(props.event.id))}
                                 deleteEvent={this.handleRemoveEvent}
                                 />)
                     }}

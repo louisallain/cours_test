@@ -14,22 +14,35 @@
     background-color: #F5F5F5;
   }
 
+  .list-group {
+    width: 90%;
+  }
+
+  .list-group-item {
+    margin-bottom: 5px;
+    padding: 10px;
+    box-shadow: 2px 2px 5px grey;
+    border-radius: 5px;
+  }
+
   .item-button {
     height: 20px;
-    border: 1px solid;
     border-radius: 5px;
     margin-right: 10px;
+    box-shadow: 1px 1px 1px grey;
+    transition-duration: 0.2s;
   }
 
   .item-button:hover {
-    opacity: 0.5;
+    background-color: white;
   }
 
   .item-button-remove {
-    
+    border: 1px solid #f44336;
+    background-color: #f44336;
   }
   
   .item-button-validate {
-    
-    background-color: #42f575;
+    border: 1px solid #4CAF50;
+    background-color: #4CAF50;
   }
