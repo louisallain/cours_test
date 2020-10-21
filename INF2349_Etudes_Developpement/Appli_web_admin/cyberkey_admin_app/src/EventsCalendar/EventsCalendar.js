@@ -93,6 +93,7 @@ class EventsCalendar extends React.Component {
                 if(this.keepExistingEventsCheckbox.current.checked === false) {
                     this.setState({events: []})
                 }
+                console.log(event.target.result)
                 JSON.parse(event.target.result).map(e => {
                     if(e.start && e.end) {
                         e.start = new Date(e.start)
@@ -138,6 +139,8 @@ class EventsCalendar extends React.Component {
 
             if(isPossible) {
                 const title = "CyberLab dispo"
+                start = new Date(start)
+                end = new Date(end)
 
                 if (title)
                 this.setState({
@@ -160,6 +163,9 @@ class EventsCalendar extends React.Component {
         }
     }
 
+    /**
+     * Supprime un créneau.
+     */
     handleRemoveEvent = (event) => {
         let c = window.confirm("Supprimer le créneau ?")
         if(c) this.setState({
@@ -168,6 +174,9 @@ class EventsCalendar extends React.Component {
                             })
     }
 
+    /**
+     * Handler permettant d'afficher le modal affichangt les détails d'un créneau.
+     */
     handleShowMoreOfTheEvent = (event) => {
         this.setState({
             showShowMoreForEventModal: true, 
@@ -177,10 +186,16 @@ class EventsCalendar extends React.Component {
         })
     }
 
+    /**
+     * Handler permettant de fermer le modal affichant les détails d'un créneau.
+     */
     handleCloseShowMoreOfEventModal = () => {
         this.setState({showShowMoreForEventModal: false})
     }
 
+    /**
+     * Handler permettant d'envoyer un fichier ce créneaux JSON.
+     */
     handleSubmitJSONEventsFile = (evt) => {
         evt.preventDefault()
         if(this.JSONEventsFileInput.current.files[0]) {
@@ -197,20 +212,25 @@ class EventsCalendar extends React.Component {
             .ref("events")
             .once("value", 
                 (snapshot) => {
+                    console.log(snapshot.val())
                     myUtils.downloadFileFromText(snapshot.val(), "creneaux.json")
                 }, 
                 (error) => console.error(error)
             )
     }
 
-    saveEventsOnDB = () => {        
+    /**
+     * Sauvegarde l'état actuel des créneaux en BDD.
+     */
+    saveEventsOnDB = () => {       
         firebase.fbDatabase.ref("events").set(JSON.stringify(this.state.events), (error) => {
             if(error) {
                 console.log(error)
                 alert(error)
             } else {
-                alert("Changements sauvegardés !")
+                this.props.matchUsersStateByExistingEventsOnDB(this.state.events);
                 this.setState({changesSaved: true})
+                alert("Changements sauvegardés !")
             }
         })
     }

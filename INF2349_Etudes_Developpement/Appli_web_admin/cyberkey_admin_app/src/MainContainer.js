@@ -29,7 +29,9 @@ class MainContainer extends React.Component {
 
   componentDidMount = () => {
     firebase.fbAuth.onAuthStateChanged((user) => { // observer sur l'état d'authentification de Firebase
-      if(user) this.setState({currentPage: HOME_PAGE, user: user}) // un user connecté
+      if(user) {
+        this.setState({currentPage: HOME_PAGE, user: user}) // l'admin s'est connecté
+      }
       else this.setState({currentPage: CONNECTION_PAGE, user: null}) // pas d'user connecté
     })
   }

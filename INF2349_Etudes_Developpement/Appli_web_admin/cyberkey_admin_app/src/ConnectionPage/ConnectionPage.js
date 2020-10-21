@@ -13,7 +13,8 @@ class ConnectionPage extends React.Component {
   }
 
   /**
-   * Compare le nom d'utilisateur et le hash du mot de passe aux informations depuis la base de données
+   * Vérifie toutes les conditions pour que l'admin se connecte :
+   * - vérifie que c'est bien l'email de l'admin et son mot de passe
    */
   handleLoginButton = () => {
 
@@ -33,6 +34,17 @@ class ConnectionPage extends React.Component {
     })
   } 
 
+  /**
+   * Envoie un mail à l'email de l'admin afin de réinitialiser le mot de passe.
+   */
+  handleResetAdminPassword = () => {
+    firebase.fbDatabase.ref('admin_email').once('value', (snapshot) => {
+      firebase.fbAuth.sendPasswordResetEmail(snapshot.val()).then(() => {
+        alert("Un email de réinitialisation de mot de passe a été envoyé à l'adresse mail de l'administrateur.")
+      }).catch((error) => console.error(error))
+    })
+  }
+
   render() {
     return (
       <div className="loginContainer">
@@ -45,6 +57,9 @@ class ConnectionPage extends React.Component {
 
         <button className="validateButton" onClick={this.handleLoginButton}>
             Valider
+        </button>
+        <button className="validateButton" onClick={this.handleResetAdminPassword}>
+            Réinitialiser mot de passe
         </button>
       </div>
     );

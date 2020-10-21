@@ -22,7 +22,6 @@ export const digestText = async (text) => {
  * @param  {Number} N the number of time the text should be hashed.
  * @return {String} hashed text N times of 64 bytes length.
  */
-
 export const digestText_N_Times = async (text, N) => {
 
     let tmp = await digestText(text)

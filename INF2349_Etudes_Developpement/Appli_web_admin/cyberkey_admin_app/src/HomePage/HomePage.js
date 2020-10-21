@@ -95,6 +95,27 @@ class HomePage extends React.Component {
         this.setState({currentPage: SHOW_ACCEPTED_USERS_PAGE})
     }
 
+    /**
+     * Met à jour en BDD les utilisateurs.
+     * C'est à dire que pour chaque utilisateur, on vérifie si les créneaux auxquels ils ont accès existent toujours après les modifications.
+     * De même que pour les créneaux auxquels ils souhaitent accéder.
+     */
+    matchUsersStateByExistingEventsOnDB = (events) => {
+        let tmpUsers = [...this.state.users]
+        tmpUsers.map((u) => {
+            u.requestForEvents = u.requestForEvents.filter(er => events.flatMap(e => e.id).includes(er))
+            u.acceptedForEvents = u.acceptedForEvents.filter(er => events.flatMap(e => e.id).includes(er))
+        })
+        
+        this.setState({
+            users: tmpUsers
+        })
+        this.saveUsersStateOnDB();
+    }
+
+    /**
+     * Sauvegarde l'état actuel des utilisateurs sur la BDD.
+     */
     saveUsersStateOnDB = () => {
         firebase.fbDatabase.ref("users").set(JSON.stringify(this.state.users), (error) => {
             if(error) {
@@ -180,7 +201,8 @@ class HomePage extends React.Component {
                     users={this.state.users} 
                     denieAcessForThisUser={this.denieAccessForThisUser}
                     rejectRequestAccessForThisUser={this.rejectRequestAccessForThisUser}
-                    acceptRequestAccesForThisUser={this.acceptRequestAccesForThisUser}/>
+                    acceptRequestAccesForThisUser={this.acceptRequestAccesForThisUser}
+                    matchUsersStateByExistingEventsOnDB={this.matchUsersStateByExistingEventsOnDB}/>
             )
             break;
         
