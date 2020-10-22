@@ -23,9 +23,14 @@ const navigate = {
 // to the correct localizer.
 const localizer = momentLocalizer(moment) // or globalizeLocalizer
 
-
+/**
+ * Classe du composant représentant la barre d'outil du calendrier.
+ */
 class CustomToolbar extends React.Component {
 
+    /**
+     * Méthode de rendu du composant.
+     */
     render() {
         let { localizer: { messages }, label } = this.props
         return(
@@ -48,11 +53,19 @@ class CustomToolbar extends React.Component {
             </div>
         )
     }
+
+    /**
+     * Méthode permettant de naviguer entre les semaines du calendrier.
+     */
     navigate = action => {
         this.props.onNavigate(action)
     }
 }
 
+/**
+ * Composant représentant un créneau sur le calendrier.
+ * @param {*} props propriétés héritées du parent.
+ */
 function CustomEvent(props) {
     return (
         <div className="customEventContainer" title="Double cliquer pour plus d'infos">
@@ -65,8 +78,15 @@ function CustomEvent(props) {
     )
 }
 
+/**
+ * Classe représentant le calendrier des créneaux.
+ */
 class EventsCalendar extends React.Component {
 
+    /**
+     * Initialise l'état du composant.
+     * @param {Object} props propriétés héritées du parent.
+     */
     constructor(props) {
 
         super(props);
@@ -77,7 +97,7 @@ class EventsCalendar extends React.Component {
             events: this.props.events,
             dayLayoutAlgorithm: 'no-overlap',
             slotLengthCalendar: 30,
-            slotLengthChosen: 105,
+            slotLengthChosen: 90,
             beginningOfTheDay: new Date(1970, 1, 1, 8, 0, 0),
             endOfTheDay: new Date(1970, 1, 1, 19, 30, 0),
             showLoadJSONModal: false,
@@ -87,19 +107,24 @@ class EventsCalendar extends React.Component {
             usersRequestOfTheSelectedEvent: [],
             selectedEvent: null,
         };
+    } 
 
+    /**
+     * Fonction invoquée lorsque le composant est monté.
+     * Ajoute un listener au chargement de l'entrée d'un fichier des créneaux.
+     * Ajoute un listener lorsque l'utilisateur quitte la page afin de vérifier si l'état des créneaux dans le calendrier a été sauvegardé en BDD.
+     */
+    componentDidMount() {
         this.fileReader.onload = (event) => {
             try {
                 if(this.keepExistingEventsCheckbox.current.checked === false) {
                     this.setState({events: []})
                 }
-                console.log(event.target.result)
-                JSON.parse(event.target.result).map(e => {
-                    if(e.start && e.end) {
-                        e.start = new Date(e.start)
-                        e.end = new Date(e.end)
-                        this.addEvent(e)
-                    }
+                let tmpEvents = JSON.parse(event.target.result);
+                tmpEvents.forEach(e => {
+                    e.start = new Date(e.start)
+                    e.end = new Date(e.end)
+                    this.addEvent(e)
                 })
                 this.handleCloseLoadJSONModal()
             }
@@ -112,8 +137,12 @@ class EventsCalendar extends React.Component {
         window.onbeforeunload = (e) => {
             if(!this.state.changesSaved) return "Les changements sur les créneaux ne sont pas sauvegardés, êtes vous sûr de vouloir quitter la page ?"
         }
-    } 
+    }
 
+    /**
+     * Fonction invoquée avant que le composant soit démonté.
+     * Vérifie que les changements courants sont sauvegardés en BDD.
+     */
     componentWillUnmount = () => {
         if(this.state.changesSaved === false) {
             let c = window.confirm("Voulez vous enregistrer les changements apportés aux créneaux ?")
@@ -121,17 +150,28 @@ class EventsCalendar extends React.Component {
         }
     }
 
+    /**
+     * Handler d'ouverture du modal de chargement d'un fichier de créneaux.
+     */
     handleOpenLoadJSONModal = () => {
         this.setState({showLoadJSONModal: true})
     }
 
+    /**
+     * Handler de fermeture du modal de chargement d'un fichier de créneaux.
+     */
     handleCloseLoadJSONModal = () => {
         this.setState({showLoadJSONModal: false})
     }
 
+    /**
+     * Ajoute un évènement sur le calendrier en précisant la date de début et de fin.
+     */
     addEvent = ({ start, end }) => {
 
-        end.setMinutes(end.getMinutes()+(this.state.slotLengthChosen - this.state.slotLengthCalendar))
+        start = new Date(start)
+        end = new Date(start) 
+        end.setMinutes(start.getMinutes() + this.state.slotLengthChosen) // recalcule la fin du créneau en fonction de la durée prévu d'un créneau
         // vérifie qu'un créneau n'en chevauche pas un autre
         let isPossible = this.state.events.filter((ev) => (start >= ev.start && start < ev.end) || (end > ev.start && end <= ev.end)).length > 0 ? false : true
 
@@ -139,8 +179,6 @@ class EventsCalendar extends React.Component {
 
             if(isPossible) {
                 const title = "CyberLab dispo"
-                start = new Date(start)
-                end = new Date(end)
 
                 if (title)
                 this.setState({
@@ -206,6 +244,9 @@ class EventsCalendar extends React.Component {
         }
     }
 
+    /**
+     * Télécharge le fichiers des créneaux DEPUIS LA BDD et non pas forcémément les créneaux affichés (si l'utilisateur n'a pas sauvegardé).
+     */
     downloadJSONEvents = () => {
 
         firebase.fbDatabase
@@ -235,6 +276,9 @@ class EventsCalendar extends React.Component {
         })
     }
 
+    /**
+     * Handler du bouton où l'admin réfute l'accès d'un utilisateur à un créneau.
+     */
     handleDenyUserAccess = (index, item) => {
         this.props.denieAcessForThisUser(index, item, this.state.selectedEvent, () => {
             this.setState({
@@ -243,6 +287,9 @@ class EventsCalendar extends React.Component {
         })
     }
 
+    /**
+     * Handler du bouton où l'admin rejette la demande d'accès d'un utilisateur à un créneau.
+     */
     handleRejectUserRequestAccess = (index, item) => {
         this.props.rejectRequestAccessForThisUser(index, item, this.state.selectedEvent, () => {
             this.setState({
@@ -251,6 +298,9 @@ class EventsCalendar extends React.Component {
         })
     }
 
+    /**
+     * Handler du bouton où l'admin accepte la demande d'accès d'un utilisateur à créneau.
+     */
     handleAcceptUserRequestAccess = (index, item) => {
         let tmp = this.state.usersOfTheSelectedEvent
         tmp.push(item)
@@ -261,7 +311,10 @@ class EventsCalendar extends React.Component {
             })
         })
     }
-    
+
+    /**
+     * Méthode de rendu du composant.
+     */
     render() {
         return (
             <div className="calendarContainer">

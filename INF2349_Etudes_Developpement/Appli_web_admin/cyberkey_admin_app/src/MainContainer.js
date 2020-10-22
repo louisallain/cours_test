@@ -8,8 +8,16 @@ import HomePage from './HomePage/HomePage'
 const CONNECTION_PAGE = "connection_page"
 const HOME_PAGE = "home_page"
 
+/**
+ * Classe représentant le conteneur principale de l'application.
+ * Gère la transition de l'état connecté / déconnecté de l'administrateur.
+ */
 class MainContainer extends React.Component {
 
+  /**
+   * Initialise l'état du composant.
+   * @param {*} props propriétés héritées du parent.
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -18,6 +26,9 @@ class MainContainer extends React.Component {
     }
   } 
 
+  /**
+   * Handler du bouton de déconnection.
+   */
   handleLogoutButton = () => {
     let c = window.confirm("Voulez-vous vous déconnecter ?")
     if(c) {
@@ -27,6 +38,11 @@ class MainContainer extends React.Component {
     }
   }
 
+  /**
+   * Fonction invoquée après le montage du composant.
+   * Ajoute un listener sur l'état de connection.
+   * Si l'admin se connecte, on va à la page d'accueil sinon on va à la page de connexion.
+   */
   componentDidMount = () => {
     firebase.fbAuth.onAuthStateChanged((user) => { // observer sur l'état d'authentification de Firebase
       if(user) {
@@ -36,10 +52,11 @@ class MainContainer extends React.Component {
     })
   }
 
+  /**
+   * Méthode de rendu du composant.
+   */
   render() {
-
     switch(this.state.currentPage) {
-
       case CONNECTION_PAGE:
         return (
           <div>

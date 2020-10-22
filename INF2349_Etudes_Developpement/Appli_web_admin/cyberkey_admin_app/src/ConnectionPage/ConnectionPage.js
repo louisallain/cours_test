@@ -2,8 +2,15 @@ import React from 'react';
 import * as firebase from '../utils/firebase_config';
 import './ConnectionPage.css'
 
+/**
+ * Classe représent la page de connexion de l'application.
+ */
 class ConnectionPage extends React.Component {
 
+  /**
+   * Initialise l'état du composant.
+   * @param {*} props les propriétés héritées du parent. 
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -45,6 +52,9 @@ class ConnectionPage extends React.Component {
     })
   }
 
+  /**
+   * Méthode de rendu du composant.
+   */
   render() {
     return (
       <div className="loginContainer">

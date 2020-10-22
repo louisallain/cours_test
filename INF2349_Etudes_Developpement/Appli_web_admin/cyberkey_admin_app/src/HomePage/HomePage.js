@@ -13,8 +13,14 @@ const WAITING_FOR_ACCEPTATION_USERS_PAGE = "waiting_for_accpt_users_page"
 const VIP_USERS_PAGE = "vip_users_page"
 const SHOW_ACCEPTED_USERS_PAGE = "show_accepted_users_page"
 
+/**
+ * Classe représentant le composant de la page d'accueil (après connexion) de l'application.
+ */
 class HomePage extends React.Component {
 
+    /**
+     * Initialise l'état du composant.
+     */
     constructor(props) {
 
         super(props);
@@ -27,11 +33,18 @@ class HomePage extends React.Component {
         };
     } 
 
+    /**
+     * Fonction exécuté après le montage du composant.
+     * Récupère les créneaux et les utilisateurs depuis la BDD.
+     */
     componentDidMount() {
         this.retrieveEventsFromDB();
         this.retrieveUsersFromDB();
     }
 
+    /**
+     * Récupère les utilisateurs depus la BDD.
+     */
     retrieveUsersFromDB = () => {
         console.log("Retrieving users from db...")
         firebase.fbDatabase
@@ -53,14 +66,17 @@ class HomePage extends React.Component {
             )
     }
 
+    /**
+     * Récupère les créneaux depuis la BDD.
+     */
     retrieveEventsFromDB = () => {
         console.log("Retrieving events from db...")
         firebase.fbDatabase
             .ref("events")
             .on("value", 
                 (snapshot) => {
-                    let tmpEvents = JSON.parse(snapshot.val())
-                    tmpEvents.map(e => {
+                    let tmpEvents = JSON.parse(snapshot.val())                    
+                    tmpEvents.map(e => { // créer des dates à partir des heures de début et de fin (en UTC) des créneaux.
                         e.start = new Date(e.start)
                         e.end = new Date(e.end)
                     })
@@ -79,18 +95,30 @@ class HomePage extends React.Component {
             )
     }
 
+    /**
+     * Handler du bouton menant au calendrier des créneaux du menu de gauche.
+     */
     handleCalendarButton = () => {
         this.setState({currentPage: CALENDAR_PAGE})
     }
 
+    /**
+     * Handler du bouton menant aux demandes d'accès des utilisateurs.
+     */
     handleWaitingForAcceptationUsersButton = () => {
         this.setState({currentPage: WAITING_FOR_ACCEPTATION_USERS_PAGE})
     }
 
+    /**
+     * Handler du bouton menant aux demandes d'accès VIP des utilisateurs.
+     */
     handleVIPUsersButton = () => {
         this.setState({currentPage: VIP_USERS_PAGE})
     }
 
+    /**
+     * Handler du bouton menant aux utilisateurs acceptés.
+     */
     handleShowAcceptedUsers = () => {
         this.setState({currentPage: SHOW_ACCEPTED_USERS_PAGE})
     }
@@ -127,6 +155,9 @@ class HomePage extends React.Component {
         })
     }
 
+    /**
+     * Réfute l'accès d'un utilisateur pour un créneau.
+     */
     denieAccessForThisUser = (index, item, ev, callback) => {
         let tmpUserIndex = this.state.users.findIndex(u => u.id === item.id)
         let tmpUser = this.state.users[tmpUserIndex]
@@ -139,6 +170,9 @@ class HomePage extends React.Component {
         this.saveUsersStateOnDB();
     }
 
+    /**
+     * Rejette la demande d'accès d'un utilisateur pour un créneau.
+     */
     rejectRequestAccessForThisUser = (index, item, ev, callback) => {
         let tmpUserIndex = this.state.users.findIndex(u => u.id === item.id)
         let tmpUser = this.state.users[tmpUserIndex]
@@ -151,6 +185,9 @@ class HomePage extends React.Component {
         this.saveUsersStateOnDB();
     }
 
+    /**
+     * Accepte la demande d'accès d'un utilisateur pour un créneau.
+     */
     acceptRequestAccesForThisUser = (index, item, ev, callback) => {
         let tmpUserIndex = this.state.users.findIndex(u => u.id === item.id)
         let tmpUser = this.state.users[tmpUserIndex]
@@ -164,6 +201,9 @@ class HomePage extends React.Component {
         this.saveUsersStateOnDB();
     }
 
+    /**
+     * Rejette la demande d'accès VIP d'un utilisateur.
+     */
     denieVIPForThisUser = (index, item) => {
         let tmpUserIndex = this.state.users.findIndex(u => u.id === item.id)
         let tmpUser = this.state.users[tmpUserIndex]
@@ -176,6 +216,9 @@ class HomePage extends React.Component {
         this.saveUsersStateOnDB();
     }
 
+    /**
+     * Accepte la demande d'accès VIP d'un utilisateur
+     */
     authorizeVIPForThisUser = (index, item) => {
         let tmpUserIndex = this.state.users.findIndex(u => u.id === item.id)
         let tmpUser = this.state.users[tmpUserIndex]
@@ -188,6 +231,9 @@ class HomePage extends React.Component {
         this.saveUsersStateOnDB();
     }
 
+    /**
+     * Méthode de rendu du composant.
+     */
     render() {
         
     let dateStringOptions = { hour: "numeric", minute: 'numeric' };

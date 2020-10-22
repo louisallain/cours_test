@@ -1,12 +1,14 @@
 import React from 'react'
 import './List.css'
 
-var todoItems = [];
-todoItems.push({ index: 1, value: "learn react"});
-todoItems.push({ index: 2, value: "Go shopping"});
-todoItems.push({ index: 3, value: "buy flowers"});
-
+/**
+ * Classe représentant une liste de choses avec un bouton valider et supprimer.
+ */
 export default class List extends React.Component {
+
+    /**
+     * Méthode de rendu du composant.
+     */
     render() {
         var items = this.props.items.map((item, index) => {
             return (
@@ -25,22 +27,42 @@ export default class List extends React.Component {
     }
 }
 
+/**
+ * Classe représentant un item de la liste définie ci-dessus.
+ */
 class TodoListItem extends React.Component {
+
+    /**
+     * Initialise l'état du composant.
+     * @param {*} props propriétés héritées du parent.
+     */
     constructor(props) {
         super(props);
         this.onClickClose = this.onClickClose.bind(this);
         this.onClickDone = this.onClickDone.bind(this);
     }
+
+    /**
+     * Handler du bouton de suppression de l'élément.
+     */
     onClickClose() {
         var index = parseInt(this.props.index);
         var item = this.props.item;
         this.props.removeItem(index, item);
     }
+
+    /**
+     * Handler du bouton de validation de l'élément.
+     */
     onClickDone() {
         var index = parseInt(this.props.index);
         var item = this.props.item;
         this.props.validateItem(index, item);
     }
+
+    /**
+     * Méthode de rendu du composant.
+     */
     render() {
         return (
             <li className="list-group-item ">
