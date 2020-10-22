@@ -124,7 +124,7 @@ class EventsCalendar extends React.Component {
                 tmpEvents.forEach(e => {
                     e.start = new Date(e.start)
                     e.end = new Date(e.end)
-                    this.addEvent(e)
+                    this.addEvent(e, false)
                 })
                 this.handleCloseLoadJSONModal()
             }
@@ -167,7 +167,7 @@ class EventsCalendar extends React.Component {
     /**
      * Ajoute un évènement sur le calendrier en précisant la date de début et de fin.
      */
-    addEvent = ({ start, end }) => {
+    addEvent = ({ start, end}, activateFeedback) => {
 
         start = new Date(start)
         end = new Date(start) 
@@ -193,11 +193,11 @@ class EventsCalendar extends React.Component {
                     changesSaved: false,
                 })
             } else {
-                alert("Un autre créneau existe déjà à ce moment.")
+                if(activateFeedback) alert("Un autre créneau existe déjà à ce moment.")
             }
             
         } else {
-            alert("Restez dans les limites de la journée.")
+            if(activateFeedback) alert("Restez dans les limites de la journée.")
         }
     }
 
@@ -382,7 +382,7 @@ class EventsCalendar extends React.Component {
                     defaultDate={new Date()}
                     //onSelectEvent={event => alert(event.title)}
                     onDoubleClickEvent={this.handleShowMoreOfTheEvent}
-                    onSelectSlot={this.addEvent}
+                    onSelectSlot={(t) => this.addEvent(t, true)}
                     dayLayoutAlgorithm={this.state.dayLayoutAlgorithm}
                     step={15}
                     timeslots={4}
