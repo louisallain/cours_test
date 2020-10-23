@@ -20,6 +20,7 @@ class HomePage extends React.Component {
 
     /**
      * Initialise l'état du composant.
+     * @param {*} props propriétés héritées du parent.
      */
     constructor(props) {
 
