@@ -1,3 +1,5 @@
-# Le lien de l'application se trouve dans le fichier "lien_application_admin.txt"
+# Le lien de l'application se trouve dans le fichier "lien_application_admin.txt".
 
-# La documentation fournie explique comment se servir de l'application
+# Les sources documentées se trouvent dans l'archive "cyberkey_admin_app_source.zip".
+
+# De la documentation générale sur les fonctionnalités de l'application se trouve dans le fichier
