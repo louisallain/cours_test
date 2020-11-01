@@ -2,4 +2,4 @@
 
 # Les sources documentées se trouvent dans l'archive "cyberkey_admin_app_source.zip".
 
-# De la documentation générale sur les fonctionnalités de l'application se trouve dans le fichier
+# De la documentation générale sur les fonctionnalités de l'application se trouve dans le fichier "CyberKey_AdminApp_utilisation.pdf"
