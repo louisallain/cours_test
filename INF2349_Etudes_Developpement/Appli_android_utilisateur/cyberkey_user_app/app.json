@@ -1,0 +1,12 @@
+{
+  "name": "cyberkey_user_app",
+  "displayName": "cyberkey_user_app",
+  "expo": {
+    "name": "cyberkey_user_app",
+    "slug": "cyberkey_user_app",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
