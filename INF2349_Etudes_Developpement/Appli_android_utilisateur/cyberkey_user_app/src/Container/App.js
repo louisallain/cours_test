@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text } from "react-native";
+import { View, Text, Button } from "react-native";
 import auth from '@react-native-firebase/auth';
 import SignIn from '../Account/SignIn/SignIn';
 import { Root } from "native-base";
@@ -22,6 +22,10 @@ class App extends Component {
     })
   }
 
+  signOut = () => {
+    auth().signOut()
+  }
+
   render() {
     
     let content
@@ -29,6 +33,11 @@ class App extends Component {
     switch(this.state.current_page) {
       case PAGES.ACCOUNT_SIGN_IN: {
         content = <SignIn />
+        break;
+      }
+
+      case PAGES.HOME:{
+        content = <Text onPress={this.signOut}>Connecté</Text>
         break;
       }
 

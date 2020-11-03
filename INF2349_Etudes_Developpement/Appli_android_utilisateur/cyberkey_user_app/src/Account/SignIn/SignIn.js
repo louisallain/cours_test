@@ -1,12 +1,25 @@
 import React, { Component } from "react";
 import { Container, Header, Content, Form, Item, Input, Label, Body, Title, Left, Button, Text, Toast } from 'native-base';
+import auth from '@react-native-firebase/auth';
+import database from '@react-native-firebase/database';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+var RSAKey = require('react-native-rsa');
+
+import * as STORAGE_NAMING from '../../utils/storage_naming';
 
 import styles from './SignInCSS'
 
 const UBS_EMAIL_REGEX = /.+@.*univ-ubs.fr$/g
 
+/**
+ * Classe représentant la page de création de comptes.
+ */
 class SignIn extends Component {
 
+  /**
+   * Constructeur du composant.
+   * @param {Object} props propriétés du composant
+   */
   constructor(props) {
     super(props)
     this.state = {
@@ -19,12 +32,20 @@ class SignIn extends Component {
     }
   }
 
+  /**
+   * Handler de la modification du champ email
+   * @param {string} text valeur de l'entrée du champ de l'email
+   */
   handleEmailInput = (text) => {
     if(text === "") this.setState({emailLabel: "Email (univ-ubs.fr)", email: ""})
     else if(!text.match(UBS_EMAIL_REGEX)) this.setState({emailLabel: "Email non valide !", email: ""})
     else this.setState({emailLabel: "Email valide", email: text})
   }
 
+  /**
+   * Handler de la modification du champ mot de passe
+   * @param {string} text valeur du champ mot de passe
+   */
   handlePasswordInput = (text) => {
     if(this.state.passwordConfirmation === "") this.setState({passwordConfirmLabel: "Confirmer le mot de passe"})
     else if(text === this.state.passwordConfirmation) this.setState({passwordConfirmLabel: "Confirmation validée"})
@@ -34,6 +55,10 @@ class SignIn extends Component {
     else this.setState({passwordLabel: "Mot de passe valide", password: text})
   }
 
+  /**
+   * Handler de la modification du champ conformation de mot de passe.
+   * @param {string} text valeur du champ confirmation de mot de passe
+   */
   handlePasswordConfirmationInput = (text) => {
     this.setState({passwordConfirmation: text})
     if(text === "") this.setState({passwordConfirmLabel: "Confirmer le mot de passe"})
@@ -42,10 +67,79 @@ class SignIn extends Component {
     else if(text === this.state.password) this.setState({passwordConfirmLabel: "Confirmation validée"})
   }
 
+  /**
+   * Handler du bouton de création de compte.
+   * Vérifie si l'email est bien du domaine de l'ubs (univ-ubs.fr), si le mot de passe comporte au moins 8 caractères et si les mot deux mots de passe correspondent.
+   * Ajoute le nouvel utilisateur à la base de données.
+   * Créer une paire de clefs RSA.
+   * La clef privée est stockée dans le AsyncStorage du mobile et la clef publique est ajoutée à la base de données.
+   */
   handleSignIn = () => {
     if(this.state.email.match(UBS_EMAIL_REGEX) && this.state.password.length >= 8 && this.state.password === this.state.passwordConfirmation) {
-      // TODO: créer le compte
-      // TODO: créer une paire de clefs RSA, sauvegarder la clef privée localement (AsyncStorage) et la clef publique sur la bdd
+
+      auth()
+        .createUserWithEmailAndPassword(this.state.email, this.state.password)
+        .then(() => {
+          console.log(`User succesufully created with email : ${this.state.email}`)
+          Toast.show({
+            text: "Compte créé !"
+          })
+
+          // Créer un couple de clef RSA
+          let rsa = new RSAKey();
+          rsa.generate(1024, '10001');
+          let publicKey = rsa.getPublicString(); // return json encoded string
+          let privateKey = rsa.getPrivateString(); // return json encoded string
+
+          // Ajoute la clef privée à l'AsyncStorage (la clef pour l'AsyncStorage est STORAGE_NAMING.PRIVATE_KEY_NAME-<email_de_utilisateur>)
+          AsyncStorage.setItem(`${STORAGE_NAMING.PRIVATE_KEY_NAME}-${this.state.email}`, JSON.stringify(privateKey))
+            .then(() => console.log(`Private key of ${this.state.email} added to the AsyncStorage`))
+            .catch((error) => console.log(error))
+
+          // Ajoute la clef publique à la BDD sous /public_key/<email_utilisateur> NOTE : EMAIL SANS LES POINTS CAR INTERDITS DANS BDD
+          // NOTE : EMAIL SANS LES POINTS CAR INTERDITS DANS BDD
+          let userKey = this.state.email.replace(/[.]/g, '') // NOTE : EMAIL SANS LES POINTS CAR INTERDITS DANS BDD
+          database().ref(`/public_keys/${userKey}`).set({public_key: publicKey})
+            .then(() => console.log(`Public key added to the BDD for user : ${this.state.email}`))
+            .catch((error) => console.log(error))
+
+          // Ajoute l'utilisateur à la BDD
+          database()
+            .ref("/users")
+            .once("value")
+            .then((snapshot) => {
+
+              // Ajoute le nouvel utilisateur à la BDD.
+              let tmpUsers = JSON.parse(snapshot.val())
+              let newUser = {
+                id: this.state.email,
+                requestForEvents: [],
+                acceptedForEvents: [],
+                isVIP: false,
+                requestVIP:false
+              }
+              tmpUsers.push(newUser)
+              database()
+                .ref("/users")
+                .set(JSON.stringify(tmpUsers))
+                .then(() => console.log("New user added to /users"))
+            })
+        })
+        .catch((error) => {
+          console.log(error)
+          if(error.code === 'auth/email-already-in-use') {
+            console.log(`Email ${this.state.email} already in use`)
+            Toast.show({
+              text: "Cette email est déjà utilisé !"
+            })
+          }
+          else if(error.code === 'auth/invalid-email') {
+            console.log(`Email ${this.state.email} invalide`)
+            Toast.show({
+              text: "Cette email est invalide !"
+            })
+          }
+        })
     } else {
       Toast.show({
         text: 'Vérifier les champs !'
@@ -66,15 +160,15 @@ class SignIn extends Component {
           <Form>
             <Item floatingLabel>
               <Label>{this.state.emailLabel}</Label>
-              <Input onChangeText={this.handleEmailInput}/>
+              <Input autoCapitalize="none" keyboardType="email-address" textContentType="emailAddress" onChangeText={this.handleEmailInput}/>
             </Item>
             <Item floatingLabel last>
               <Label>{this.state.passwordLabel}</Label>
-              <Input secureTextEntry={true} onChangeText={this.handlePasswordInput}/>
+              <Input secureTextEntry={true} textContentType="password" onChangeText={this.handlePasswordInput}/>
             </Item>
             <Item floatingLabel last>
               <Label>{this.state.passwordConfirmLabel}</Label>
-              <Input secureTextEntry={true} onChangeText={this.handlePasswordConfirmationInput} value={this.state.passwordConfirmationValue} />
+              <Input secureTextEntry={true} textContentType="password" onChangeText={this.handlePasswordConfirmationInput} value={this.state.passwordConfirmationValue} />
             </Item>
           </Form>
           <Button style={styles.createButton} block onPress={this.handleSignIn}>

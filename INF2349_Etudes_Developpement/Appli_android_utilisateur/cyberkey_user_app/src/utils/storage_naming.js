@@ -1,0 +1,1 @@
+export const PRIVATE_KEY_NAME = "@cyberkey_private_key"
