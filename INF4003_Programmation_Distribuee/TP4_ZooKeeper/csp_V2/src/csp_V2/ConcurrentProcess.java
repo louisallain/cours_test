@@ -118,6 +118,7 @@ public final class ConcurrentProcess extends ThreadLoop {
             int bytesCount = packet.getLength();
             this.neighbouring.getOutputSocket(dest_id).send(packet);
             this.trace("Message sent to : " + this.neighbouring.getOutputAddress(dest_id).toString() + ":" + this.neighbouring.getOutputPort(dest_id));
+            this.snd_msg_cnt.getAndIncrement();
         } catch(IOException ioe) {
             ioe.printStackTrace();
         }
@@ -130,6 +131,7 @@ public final class ConcurrentProcess extends ThreadLoop {
     
     void receiveMessage(Message msg) {
         this.listener_map.get(msg.getTag()).onMessage(msg);
+        this.rcv_msg_cnt.getAndIncrement();
     }
 
     void beforeLoop() {
