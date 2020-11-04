@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Container, Header, Content, Form, Item, Input, Label, Body, Title, Left, Button, Text, Toast } from 'native-base';
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNSecureKeyStore, {ACCESSIBLE} from "react-native-secure-key-store";
 var RSAKey = require('react-native-rsa');
 
 import * as STORAGE_NAMING from '../../utils/storage_naming';
@@ -91,10 +91,10 @@ class SignIn extends Component {
           let publicKey = rsa.getPublicString(); // return json encoded string
           let privateKey = rsa.getPrivateString(); // return json encoded string
 
-          // Ajoute la clef privée à l'AsyncStorage (la clef pour l'AsyncStorage est STORAGE_NAMING.PRIVATE_KEY_NAME-<email_de_utilisateur>)
-          AsyncStorage.setItem(`${STORAGE_NAMING.PRIVATE_KEY_NAME}-${this.state.email}`, JSON.stringify(privateKey))
-            .then(() => console.log(`Private key of ${this.state.email} added to the AsyncStorage`))
-            .catch((error) => console.log(error))
+          // Ajoute la clef privée au SecureKeyStore (la clef est STORAGE_NAMING.PRIVATE_KEY_NAME-<email_de_utilisateur>)
+          RNSecureKeyStore.set(`${STORAGE_NAMING.PRIVATE_KEY_NAME}-${this.state.email}`, JSON.stringify(privateKey), {accessible: ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY})
+          .then((res) => console.log(`Private key of ${this.state.email} added to the SecureKeyStore`))
+          .catch((error) => console.log(error))
 
           // Ajoute la clef publique à la BDD sous /public_key/<email_utilisateur> NOTE : EMAIL SANS LES POINTS CAR INTERDITS DANS BDD
           // NOTE : EMAIL SANS LES POINTS CAR INTERDITS DANS BDD
@@ -147,6 +147,9 @@ class SignIn extends Component {
     }
   }
 
+  /**
+   * Méthode rendu graphique du composant.
+   */
   render() {
     return (
       <Container>
