@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { View, Text, Button, BackHandler } from "react-native";
-import { Root } from "native-base";
+import { Alert, BackHandler } from "react-native";
+import { Root, Toast } from "native-base";
 import auth from '@react-native-firebase/auth';
 import SignIn from '../Account/SignIn/SignIn';
 import LogIn from '../Account/LogIn/LogIn';
@@ -48,7 +48,22 @@ class App extends Component {
       return true
     }
     else if(this.state.current_page === PAGES.HOME) {
-      this.signOut();
+      Alert.alert(
+        "Déconnexion",
+        "Se déconnecter ?",
+        [
+            {
+                text: 'Ok',
+                onPress: () => this.signOut()
+            },
+            {
+                text: 'Annuler',
+                onPress: () => Toast.show({text: "Annulation !"}),
+                style: 'cancel'
+            }
+        ],
+        { cancelable: false }
+      )
       return true
     }
     else {

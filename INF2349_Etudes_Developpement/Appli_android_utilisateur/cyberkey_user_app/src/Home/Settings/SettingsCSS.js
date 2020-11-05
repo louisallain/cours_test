@@ -4,13 +4,14 @@ export default StyleSheet.create({
 
     container: {
         display: "flex",
-        flexDirection: "row",
-        justifyContent: "center",
+        flexDirection: "column",
         padding: 30,
     },
     button: {
-        flexGrow: 1,
+        width: "80%",
         justifyContent: "center",
-        margin: 10,
+        marginLeft: "auto",
+        marginRight: "auto",
+        marginTop: 10,
     }
 })

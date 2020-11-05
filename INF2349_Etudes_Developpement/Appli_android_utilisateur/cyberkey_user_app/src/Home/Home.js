@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Container, Header, Content, Body, Title, Left, Tabs, Tab, Text, TabHeading, Icon, Spinner } from 'native-base';
+import { Container, Header, Content, Body, Title, Left, Tabs, Tab, Text, TabHeading, Icon, Spinner, Toast } from 'native-base';
+import { Alert } from 'react-native';
 import Settings from './Settings/Settings';
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
@@ -32,18 +33,21 @@ class Home extends Component {
      */
     componentDidMount() {
         
-        database() // récupère les informations générales.
-            .ref("/users")
+        let userKey = auth().currentUser.email.replace(/[.]/g, '')
+        database() // récupère les informations générales de l'utilisateur
+            .ref(`/users/${userKey}`)
             .on("value", 
                 (snapshot) => {
-                this.setState({
-                    user: JSON.parse(snapshot.val()).filter(u => u.id === auth().currentUser.email)[0],
-                    userInformationsRetrieved: true
-                })},
+                    console.log(snapshot.val())
+                    this.setState({
+                        user: snapshot.val(),
+                        userInformationsRetrieved: true
+                    })
+                },
                 (error) => console.log(error)
             )
         database() // récupère la clef publique
-            .ref(`public_keys/${auth().currentUser.email.replace(/[.]/g, '')}/public_key`)
+            .ref(`public_keys/${userKey}/public_key`)
             .once("value")
             .then((snapshot) => {
                 this.setState({
@@ -58,6 +62,59 @@ class Home extends Component {
      * Modifie la base de données pour demander l'accès VIP pour l'uilisateur courant.
      */
     requestVIP = () => {
+        Alert.alert(
+            "Demande VIP",
+            "L'accès VIP permet d'accéder à la salle à n'importe quel moment sans contrainte de créneaux. Cette demande pourra être acceptée ou refusée par l'administrateur",
+            [
+                {
+                    text: 'Envoyer la demande',
+                    onPress: () => {
+                        let userKey = auth().currentUser.email.replace(/[.]/g, '')
+                        if(this.state.user.isVIP === false && this.state.user.requestVIP === false) {
+                            this.state.user.requestVIP = true
+                            database()
+                                .ref(`/users/${userKey}`)
+                                .set(this.state.user)
+                                .then(() => {
+                                    console.log(`Request VIP set to DB for user : ${auth().currentUser.email}`)
+                                    Toast.show({text: "Demande envoyée !"})
+                                })
+                                .catch((error) => console.log(error))
+                        }
+                    }
+                },
+                {
+                    text: 'Annuler',
+                    onPress: () => Toast.show({text: "Demande annulée !"}),
+                    style: 'cancel'
+                }
+            ],
+            { cancelable: false }
+        )
+    }
+
+    deleteAccount = () => {
+        Alert.alert(
+            "Suppression du compte",
+            "La suppression du compte est irréverssible. Il sera toujours possible d'en re-créer un par la suite mais tous les accès liés à ce compte seront supprimés.",
+            [
+                {
+                    text: 'Supprimer mon compte',
+                    onPress: () => {
+                        auth().currentUser.delete().then(() => {
+                            Toast.show({text: "Compte supprimé !"})
+                            auth().signOut()
+                        })
+                    }
+                },
+                {
+                    text: 'Annuler',
+                    onPress: () => Toast.show({text: "Annulation !"}),
+                    style: 'cancel'
+                }
+            ],
+            { cancelable: false }
+        )
     }
 
 
@@ -82,7 +139,7 @@ class Home extends Component {
                     {(this.state.userInformationsRetrieved && this.state.userPublicKeyRetrieved) ? <Text>TODO: dévérouillage de la porte</Text> : <Spinner color="blue"/>}
                 </Tab>
                 <Tab style={styles.settingsTab} heading={ <TabHeading><Icon name="settings" /></TabHeading>}>
-                    {(this.state.userInformationsRetrieved && this.state.userPublicKeyRetrieved) ? <Settings user={this.state.user} requestVIP={this.requestVIP}/> : <Spinner color="blue"/>}
+                    {(this.state.userInformationsRetrieved && this.state.userPublicKeyRetrieved) ? <Settings user={this.state.user} requestVIP={this.requestVIP} deleteAccount={this.deleteAccount}/> : <Spinner color="blue"/>}
                 </Tab>
             </Tabs>
             </Content>

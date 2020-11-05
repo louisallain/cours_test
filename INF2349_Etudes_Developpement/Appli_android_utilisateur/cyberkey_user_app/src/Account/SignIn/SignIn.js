@@ -103,27 +103,16 @@ class SignIn extends Component {
             .then(() => console.log(`Public key added to the BDD for user : ${this.state.email}`))
             .catch((error) => console.log(error))
 
-          // Ajoute l'utilisateur à la BDD
+          // Ajoute l'utilisateur à la BDD sous /users/<email_utilisateur> NOTE : EMAIL SANS LES POINTS CAR INTERDITS DANS BDD
           database()
-            .ref("/users")
-            .once("value")
-            .then((snapshot) => {
-
-              // Ajoute le nouvel utilisateur à la BDD.
-              let tmpUsers = JSON.parse(snapshot.val())
-              let newUser = {
-                id: this.state.email,
-                requestForEvents: [],
-                acceptedForEvents: [],
-                isVIP: false,
-                requestVIP:false
-              }
-              tmpUsers.push(newUser)
-              database()
-                .ref("/users")
-                .set(JSON.stringify(tmpUsers))
-                .then(() => console.log("New user added to /users"))
-            })
+          .ref(`/users/${userKey}`)
+          .set({
+            id: this.state.email,
+            isVIP: false,
+            requestVIP: false,
+          })
+          .then(() => console.log("New user added to /users"))
+          .catch((error) => console.log(error))
         })
         .catch((error) => {
           console.log(error)
