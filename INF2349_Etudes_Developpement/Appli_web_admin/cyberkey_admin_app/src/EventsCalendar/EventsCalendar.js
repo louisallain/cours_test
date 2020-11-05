@@ -218,8 +218,8 @@ class EventsCalendar extends React.Component {
     handleShowMoreOfTheEvent = (event) => {
         this.setState({
             showShowMoreForEventModal: true, 
-            usersOfTheSelectedEvent: this.props.users.filter(u => u.acceptedForEvents).filter(u => u.acceptedForEvents.includes(event.id)), 
-            usersRequestOfTheSelectedEvent: this.props.users.filter(u => u.requestForEvents).filter(u => u.requestForEvents.includes(event.id)), 
+            usersOfTheSelectedEvent: Object.values(this.props.users).filter(u => u.acceptedForEvents).filter(u => u.acceptedForEvents.includes(event.id)), 
+            usersRequestOfTheSelectedEvent: Object.values(this.props.users).filter(u => u.requestForEvents).filter(u => u.requestForEvents.includes(event.id)), 
             selectedEvent: event
         })
     }
@@ -401,8 +401,8 @@ class EventsCalendar extends React.Component {
                         event : props => (
                                 <CustomEvent
                                 {...props}
-                                usersAcceptedForThisEvent={this.props.users.filter(u => u.acceptedForEvents).filter(u => u.acceptedForEvents.includes(props.event.id))}
-                                usersRequestForThisEvent={this.props.users.filter(u => u.requestForEvents).filter(u => u.requestForEvents.includes(props.event.id))}
+                                usersAcceptedForThisEvent={Object.values(this.props.users).filter(u => u.acceptedForEvents).filter(u => u.acceptedForEvents.includes(props.event.id))}
+                                usersRequestForThisEvent={Object.values(this.props.users).filter(u => u.requestForEvents).filter(u => u.requestForEvents.includes(props.event.id))}
                                 deleteEvent={this.handleRemoveEvent}
                                 />)
                     }}

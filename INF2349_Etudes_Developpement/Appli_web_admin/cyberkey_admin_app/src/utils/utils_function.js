@@ -36,3 +36,12 @@ export const downloadFileFromText = (text, filename) => {
     a.download = filename;
     a.click();
 }
+
+export const json2array = (json) => {
+    let result = [];
+    let keys = Object.keys(json);
+    keys.forEach((key) =>{
+        result.push(json[key]);
+    });
+    return result;
+}

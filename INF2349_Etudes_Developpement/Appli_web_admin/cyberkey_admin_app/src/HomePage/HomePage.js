@@ -7,6 +7,7 @@ import List from '../List/List'
 import { v4 as uuidv4 } from 'uuid'
 
 import * as firebase from '../utils/firebase_config'
+import * as utils_function from '../utils/utils_function'
 
 const CALENDAR_PAGE = "calendar_page"
 const WAITING_FOR_ACCEPTATION_USERS_PAGE = "waiting_for_accpt_users_page"
@@ -162,11 +163,11 @@ class HomePage extends React.Component {
      * Réfute l'accès d'un utilisateur pour un créneau.
      */
     denieAccessForThisUser = (index, item, ev, callback) => {
-        let tmpUserIndex = this.state.users.findIndex(u => u.id === item.id)
-        let tmpUser = this.state.users[tmpUserIndex]
+        let userKey = item.id.replace(/[.]/g, '')
+        let tmpUser = this.state.users[userKey]
         tmpUser.acceptedForEvents = tmpUser.acceptedForEvents.filter(e => e != ev.id)
         let tmpUsers = this.state.users;
-        tmpUsers[tmpUserIndex] = tmpUser;
+        tmpUsers[userKey] = tmpUser;
         this.setState({users: tmpUsers})
         if(callback) callback()
         
@@ -177,11 +178,11 @@ class HomePage extends React.Component {
      * Rejette la demande d'accès d'un utilisateur pour un créneau.
      */
     rejectRequestAccessForThisUser = (index, item, ev, callback) => {
-        let tmpUserIndex = this.state.users.findIndex(u => u.id === item.id)
-        let tmpUser = this.state.users[tmpUserIndex]
+        let userKey = item.id.replace(/[.]/g, '')
+        let tmpUser = this.state.users[userKey]
         tmpUser.requestForEvents = tmpUser.requestForEvents.filter(e => e != ev.id)
         let tmpUsers = this.state.users;
-        tmpUsers[tmpUserIndex] = tmpUser;
+        tmpUsers[userKey] = tmpUser;
         this.setState({users: tmpUsers})
         if(callback) callback()
         
@@ -192,13 +193,13 @@ class HomePage extends React.Component {
      * Accepte la demande d'accès d'un utilisateur pour un créneau.
      */
     acceptRequestAccesForThisUser = (index, item, ev, callback) => {
-        let tmpUserIndex = this.state.users.findIndex(u => u.id === item.id)
-        let tmpUser = this.state.users[tmpUserIndex]
+        let userKey = item.id.replace(/[.]/g, '')
+        let tmpUser = this.state.users[userKey]
         tmpUser.requestForEvents = tmpUser.requestForEvents.filter(e => e != ev.id)
         if(tmpUser.acceptedForEvents) tmpUser.acceptedForEvents.push(ev.id)
         else tmpUser.acceptedForEvents = [ev.id]
         let tmpUsers = this.state.users;
-        tmpUsers[tmpUserIndex] = tmpUser;
+        tmpUsers[userKey] = tmpUser;
         this.setState({users: tmpUsers})
         if(callback) callback()
 
@@ -209,12 +210,12 @@ class HomePage extends React.Component {
      * Rejette la demande d'accès VIP d'un utilisateur.
      */
     denieVIPForThisUser = (index, item) => {
-        let tmpUserIndex = this.state.users.findIndex(u => u.id === item.id)
-        let tmpUser = this.state.users[tmpUserIndex]
+        let userKey = item.id.replace(/[.]/g, '')
+        let tmpUser = this.state.users[userKey]
         tmpUser.isVIP = false
         tmpUser.requestVIP = false
         let tmpUsers = this.state.users;
-        tmpUsers[tmpUserIndex] = tmpUser;
+        tmpUsers[userKey] = tmpUser;
         this.setState({users: tmpUsers})
 
         this.saveUsersStateOnDB();
@@ -224,12 +225,12 @@ class HomePage extends React.Component {
      * Accepte la demande d'accès VIP d'un utilisateur
      */
     authorizeVIPForThisUser = (index, item) => {
-        let tmpUserIndex = this.state.users.findIndex(u => u.id === item.id)
-        let tmpUser = this.state.users[tmpUserIndex]
+        let userKey = item.id.replace(/[.]/g, '')
+        let tmpUser = this.state.users[userKey]
         tmpUser.isVIP = true
         tmpUser.requestVIP = false
         let tmpUsers = this.state.users;
-        tmpUsers[tmpUserIndex] = tmpUser;
+        tmpUsers[userKey] = tmpUser;
         this.setState({users: tmpUsers})
 
         this.saveUsersStateOnDB();
@@ -257,13 +258,13 @@ class HomePage extends React.Component {
             break;
         
         case WAITING_FOR_ACCEPTATION_USERS_PAGE:
-            let listEventsRequested = this.state.events.filter(e => this.state.users.filter(u => u.requestForEvents).filter(u => u.requestForEvents.length > 0).map(u => u.requestForEvents).flat().includes(e.id)).map(er => {
+            let listEventsRequested = this.state.events.filter(e => Object.values(this.state.users).filter(u => u.requestForEvents).filter(u => u.requestForEvents.length > 0).map(u => u.requestForEvents).flat().includes(e.id)).map(er => {
                     
                     return (
                     <div key={uuidv4()}>
                         <h3>Créneau du {er.start.toLocaleDateString("fr-FR", dateStringOptions)} - {er.end.toLocaleDateString("fr-FR", dateStringOptions)}</h3>
                         <List 
-                            items={this.state.users.filter(u => u.requestForEvents).filter(u => u.requestForEvents.length > 0).filter(u => u.requestForEvents.includes(er.id))} 
+                            items={Object.values(this.state.users).filter(u => u.requestForEvents).filter(u => u.requestForEvents.length > 0).filter(u => u.requestForEvents.includes(er.id))} 
                             removeItem={(index, item) => this.rejectRequestAccessForThisUser(index, item, er)}
                             validateItem={(index, item) => this.acceptRequestAccesForThisUser(index, item, er)}
                             hasValidateButton={true}/>
@@ -279,13 +280,13 @@ class HomePage extends React.Component {
 
         case VIP_USERS_PAGE:
             let requestVIPList = (<List 
-                items={this.state.users.filter(u => u.requestVIP === true)} 
+                items={Object.values(this.state.users).filter(u => u.requestVIP === true)} 
                 removeItem={(index, item) => this.denieVIPForThisUser(index, item)}
                 validateItem={(index, item) => this.authorizeVIPForThisUser(index, item)}
                 hasValidateButton={true}/>)
 
             let VIPList = (<List 
-                items={this.state.users.filter(u => u.isVIP === true)} 
+                items={Object.values(this.state.users).filter(u => u.isVIP === true)} 
                 removeItem={(index, item) => this.denieVIPForThisUser(index, item)}/>)
 
             centerContent = (
@@ -300,13 +301,13 @@ class HomePage extends React.Component {
 
         case SHOW_ACCEPTED_USERS_PAGE: 
 
-            let listEventsAccepeted = this.state.events.filter(e => this.state.users.filter(u => u.acceptedForEvents).filter(u => u.acceptedForEvents.length > 0).map(u => u.acceptedForEvents).flat().includes(e.id)).map(er => {
+            let listEventsAccepeted = this.state.events.filter(e => Object.values(this.state.users).filter(u => u.acceptedForEvents).filter(u => u.acceptedForEvents.length > 0).map(u => u.acceptedForEvents).flat().includes(e.id)).map(er => {
                     
                     return (
                     <div key={uuidv4()}>
                         <h3>Créneau du {er.start.toLocaleDateString("fr-FR", dateStringOptions)} - {er.end.toLocaleDateString("fr-FR", dateStringOptions)}</h3>
                         <List 
-                            items={this.state.users.filter(u => u.acceptedForEvents).filter(u => u.acceptedForEvents.length > 0).filter(u => u.acceptedForEvents.includes(er.id))} 
+                            items={Object.values(this.state.users).filter(u => u.acceptedForEvents).filter(u => u.acceptedForEvents.length > 0).filter(u => u.acceptedForEvents.includes(er.id))} 
                             removeItem={(index, item) => this.denieAccessForThisUser(index, item, er)}/>
                     </div>)
             })
@@ -327,8 +328,8 @@ class HomePage extends React.Component {
 
             <div className="leftMenu">
                 <button className="leftMenuButton" onClick={this.handleCalendarButton}>Créneaux</button>
-                <button className="leftMenuButton" onClick={this.handleWaitingForAcceptationUsersButton}>En attente ({this.state.users.filter(u => u.requestForEvents).map(u => u.requestForEvents).flat().length})</button>
-                <button className="leftMenuButton" onClick={this.handleVIPUsersButton}>Utilisateurs en accès libre ({this.state.users.filter(u => u.requestVIP === true).length})</button>
+                <button className="leftMenuButton" onClick={this.handleWaitingForAcceptationUsersButton}>En attente ({Object.values(this.state.users).filter(u => u.requestForEvents).map(u => u.requestForEvents).flat().length})</button>
+                <button className="leftMenuButton" onClick={this.handleVIPUsersButton}>Utilisateurs en accès libre ({Object.values(this.state.users).filter(u => u.requestVIP === true).length})</button>
                 <button className="leftMenuButton" onClick={this.handleShowAcceptedUsers}>Utilisateurs acceptés</button>
                 <button className="leftMenuButton" onClick={this.props.handleLogoutButton}>Se déconnecter</button>
             </div>
