@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { View, Text, Button, BackHandler } from "react-native";
+import { Root } from "native-base";
 import auth from '@react-native-firebase/auth';
 import SignIn from '../Account/SignIn/SignIn';
 import LogIn from '../Account/LogIn/LogIn';
-import { Root } from "native-base";
+import Home from '../Home/Home';
 
 import * as PAGES from '../utils/pages';
 
@@ -44,6 +45,10 @@ class App extends Component {
   handleBackButton = () => {
     if(this.state.current_page === PAGES.ACCOUNT_SIGN_IN) {
       this.switchToPage(PAGES.ACCOUNT_LOG_IN)
+      return true
+    }
+    else if(this.state.current_page === PAGES.HOME) {
+      this.signOut();
       return true
     }
     else {
@@ -90,7 +95,7 @@ class App extends Component {
       }
 
       case PAGES.HOME:{
-        content = <Text onPress={this.signOut}>Connecté</Text>
+        content = <Home />
         break;
       }
 
