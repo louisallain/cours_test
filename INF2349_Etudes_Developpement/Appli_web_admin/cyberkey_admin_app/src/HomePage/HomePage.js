@@ -53,7 +53,7 @@ class HomePage extends React.Component {
             .on("value", 
                 (snapshot) => {
                     this.setState({
-                        users: JSON.parse(snapshot.val()),
+                        users: snapshot.val(),
                         usersRetrieved: true,
                     })
                 }, 
@@ -132,8 +132,10 @@ class HomePage extends React.Component {
     matchUsersStateByExistingEventsOnDB = (events) => {
         let tmpUsers = [...this.state.users]
         tmpUsers.map((u) => {
-            u.requestForEvents = u.requestForEvents.filter(er => events.flatMap(e => e.id).includes(er))
-            u.acceptedForEvents = u.acceptedForEvents.filter(er => events.flatMap(e => e.id).includes(er))
+            if(u.requestForEvents && u.acceptedForEvents) {
+                u.requestForEvents = u.requestForEvents.filter(er => events.flatMap(e => e.id).includes(er))
+                u.acceptedForEvents = u.acceptedForEvents.filter(er => events.flatMap(e => e.id).includes(er))
+            }
         })
         
         this.setState({
@@ -146,7 +148,7 @@ class HomePage extends React.Component {
      * Sauvegarde l'état actuel des utilisateurs sur la BDD.
      */
     saveUsersStateOnDB = () => {
-        firebase.fbDatabase.ref("users").set(JSON.stringify(this.state.users), (error) => {
+        firebase.fbDatabase.ref("users").set(this.state.users, (error) => {
             if(error) {
                 console.log(error)
                 alert(error)
@@ -193,7 +195,8 @@ class HomePage extends React.Component {
         let tmpUserIndex = this.state.users.findIndex(u => u.id === item.id)
         let tmpUser = this.state.users[tmpUserIndex]
         tmpUser.requestForEvents = tmpUser.requestForEvents.filter(e => e != ev.id)
-        tmpUser.acceptedForEvents.push(ev.id)
+        if(tmpUser.acceptedForEvents) tmpUser.acceptedForEvents.push(ev.id)
+        else tmpUser.acceptedForEvents = [ev.id]
         let tmpUsers = this.state.users;
         tmpUsers[tmpUserIndex] = tmpUser;
         this.setState({users: tmpUsers})
@@ -254,13 +257,13 @@ class HomePage extends React.Component {
             break;
         
         case WAITING_FOR_ACCEPTATION_USERS_PAGE:
-            let listEventsRequested = this.state.events.filter(e => this.state.users.filter(u => u.requestForEvents.length > 0).map(u => u.requestForEvents).flat().includes(e.id)).map(er => {
+            let listEventsRequested = this.state.events.filter(e => this.state.users.filter(u => u.requestForEvents).filter(u => u.requestForEvents.length > 0).map(u => u.requestForEvents).flat().includes(e.id)).map(er => {
                     
                     return (
                     <div key={uuidv4()}>
                         <h3>Créneau du {er.start.toLocaleDateString("fr-FR", dateStringOptions)} - {er.end.toLocaleDateString("fr-FR", dateStringOptions)}</h3>
                         <List 
-                            items={this.state.users.filter(u => u.requestForEvents.length > 0).filter(u => u.requestForEvents.includes(er.id))} 
+                            items={this.state.users.filter(u => u.requestForEvents).filter(u => u.requestForEvents.length > 0).filter(u => u.requestForEvents.includes(er.id))} 
                             removeItem={(index, item) => this.rejectRequestAccessForThisUser(index, item, er)}
                             validateItem={(index, item) => this.acceptRequestAccesForThisUser(index, item, er)}
                             hasValidateButton={true}/>
@@ -297,13 +300,13 @@ class HomePage extends React.Component {
 
         case SHOW_ACCEPTED_USERS_PAGE: 
 
-            let listEventsAccepeted = this.state.events.filter(e => this.state.users.filter(u => u.acceptedForEvents.length > 0).map(u => u.acceptedForEvents).flat().includes(e.id)).map(er => {
+            let listEventsAccepeted = this.state.events.filter(e => this.state.users.filter(u => u.acceptedForEvents).filter(u => u.acceptedForEvents.length > 0).map(u => u.acceptedForEvents).flat().includes(e.id)).map(er => {
                     
                     return (
                     <div key={uuidv4()}>
                         <h3>Créneau du {er.start.toLocaleDateString("fr-FR", dateStringOptions)} - {er.end.toLocaleDateString("fr-FR", dateStringOptions)}</h3>
                         <List 
-                            items={this.state.users.filter(u => u.acceptedForEvents.length > 0).filter(u => u.acceptedForEvents.includes(er.id))} 
+                            items={this.state.users.filter(u => u.acceptedForEvents).filter(u => u.acceptedForEvents.length > 0).filter(u => u.acceptedForEvents.includes(er.id))} 
                             removeItem={(index, item) => this.denieAccessForThisUser(index, item, er)}/>
                     </div>)
             })
@@ -324,7 +327,7 @@ class HomePage extends React.Component {
 
             <div className="leftMenu">
                 <button className="leftMenuButton" onClick={this.handleCalendarButton}>Créneaux</button>
-                <button className="leftMenuButton" onClick={this.handleWaitingForAcceptationUsersButton}>En attente ({this.state.users.map(u => u.requestForEvents).flat().length})</button>
+                <button className="leftMenuButton" onClick={this.handleWaitingForAcceptationUsersButton}>En attente ({this.state.users.filter(u => u.requestForEvents).map(u => u.requestForEvents).flat().length})</button>
                 <button className="leftMenuButton" onClick={this.handleVIPUsersButton}>Utilisateurs en accès libre ({this.state.users.filter(u => u.requestVIP === true).length})</button>
                 <button className="leftMenuButton" onClick={this.handleShowAcceptedUsers}>Utilisateurs acceptés</button>
                 <button className="leftMenuButton" onClick={this.props.handleLogoutButton}>Se déconnecter</button>
