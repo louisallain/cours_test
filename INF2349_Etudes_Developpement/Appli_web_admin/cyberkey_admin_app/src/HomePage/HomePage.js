@@ -131,12 +131,14 @@ class HomePage extends React.Component {
      * De même que pour les créneaux auxquels ils souhaitent accéder.
      */
     matchUsersStateByExistingEventsOnDB = (events) => {
-        let tmpUsers = [...Object.values(this.state.users)]
-        tmpUsers.map((u) => {
-            if(u.requestForEvents) u.requestForEvents = u.requestForEvents.filter(er => events.flatMap(e => e.id).includes(er))
-            if(u.acceptedForEvents) u.acceptedForEvents = u.acceptedForEvents.filter(er => events.flatMap(e => e.id).includes(er))
-        })
+        let tmpUsers = this.state.users
+        let entries = Object.entries(this.state.users)
         
+        for(let [id, u] of entries) {
+            if(u.requestForEvents) tmpUsers[id].requestForEvents = u.requestForEvents.filter(er => events.flatMap(e => e.id).includes(er))
+            if(u.acceptedForEvents) tmpUsers[id].acceptedForEvents = u.acceptedForEvents.filter(er => events.flatMap(e => e.id).includes(er))
+        }
+
         this.setState({
             users: tmpUsers
         })
