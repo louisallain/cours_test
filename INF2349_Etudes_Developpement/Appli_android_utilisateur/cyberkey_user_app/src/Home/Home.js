@@ -3,6 +3,7 @@ import { Container, Header, Content, Body, Title, Left, Tabs, Tab, Text, TabHead
 import { Alert } from 'react-native';
 import { Notifications } from 'react-native-notifications';
 import Settings from './Settings/Settings';
+import Unlock from './Unlock/Unlock';
 import EventsList from './EventsList/EventsList';
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
@@ -188,7 +189,7 @@ class Home extends Component {
                     {(this.state.userInformationsRetrieved && this.state.userPublicKeyRetrieved && this.state.eventsRetrieved) ? <EventsList requestAccessForTheEvent={this.requestAccessForTheEvent} events={this.state.events} user={this.state.user}/> : <Spinner color="blue"/>}
                 </Tab>
                 <Tab heading={ <TabHeading><Icon name="key" /></TabHeading>}>
-                    {(this.state.userInformationsRetrieved && this.state.userPublicKeyRetrieved && this.state.eventsRetrieved) ? <Text>TODO: dévérouillage de la porte</Text> : <Spinner color="blue"/>}
+                    {(this.state.userInformationsRetrieved && this.state.userPublicKeyRetrieved && this.state.eventsRetrieved) ? <Unlock user={this.state.user} events={this.state.events}/> : <Spinner color="blue"/>}
                 </Tab>
                 <Tab style={styles.settingsTab} heading={ <TabHeading><Icon name="settings" /></TabHeading>}>
                     {(this.state.userInformationsRetrieved && this.state.userPublicKeyRetrieved && this.state.eventsRetrieved) ? <Settings user={this.state.user} requestVIP={this.requestVIP} deleteAccount={this.deleteAccount}/> : <Spinner color="blue"/>}

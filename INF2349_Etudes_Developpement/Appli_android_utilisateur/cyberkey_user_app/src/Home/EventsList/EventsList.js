@@ -48,7 +48,6 @@ class EventsList extends Component {
      * @param {Object} events liste des créneaux
      */
     buildDataForList = (events) => {
-        console.log(events)
         if(!events || events.length === 0) return [{key: "listeVide", header: true, name: "Aucun créneau disponible..."}]
         let data = []
         let orderedByDateEvents = events.sort((e1, e2) => {
