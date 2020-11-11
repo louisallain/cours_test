@@ -80,9 +80,9 @@ export default class Unlock extends Component {
     }
 
     /**
-     * Handler lorsque le scan BLE débute.
+     * Débute le scan BLE.
      */
-    handler_BeginBLEScanning = () => {
+    beginBLEScanning = () => {
         BleManager
             .scan([], 3, true)
             .then((results) => {
@@ -148,7 +148,7 @@ export default class Unlock extends Component {
         .then((peripheralInfo) => {
 
             console.log("Peripheral info:", peripheralInfo)
-
+            
             BleManager.write(
                 this.state.cyberKeyESP32_peripheral.id,
                 CYBER_KEY_ESP32_SERVICE_UUID,
