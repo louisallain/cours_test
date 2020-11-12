@@ -3,7 +3,7 @@ import { Container, Header, Content, Form, Item, Input, Label, Body, Title, Left
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
 import RNSecureKeyStore, {ACCESSIBLE} from "react-native-secure-key-store";
-var RSAKey = require('react-native-rsa');
+import { RSAKeychain } from 'react-native-rsa-native';
 
 import * as STORAGE_NAMING from '../../utils/storage_naming';
 
@@ -68,6 +68,17 @@ class SignIn extends Component {
   }
 
   /**
+   * Créer un couple de clef RSA de 258 octets (2048 bits).
+   * Retourne une nouvelle promise résolu avec une fonction prenant en paramètre la clef publique.
+   * @param {String} privateKeyTag Identifiant pour retrouver la clef dans le "KeyChain" du système.
+   */
+  createRSAKeys = (privateKeyTag) => {
+    return new Promise((resolve, reject) => {
+      RSAKeychain.generate(privateKeyTag).then((keys) => resolve(keys.public)).catch((error) => reject(error))
+    })
+  }
+
+  /**
    * Handler du bouton de création de compte.
    * Vérifie si l'email est bien du domaine de l'ubs (univ-ubs.fr), si le mot de passe comporte au moins 8 caractères et si les mot deux mots de passe correspondent.
    * Ajoute le nouvel utilisateur à la base de données.
@@ -75,6 +86,7 @@ class SignIn extends Component {
    * La clef privée est stockée dans le AsyncStorage du mobile et la clef publique est ajoutée à la base de données.
    */
   handleSignIn = () => {
+    
     if(this.state.email.match(UBS_EMAIL_REGEX) && this.state.password.length >= 8 && this.state.password === this.state.passwordConfirmation) {
 
       auth()
@@ -85,23 +97,17 @@ class SignIn extends Component {
             text: "Compte créé !"
           })
 
-          // Créer un couple de clef RSA
-          let rsa = new RSAKey();
-          rsa.generate(1024, '10001');
-          let publicKey = rsa.getPublicString(); // return json encoded string
-          let privateKey = rsa.getPrivateString(); // return json encoded string
-
-          // Ajoute la clef privée au SecureKeyStore (la clef est STORAGE_NAMING.PRIVATE_KEY_NAME-<email_de_utilisateur>)
-          RNSecureKeyStore.set(`${STORAGE_NAMING.PRIVATE_KEY_NAME}-${this.state.email}`, JSON.stringify(privateKey), {accessible: ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY})
-          .then((res) => console.log(`Private key of ${this.state.email} added to the SecureKeyStore`))
-          .catch((error) => console.log(error))
-
-          // Ajoute la clef publique à la BDD sous /public_key/<email_utilisateur> NOTE : EMAIL SANS LES POINTS CAR INTERDITS DANS BDD
-          // NOTE : EMAIL SANS LES POINTS CAR INTERDITS DANS BDD
+          // Défini l'id de l'utilisateur courant dans la BDD
           let userKey = this.state.email.replace(/[.]/g, '') // NOTE : EMAIL SANS LES POINTS CAR INTERDITS DANS BDD
-          database().ref(`/public_keys/${userKey}`).set({public_key: publicKey})
+
+          // Génère et sauvegarde les clefs
+          let keyTag = `${STORAGE_NAMING.PRIVATE_KEY_NAME}-${this.state.email}`
+          this.createRSAKeys(keyTag).then((pub) => {
+            // Ajoute la clef publique à la BDD sous /public_key/<email_utilisateur> NOTE : EMAIL SANS LES POINTS CAR INTERDITS DANS BDD            
+            database().ref(`/public_keys/${userKey}`).set({public_key: pub})
             .then(() => console.log(`Public key added to the BDD for user : ${this.state.email}`))
             .catch((error) => console.log(error))
+          })
 
           // Ajoute l'utilisateur à la BDD sous /users/<email_utilisateur> NOTE : EMAIL SANS LES POINTS CAR INTERDITS DANS BDD
           database()
