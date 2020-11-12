@@ -1,0 +1,8 @@
+Bundle-Name: BonjourServiceImpl
+Bundle-Description: Implementation du service de salutation
+Bundle-Version: 1.0.0
+Bundle-Vendor: Louis
+Bundle-ContactAdress: allain.e1602246@etud.univ-ubs.fr
+Bundle-Copyright: Library GNU Public Licence
+Bundle-Activator: louis.prod.bonjourserviceimpl.Activator
+Import-Package: louis.services.bonjourservice, org.osgi.framework

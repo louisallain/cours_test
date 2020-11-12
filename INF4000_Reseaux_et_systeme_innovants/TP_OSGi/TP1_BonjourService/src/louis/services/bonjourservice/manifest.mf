@@ -1,0 +1,7 @@
+Bundle-Name: BonjourService
+Bundle-Description: Service de salutation
+Bundle-Version: 1.0.0
+Bundle-Vendor: Louis
+Bundle-ContactAdress: allain.e1602246@etud.univ-ubs.fr
+Bundle-Copyright: Library GNU Public Licence
+Export-Package: louis.services.bonjourservice
