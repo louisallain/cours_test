@@ -2,11 +2,14 @@
 #include <mbedtls/rsa.h>
 #include <mbedtls/entropy.h>
 #include <mbedtls/ctr_drbg.h>
+#include <mbedtls/md.h>
+#include "os.h"
+
+
 #include "os.h"
 #include "base64.h"
 
-static const unsigned char base64_table[65] =
-  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+static const unsigned char base64_table[65] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 /**
  * base64_encode - Base64 encode
@@ -169,13 +172,9 @@ int RSA_test()
   {
         // ERROR HANDLING CODE FOR YOUR APP
   }
-  mbedtls_ctr_drbg_set_prediction_resistance( &ctr_drbg, 
-                                              MBEDTLS_CTR_DRBG_PR_ON );
+  mbedtls_ctr_drbg_set_prediction_resistance( &ctr_drbg, MBEDTLS_CTR_DRBG_PR_ON );
 ////////////////////////////////////////////////////////////////////////  
-  mbedtls_pk_context pk;
-  mbedtls_pk_init( &pk );
-  unsigned char to_encrypt[]="louis";
-  unsigned char to_decrypt[MBEDTLS_MPI_MAX_SIZE];
+  
   const unsigned char pub_key[]=
 "-----BEGIN PUBLIC KEY-----\r\n"
 "MIIBITANBgkqhkiG9w0BAQEFAAOCAQ4AMIIBCQKCAQBmRHJh5b4p+Fl4W0U82+1z\r\n"
@@ -218,52 +217,50 @@ int RSA_test()
 "eHvAjEYbPL+Nlp0poWO0gBCOU08CDFTX52eRsW9gTyWES9s/4ZwM\r\n"
 "-----END RSA PRIVATE KEY-----\r\n";
 
-  if( ( ret = mbedtls_pk_parse_public_key( &pk, pub_key, sizeof(pub_key) ) ) != 0 )
-  {
+  mbedtls_pk_context pk;
+  mbedtls_pk_init( &pk );
+  if( ( ret = mbedtls_pk_parse_public_key( &pk, pub_key, sizeof(pub_key)) ) != 0 ) {
     Serial.printf( " failed\n ! mbedtls_pk_parse_public_keyfile returned -0x%04x\n", -ret );
     return -1;
   }
 
-  unsigned char buf[MBEDTLS_MPI_MAX_SIZE];
-  size_t olen = 0;
-
-  Serial.printf( "\nGenerating the encrypted value\n" );
-
-  if( ( ret = mbedtls_pk_encrypt( &pk, to_encrypt, sizeof(to_encrypt),
-                                  buf, &olen, sizeof(buf),
-                                  mbedtls_ctr_drbg_random, &ctr_drbg ) ) != 0 )
-  {
-    Serial.printf( " failed\n ! mbedtls_pk_encrypt returned -0x%04x\n", -ret );
-    return -1;
-  }
-
-  for(int idx=0; idx<strlen(buf); Serial.printf("%02x", buf[idx++]));
-  Serial.printf ("\n");
 
   mbedtls_pk_context pk1;
-
   mbedtls_pk_init(&pk1);
-  if( ( ret = mbedtls_pk_parse_key( &pk1, prv_key, sizeof(prv_key), NULL, 0 ) ) != 0 )
-  {
+  if( ( ret = mbedtls_pk_parse_key( &pk1, prv_key, sizeof(prv_key), NULL, 0 ) ) != 0 ) {
     Serial.printf( " failed\n ! mbedtls_pk_parse_keyfile returned -0x%04x\n", -ret );
     return -1;
   }
 
-  unsigned char result[7];
-  size_t olen1 = 0;
-
-  Serial.printf( "\nGenerating the decrypted value" );
-
-  if( ( ret = mbedtls_pk_decrypt( &pk1, buf, olen, result, &olen1, sizeof(result),
-                                    mbedtls_ctr_drbg_random, &ctr_drbg ) ) != 0 )
+  // SIGNATURE
+  const unsigned char hashOfTheMessageToSign[] = "cbe2ce6f2403e3abf3aeb9bb06766d3d3547e710d56e11044d8352e976bf7e473232639509b4822ff2d1b88e95d5bbb883e551ef031d0ff7699d945b72c3c1ab";
+  unsigned char signature[256];
+  size_t signatureLength = 0;
+  
+  Serial.printf( "\n  . Signing the message" );
+  
+  if( ( ret = mbedtls_pk_sign( &pk1, MBEDTLS_MD_SHA512, hashOfTheMessageToSign, 0, signature, &signatureLength, mbedtls_ctr_drbg_random, &ctr_drbg ) ) != 0 )
   {
-        Serial.printf( " failed\n! mbedtls_pk_decrypt returned -0x%04x\n", -ret );
-        return -1;
+      Serial.printf( " failed\n  ! mbedtls_pk_sign returned -0x%04x\n", -ret );
   }
-  else
-  {
+  else {
+ 
+    Serial.printf("\nLength of signature = %d\n", signatureLength);
+    Serial.printf(" \n Signature = %s\n\n", signature);
+    for (size_t i = 0; i < signatureLength; ++i) Serial.printf("%02x", signature[i]);
+    Serial.printf("\n End of signature \n");
+  }
+  
 
-    Serial.printf("\n\n%s----------------\n\n", result);
+  // VERIFICATION
+  Serial.printf( "\n  . Verifying the message" );
+  
+  if( ( ret = mbedtls_pk_verify( &pk, MBEDTLS_MD_SHA512, hashOfTheMessageToSign, 0, signature, signatureLength) ) != 0 )
+  {
+      Serial.printf( " failed\n  ! mbedtls_pk_verify returned -0x%04x\n", -ret );
+  }
+  else {
+    Serial.printf("\n Signature verified !");
   }
 
   return 0;
@@ -281,5 +278,5 @@ void loop()
   if((res = RSA_test()) != 0) {
     Serial.printf("\n  . Error RSA_test_gen");
   }
-  delay(10000);
+  delay(5000);
 }
