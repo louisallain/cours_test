@@ -4,155 +4,29 @@
 #include <mbedtls/ctr_drbg.h>
 #include <mbedtls/md.h>
 #include "os.h"
+#include <stdio.h>
+#include <stdlib.h>
 
-
-#include "os.h"
-#include "base64.h"
-
-static const unsigned char base64_table[65] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
-/**
- * base64_encode - Base64 encode
- * @src: Data to be encoded
- * @len: Length of the data to be encoded
- * @out_len: Pointer to output length variable, or %NULL if not used
- * Returns: Allocated buffer of out_len bytes of encoded data,
- * or %NULL on failure
- *
- * Caller is responsible for freeing the returned buffer. Returned buffer is
- * nul terminated to make it easier to use as a C string. The nul terminator is
- * not included in out_len.
- */
-unsigned char * base64_encode(const unsigned char *src, size_t len,
-            size_t *out_len)
-{
-  unsigned char *out, *pos;
-  const unsigned char *end, *in;
-  size_t olen;
-  int line_len;
-
-  olen = len * 4 / 3 + 4; /* 3-byte blocks to 4-byte */
-  olen += olen / 72; /* line feeds */
-  olen++; /* nul termination */
-  if (olen < len)
-    return NULL; /* integer overflow */
-  out = os_malloc(olen);
-  if (out == NULL)
-    return NULL;
-
-  end = src + len;
-  in = src;
-  pos = out;
-  line_len = 0;
-  while (end - in >= 3) {
-    *pos++ = base64_table[in[0] >> 2];
-    *pos++ = base64_table[((in[0] & 0x03) << 4) | (in[1] >> 4)];
-    *pos++ = base64_table[((in[1] & 0x0f) << 2) | (in[2] >> 6)];
-    *pos++ = base64_table[in[2] & 0x3f];
-    in += 3;
-    line_len += 4;
-    if (line_len >= 72) {
-      *pos++ = '\n';
-      line_len = 0;
-    }
-  }
-
-  if (end - in) {
-    *pos++ = base64_table[in[0] >> 2];
-    if (end - in == 1) {
-      *pos++ = base64_table[(in[0] & 0x03) << 4];
-      *pos++ = '=';
-    } else {
-      *pos++ = base64_table[((in[0] & 0x03) << 4) |
-                (in[1] >> 4)];
-      *pos++ = base64_table[(in[1] & 0x0f) << 2];
-    }
-    *pos++ = '=';
-    line_len += 4;
-  }
-
-  if (line_len)
-    *pos++ = '\n';
-
-  *pos = '\0';
-  if (out_len)
-    *out_len = pos - out;
-  return out;
-}
 
 
 /**
- * base64_decode - Base64 decode
- * @src: Data to be decoded
- * @len: Length of the data to be decoded
- * @out_len: Pointer to output length variable
- * Returns: Allocated buffer of out_len bytes of decoded data,
- * or %NULL on failure
- *
- * Caller is responsible for freeing the returned buffer.
+ * Convert an hex string (ie: "4851BAA3759A3") to byte string.
+ * @param hexstr hex string to be converted.
+ * @return the byte array converted from hexstr.
  */
-unsigned char * base64_decode(const unsigned char *src, size_t len,
-            size_t *out_len)
-{
-  unsigned char dtable[256], *out, *pos, block[4], tmp;
-  size_t i, count, olen;
-  int pad = 0;
-
-  os_memset(dtable, 0x80, 256);
-  for (i = 0; i < sizeof(base64_table) - 1; i++)
-    dtable[base64_table[i]] = (unsigned char) i;
-  dtable['='] = 0;
-
-  count = 0;
-  for (i = 0; i < len; i++) {
-    if (dtable[src[i]] != 0x80)
-      count++;
-  }
-
-  if (count == 0 || count % 4)
-    return NULL;
-
-  olen = count / 4 * 3;
-  pos = out = os_malloc(olen);
-  if (out == NULL)
-    return NULL;
-
-  count = 0;
-  for (i = 0; i < len; i++) {
-    tmp = dtable[src[i]];
-    if (tmp == 0x80)
-      continue;
-
-    if (src[i] == '=')
-      pad++;
-    block[count] = tmp;
-    count++;
-    if (count == 4) {
-      *pos++ = (block[0] << 2) | (block[1] >> 4);
-      *pos++ = (block[1] << 4) | (block[2] >> 2);
-      *pos++ = (block[2] << 6) | block[3];
-      count = 0;
-      if (pad) {
-        if (pad == 1)
-          pos--;
-        else if (pad == 2)
-          pos -= 2;
-        else {
-          /* Invalid padding */
-          os_free(out);
-          return NULL;
-        }
-        break;
-      }
-    }
-  }
-
-  *out_len = pos - out;
-  return out;
+unsigned char* hexstr_to_char(const char* hexstr) {
+    size_t len = strlen(hexstr);
+    if(len % 2 != 0)
+        return NULL;
+    size_t final_len = len / 2;
+    unsigned char* chrs = (unsigned char*)malloc((final_len+1) * sizeof(*chrs));
+    for (size_t i=0, j=0; j<final_len; i+=2, j++)
+        chrs[j] = (hexstr[i] % 32 + 9) % 25 * 16 + (hexstr[i+1] % 32 + 9) % 25;
+    chrs[final_len] = '\0';
+    return chrs;
 }
 
-int RSA_test()
-{
+int RSA_test() {
 
   int ret=0;
 
@@ -232,8 +106,10 @@ int RSA_test()
     return -1;
   }
 
-  // SIGNATURE
   const unsigned char hashOfTheMessageToSign[] = "cbe2ce6f2403e3abf3aeb9bb06766d3d3547e710d56e11044d8352e976bf7e473232639509b4822ff2d1b88e95d5bbb883e551ef031d0ff7699d945b72c3c1ab";
+
+  /*
+  // SIGNATURE
   unsigned char signature[256];
   size_t signatureLength = 0;
   
@@ -246,22 +122,25 @@ int RSA_test()
   else {
  
     Serial.printf("\nLength of signature = %d\n", signatureLength);
-    Serial.printf(" \n Signature = %s\n\n", signature);
-    for (size_t i = 0; i < signatureLength; ++i) Serial.printf("%02x", signature[i]);
+    Serial.printf(" \n Signature = \n\n", signature);
+    for (size_t i = 0; i < signatureLength; ++i) Serial.printf("%02X", signature[i]);
     Serial.printf("\n End of signature \n");
   }
-  
+  */
 
   // VERIFICATION
   Serial.printf( "\n  . Verifying the message" );
+  const char* hexSignature = "4851BAA3759A33514D86725EE48BB17528A214837B7A039CF6714DF0B487ED2FF143CD08CD3020FF5C8043A86654D0A58B22F48032990CB037BD61D4C2EA7266910CD649B7573D4E8844D6DB32797D6F4FC15D285DECAD0E7DFB709198C3901C699AABB129B179F6575957AC8D3D74F21B3219952B3D70E1838E879404CA8F3075B5705F8045591F449ED14FE07C249510E19488696CA8AFC27AFAD9C38B01E6B704D843694A93DA4CA24E05F4D9331E78B33FEFE101E2473B86188288ECDD869E37A45EEBC43020A8997C4CC5345B05F7E0CCF6A97AE3A93140FEFA364B4CE8571B5CCBFBD705C14DB5A5D62E6454BD6D1263EB17F054FCF3F84F0AC3EAE1C7";
+  unsigned char * parsedSignature = hexstr_to_char(hexSignature);
   
-  if( ( ret = mbedtls_pk_verify( &pk, MBEDTLS_MD_SHA512, hashOfTheMessageToSign, 0, signature, signatureLength) ) != 0 )
-  {
+  if( ( ret = mbedtls_pk_verify( &pk, MBEDTLS_MD_SHA512, hashOfTheMessageToSign, 0, parsedSignature, 256) ) != 0 ) {
       Serial.printf( " failed\n  ! mbedtls_pk_verify returned -0x%04x\n", -ret );
   }
   else {
-    Serial.printf("\n Signature verified !");
+      Serial.printf("\n Signature verified !");
   }
+  free(parsedSignature); // free because hexstr_to_char malloc this
+  
 
   return 0;
 }
@@ -275,8 +154,10 @@ void setup()
 void loop()
 {
   int res = 0;
+  
   if((res = RSA_test()) != 0) {
     Serial.printf("\n  . Error RSA_test_gen");
   }
+ 
   delay(5000);
 }
