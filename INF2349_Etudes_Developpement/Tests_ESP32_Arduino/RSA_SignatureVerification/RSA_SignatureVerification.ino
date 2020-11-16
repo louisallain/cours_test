@@ -1,6 +1,6 @@
 /**
- * This file contains functions that permits to verify (or generate) RSA signature.
- */
+   This file contains functions that permits to verify (or generate) RSA signature.
+*/
 #include <mbedtls/pk.h>
 #include <mbedtls/rsa.h>
 #include <mbedtls/entropy.h>
@@ -9,14 +9,15 @@
 
 mbedtls_entropy_context entropy;
 mbedtls_ctr_drbg_context ctr_drbg;
-char *personalization = "RSA_SignatureVerification";
+char *personalization = "louis";
 // public key context
 mbedtls_pk_context public_key_context;
 // private key context
 mbedtls_pk_context private_key_context;
 
 // These keys are for tests only.
-const unsigned char pub_key[]=
+
+const unsigned char pub_key[] =
   "-----BEGIN PUBLIC KEY-----\r\n"
   "MIIBITANBgkqhkiG9w0BAQEFAAOCAQ4AMIIBCQKCAQBmRHJh5b4p+Fl4W0U82+1z\r\n"
   "u89EuNUkBJrZKldxUBRMCdc0B/kkIT92zJMY0CV9urogd+VnG5WghNqNv5z7sORl\r\n"
@@ -27,7 +28,8 @@ const unsigned char pub_key[]=
   "AgMBAAE=\r\n"
   "-----END PUBLIC KEY-----\r\n";
 
-const unsigned char prv_key[]=
+
+const unsigned char prv_key[] =
   "-----BEGIN RSA PRIVATE KEY-----\r\n"
   "MIIEowIBAAKCAQBmRHJh5b4p+Fl4W0U82+1zu89EuNUkBJrZKldxUBRMCdc0B/kk\r\n"
   "IT92zJMY0CV9urogd+VnG5WghNqNv5z7sORlYno2UwFeAuAja0HbzLXSTiJ24Lk7\r\n"
@@ -57,29 +59,29 @@ const unsigned char prv_key[]=
   "-----END RSA PRIVATE KEY-----\r\n";
 
 /**
- * Convert an hex string (ie: "4851BAA3759A3") to byte string.
- * @param hexstr hex string to be converted.
- * @return the byte array converted from hexstr.
- */
+   Convert an hex string (ie: "4851BAA3759A3") to byte string.
+   @param hexstr hex string to be converted.
+   @return the byte array converted from hexstr.
+*/
 unsigned char* hexstr_to_char(const char* hexstr) {
-    size_t len = strlen(hexstr);
-    if(len % 2 != 0)
-        return NULL;
-    size_t final_len = len / 2;
-    unsigned char* chrs = (unsigned char*)malloc((final_len+1) * sizeof(*chrs));
-    for (size_t i=0, j=0; j<final_len; i+=2, j++)
-        chrs[j] = (hexstr[i] % 32 + 9) % 25 * 16 + (hexstr[i+1] % 32 + 9) % 25;
-    chrs[final_len] = '\0';
-    return chrs;
+  size_t len = strlen(hexstr);
+  if (len % 2 != 0)
+    return NULL;
+  size_t final_len = len / 2;
+  unsigned char* chrs = (unsigned char*)malloc((final_len + 1) * sizeof(*chrs));
+  for (size_t i = 0, j = 0; j < final_len; i += 2, j++)
+    chrs[j] = (hexstr[i] % 32 + 9) % 25 * 16 + (hexstr[i + 1] % 32 + 9) % 25;
+  chrs[final_len] = '\0';
+  return chrs;
 }
 
 /**
- * Initialize randomness of RSA algorithms.
- * @return != 0 if error.
- */
+   Initialize randomness of RSA algorithms.
+   @return != 0 if error.
+*/
 int init_randomness() {
-  
-  int ret=0;
+
+  int ret = 0;
 
   // random data generator
   mbedtls_entropy_init(&entropy);
@@ -88,75 +90,76 @@ int init_randomness() {
   mbedtls_ctr_drbg_init(&ctr_drbg);
 
   ret = mbedtls_ctr_drbg_seed(&ctr_drbg , mbedtls_entropy_func, &entropy, (const unsigned char *) personalization, strlen( personalization ));
-  if( ret != 0 ) {
-      Serial.printf( " failed\n ! mbedtls_ctr_drbg_seed returned -0x%04x\n", -ret );
+  if ( ret != 0 ) {
+    Serial.printf( " failed\n ! mbedtls_ctr_drbg_seed returned -0x%04x\n", -ret );
   }
   mbedtls_ctr_drbg_set_prediction_resistance(&ctr_drbg, MBEDTLS_CTR_DRBG_PR_ON);
-  
+
   return ret;
 }
 
 /**
- * Initialize public key context and parse public key.
- * @return != 0 if error.
- */
+   Initialize public key context and parse public key.
+   @return != 0 if error.
+*/
 int init_public_key() {
-  
+
   int ret = 0;
-  
+
   mbedtls_pk_init( &public_key_context );
-  if(( ret = mbedtls_pk_parse_public_key( &public_key_context, pub_key, sizeof(pub_key)) ) != 0) {
+  if (( ret = mbedtls_pk_parse_public_key( &public_key_context, pub_key, sizeof(pub_key)) ) != 0) {
     Serial.printf( " failed\n ! mbedtls_pk_parse_public_keyfile returned -0x%04x\n", -ret );
   }
   return ret;
 }
 
 /**
- * Initialize private key context and parse private key.
- * @return != 0 if error.
- */
+   Initialize private key context and parse private key.
+   @return != 0 if error.
+*/
 int init_private_key() {
-  
+
   int ret = 0;
-  
+
   mbedtls_pk_init(&private_key_context);
-  if( ( ret = mbedtls_pk_parse_key( &private_key_context, prv_key, sizeof(prv_key), NULL, 0 ) ) != 0 ) {
+  if ( ( ret = mbedtls_pk_parse_key( &private_key_context, prv_key, sizeof(prv_key), NULL, 0 ) ) != 0 ) {
     Serial.printf( " failed\n ! mbedtls_pk_parse_keyfile returned -0x%04x\n", -ret );
   }
   return ret;
 }
 
 /**
- * Sign a hash (SHA512) of a message using the private key context initialize with method init_private_key.
- * @param hash the SHA512 hash of a message.
- * @param signature a bytes array of 256 bytes representing the signature of the param hash using the private key context initialize with method init_private_key.
- * @param signatureLength the output length of the signature (should be 256).
- * @return 
- */
+   Sign a hash (SHA512) of a message using the private key context initialize with method init_private_key.
+   @param hash the SHA512 hash of a message.
+   @param signature a bytes array of 256 bytes representing the signature of the param hash using the private key context initialize with method init_private_key.
+   @param signatureLength the output length of the signature (should be 256).
+   @return
+*/
 int sign_hash(const unsigned char * hash, unsigned char * signature, size_t * signatureLength) {
   
+
   int ret = 0;
-  
-  if( ( ret = mbedtls_pk_sign( &private_key_context, MBEDTLS_MD_SHA512, hash, 0, signature, signatureLength, mbedtls_ctr_drbg_random, &ctr_drbg ) ) != 0 ) {
-      Serial.printf( " failed\n  ! mbedtls_pk_sign returned -0x%04x\n", -ret );
+  size_t hash_len = 1024;
+  if ( ( ret = mbedtls_pk_sign( &private_key_context, MBEDTLS_MD_NONE, hash, hash_len, signature, signatureLength, mbedtls_ctr_drbg_random, &ctr_drbg ) ) != 0 ) {
+    Serial.printf( " failed\n  ! mbedtls_pk_sign returned -0x%04x\n", -ret );
   }
-  
+
   return ret;
 }
 
 /**
- * Verify a signature of a hash (SHA512) message using the public key context initialize with method init_public_key.
- * @param hexSignature the signature represented by an string of hex (ie. "4851BAA3759A3...").
- * @param hash the hash (SHA512) of the message to be signature verified.
- * @return 0 if the signature is verified, !=0 otherwise.
- */
+   Verify a signature of a hash (SHA512) message using the public key context initialize with method init_public_key.
+   @param hexSignature the signature represented by an string of hex (ie. "4851BAA3759A3...").
+   @param hash the hash (SHA512) of the message to be signature verified.
+   @return 0 if the signature is verified, !=0 otherwise.
+*/
 int verify_signature_of_hash(const char * hexSignature, const unsigned char * hash) {
 
   int ret = 0;
   unsigned char * parsedSignature = hexstr_to_char(hexSignature); // convert hex string to byte array.
-  
-  if( ( ret = mbedtls_pk_verify( &public_key_context, MBEDTLS_MD_SHA512, hash, 0, parsedSignature, 256) ) != 0 ) {
-      Serial.printf( " failed\n  ! mbedtls_pk_verify returned -0x%04x\n", -ret );
+
+  if ( ( ret = mbedtls_pk_verify( &public_key_context, MBEDTLS_MD_SHA512, hash, 0, parsedSignature, 256) ) != 0 ) {
+    Serial.printf( " failed\n  ! mbedtls_pk_verify returned -0x%04x\n", -ret );
   }
   free(parsedSignature); // free because hexstr_to_char malloc this
 
@@ -164,8 +167,8 @@ int verify_signature_of_hash(const char * hexSignature, const unsigned char * ha
 }
 
 /**
- * Test the functions above.
- */
+   Test the functions above.
+*/
 int RSA_test() {
 
   int ret = 0;
@@ -174,32 +177,43 @@ int RSA_test() {
   init_randomness();
   init_public_key();
   init_private_key();
+
+  unsigned char hash[128] = "cbe2ce6f2403e3abf3aeb9bb06766d3d3547e710d56e11044d8352e976bf7e473232639509b4822ff2d1b88e95d5bbb883e551ef031d0ff7699d945b72c3c1ab";
+  unsigned char* hashBytes = hexstr_to_char(hash);
   
-  const unsigned char SHA512HashedMessage[] = "cbe2ce6f2403e3abf3aeb9bb06766d3d3547e710d56e11044d8352e976bf7e473232639509b4822ff2d1b88e95d5bbb883e551ef031d0ff7699d945b72c3c1ab";
+  // Measure
+  unsigned long endTime, startTime;
 
   // SIGNATURE
   unsigned char signature[256];
   size_t signatureLength = 0;
-  ret = sign_hash(SHA512HashedMessage, signature, &signatureLength);
-  if(ret == 0) {
+  startTime = millis();
+  ret = sign_hash(hashBytes, signature, &signatureLength);
+  endTime = millis();
+  Serial.printf("\nMeasure of sign (ms) = %lu", (endTime - startTime));
+
+  if (ret == 0) {
     Serial.printf("\nLength of signature = %d\n", signatureLength);
     Serial.printf(" \n Signature = \n\n");
     for (size_t i = 0; i < signatureLength; ++i) Serial.printf("%02X", signature[i]); // print hex of signature
-    Serial.printf("\n End of signature \n"); 
+    Serial.printf("\n End of signature \n");
   }
-  
 
+  /*
   // VERIFICATION
   // hexSignature has been generated thanks to sign_hash function. (see commented bloc just above).
-  const char* hexSignature = "4851BAA3759A33514D86725EE48BB17528A214837B7A039CF6714DF0B487ED2FF143CD08CD3020FF5C8043A86654D0A58B22F48032990CB037BD61D4C2EA7266910CD649B7573D4E8844D6DB32797D6F4FC15D285DECAD0E7DFB709198C3901C699AABB129B179F6575957AC8D3D74F21B3219952B3D70E1838E879404CA8F3075B5705F8045591F449ED14FE07C249510E19488696CA8AFC27AFAD9C38B01E6B704D843694A93DA4CA24E05F4D9331E78B33FEFE101E2473B86188288ECDD869E37A45EEBC43020A8997C4CC5345B05F7E0CCF6A97AE3A93140FEFA364B4CE8571B5CCBFBD705C14DB5A5D62E6454BD6D1263EB17F054FCF3F84F0AC3EAE1C7";
+  const char* hexSignature = "6B127EAC1A5FD97C6E15BA0987FE1E40FF2FAD99812FE58257CF5CB658F1FBBCFF04AECD87742D561A5B0C9F523C49513DD88832C5E034800E0C7CCF992C4BC17762748CAC252980BE6B5FF4ACB66FB2AF748F10925D87AC83E1710FA5F53F4464302DA9D92AFA849B9B476E96D00D6F70D7B8CF43EA46D981C85ADFF37664BF5A8A71D365FCF9340EE9D0BF5585ED73EDD3839BFC2F9AEF2356E2474D60BFB85366CC7FA03866B822709CF4B8B62DE6B4AC8646751ED88AC68E15CF07EE8697AEA1091BD925DAE6EB4C46D2683D84F0F8D38294AEC24F00C8C4872A88C927B695D1F8C89DBF9CA79430646C05CB3024D1D9DD917A48CB51A49630412BB33B44";
+  startTime = millis();
   ret = verify_signature_of_hash(hexSignature, SHA512HashedMessage);
-  if(ret != 0) {
+  endTime = millis();
+  Serial.printf("\nMeasure of verify (ms) = %lu", (endTime - startTime));
+  if (ret != 0) {
     Serial.println("\nVERFICATION FAILED...\n");
   }
   else {
     Serial.println("\nSignature verified !\n");
   }
-
+  */
   return 0;
 }
 
@@ -212,10 +226,10 @@ void setup()
 void loop()
 {
   int res = 0;
-  
-  if((res = RSA_test()) != 0) {
+
+  if ((res = RSA_test()) != 0) {
     Serial.printf("\n  . Error RSA_test_gen");
   }
- 
+
   delay(5000);
 }

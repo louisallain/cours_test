@@ -3,6 +3,12 @@ import { Dimensions, NativeModules, NativeEventEmitter, Platform, PermissionsAnd
 import { Container, Header, Content, Button, Text, Spinner, Toast } from 'native-base';
 import BleManager from 'react-native-ble-manager';
 import { stringToBytes, bytesToString } from "convert-string";
+import { RSAKeychain, RSA } from 'react-native-rsa-native';
+import { sha512 } from "js-sha512";
+import { base64ToHex } from "../../utils/functions";
+
+import * as STORAGE_NAMING from '../../utils/storage_naming';
+
 import styles from './UnlockCSS';
 
 // Nécessaire au BLE
@@ -13,6 +19,11 @@ const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 const CYBER_KEY_ESP32_MAC_ADDR = "24:0A:C4:58:4F:0A"; // @MAC de l'ESP32 serrure
 const CYBER_KEY_ESP32_SERVICE_UUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b"; // Identifiant du service BLE
 const CYBER_KEY_ESP32_CHARACTERISTIC_UUID = "beb5483e-36e1-4688-b7f5-ea07361b26a8"; // Identifiant de la caractéristique BLE
+
+// Etat possible du déverrouillage
+const UNLOCK_STATE = {
+    NOTHING_DONE: "nothing_done"
+}
 
 /**
  * Classe représentant la page de déverrouillage de la porte.
@@ -31,6 +42,7 @@ export default class Unlock extends Component {
             cyberKeyESP32Found: false, // si l'ESP32 a été trouvé lors du scan
             cyberKeyESP32_peripheral: null, // l'objet représentant le périphérique ESP32
             connectedTo_cykerKeyESP32: false, // si on est connecté à l'ESP32
+            unlockState: UNLOCK_STATE.NOTHING_DONE
         }
     }
 
@@ -186,9 +198,10 @@ export default class Unlock extends Component {
      * Méthode rendant le bouton de déverouillage.
      */
     renderButton = () => {
+        let text = this.state.loading ? "" : "Déverrouillage"
         return (
             <Button style={styles.unlockButton} onPress={this.unlock}>
-                <Text>Déverouillage</Text>
+                <Text>{text}</Text>
             </Button>
         )
     }
@@ -228,13 +241,75 @@ export default class Unlock extends Component {
      */
     unlock = () => {
         
+        let privateKey = 
+        "-----BEGIN RSA PRIVATE KEY-----\n" +
+        "MIIEogIBAAKCAQEAkw7qWtHXgvdPTEjvy+B3be0wP+0ixtNZltJ6AFkoELhIeDUr\n" +
+        "HtSjeKSc/J7kLisBIGZILEkRxZVT8n5yjazjIoHACDXPbjcfw7SNWLyjA+SpmcFz\n" +
+        "enIzu9x3al53xujlePYoQWF3KFIbeSC0NydD7PBo2SjZkHLJr1JcNgOkAx1YHRMt\n" +
+        "4BZy5OzvP3Cf1Jwx4S4RmcO3W8M/AC3iayiNOjZiTGivMA+Nmng20/TqoIKzvunt\n" +
+        "2GFrWxtfa51mrKI0WsosR3voqlGaVNEfD2W0NRnSxt2sC/7UQ38ZWs6QaDsBkQsp\n" +
+        "LHbUyfL8X7dT2dbeo9mxAy02Mu0UgShQHJOUzwIDAQABAoIBABqQerAOMOZ1AyuO\n" +
+        "D1ceRKSkUG9zyDDvU8MlYSl38X9XsquYOyJWGfN8lOkjUKewWANAxq/NQTsWVvQ6\n" +
+        "eDn0bZE5q/Uvtzk7Fu9UyaWqaa4V27ctFU2cnJDGagHab7uMLYuUt7/budkcP985\n" +
+        "E6TU4HXIFcCImwh3W8xiTcrqDHINUFLDlGgHDtGKikI1ac+AC1YT9hmQdiNGy92r\n" +
+        "r5/ceraQnWBk6Vyp/qs2eo9Gn+nW7t1y5mvnql5NSLPBnz0zsR18AFM+kRxTAfL1\n" +
+        "B6ltctfYcTmppQu/EsdTh54aKv7br4mH33lzMgZ+lDUn2aVdcSsAn61gMm+NfQpj\n" +
+        "J1O50q0CgYEAxwme7DTQ8bay/WKhm4mlmj03oKIyJGmLN7L6QMAw7TM1XczifJGs\n" +
+        "deYWylTCfMcl6a4oDIyA8s/oCVJirhUJpDaM3hQATNRMEOGNGCEiDUyws2BVO/Ba\n" +
+        "reD0rFIrzWeA3JW08tjHjt6naEA1Yr7N6VV7Mc+WWAAwqDYxkXJZBmsCgYEAvSUO\n" +
+        "9t44Ih4kELRNcXRYOBRsre+3uc+RNxIMEDirYwYqEpubp4SzT9C6Fq+WnFTXQ+kU\n" +
+        "66BRbj2OEnIkSS/w6dBgr+JDmtJws4r3a5JIXDjFepEJ2CqwbpoFrNgomoV/LVW9\n" +
+        "RhhKKHv4g9tChZhuyWCf5Vgdl4C0TRHnXX+dXC0CgYBiQ1KtZKnfG4akZ+RHKJ6U\n" +
+        "VjK3YDwHFABCQF8iRoAhKs3nADa0ryqIjk6kF1JpTdxe0Lc+8sLanV/98il7rjEz\n" +
+        "XCcRoKhBRfJDx0bkKb9o93qpJB8QV2o9O7kvteWgI8BPpq1N0046L5xQcJqqpG5+\n" +
+        "CtCmV8juqzFaal7wYpam/wKBgF7/geiT6/WW1d5d8JePK8/e0kb6I3j7u5/BPLXZ\n" +
+        "AJuXuQHnjeIxUC5CU3SZdDfIlOXS52MA/mU0HWs+UONBZOrKcgVkyzezgk9q+KHa\n" +
+        "suU+zlClECC2MC8cxMTvPFV/v0Rxz8Ko6HY07bisI1keGmaiVSzHePVi+yvKVj4r\n" +
+        "nklxAoGAFAbuy5eQYU9bXNFiGvm1Yu3zQ95wlwGk6qRj41oO6q/gocmjcxReMCdt\n" +
+        "yplL6YK+8o6oTxb7k7ZSPNFxgwcA8mLGOdBt3/ne5c5TnEACT0BahzPco9sSnFny\n" +
+        "RgQmVlzUPF1jj46lnURxcgk1/X3Ozb1F/Mis+JI2WdfrteOC/gA=\n" +
+        "-----END RSA PRIVATE KEY-----\n";
+
+        let publicKey = 
+        "-----BEGIN RSA PUBLIC KEY-----\n" +
+        "MIIBCgKCAQEAkw7qWtHXgvdPTEjvy+B3be0wP+0ixtNZltJ6AFkoELhIeDUrHtSj\n" +
+        "eKSc/J7kLisBIGZILEkRxZVT8n5yjazjIoHACDXPbjcfw7SNWLyjA+SpmcFzenIz\n" +
+        "u9x3al53xujlePYoQWF3KFIbeSC0NydD7PBo2SjZkHLJr1JcNgOkAx1YHRMt4BZy\n" +
+        "5OzvP3Cf1Jwx4S4RmcO3W8M/AC3iayiNOjZiTGivMA+Nmng20/TqoIKzvunt2GFr\n" +
+        "Wxtfa51mrKI0WsosR3voqlGaVNEfD2W0NRnSxt2sC/7UQ38ZWs6QaDsBkQspLHbU\n" +
+        "yfL8X7dT2dbeo9mxAy02Mu0UgShQHJOUzwIDAQAB\n" +
+        "-----END RSA PUBLIC KEY-----\n";
+        
+        RSA.signWithAlgorithm("louis", privateKey, RSA.SHA512withRSA).then((sig) => console.log(sig))
+        
+        /*
+        RSAKeychain.getPublicKey(`${STORAGE_NAMING.PRIVATE_KEY_NAME}-${this.props.user.id}`).then((pub_key) => console.log(pub_key))
+        RSAKeychain.signWithAlgorithm("louis", `${STORAGE_NAMING.PRIVATE_KEY_NAME}-${this.props.user.id}`, RSAKeychain.SHA512withRSA)
+            .then((signature) => console.log(signature))
+            .catch((error) => console.log(error))
+        */
+
+        /*
+        this.loading(true)
+        
         // Vérifie qu'un créneau est actuellement disponible
         if(!this.isThereACurrentEvent()) {
             Toast.show({text: "Aucun créneau n'est actuellement disponible !"})
+            return;
         }
-        else {
-
-        }
+        
+        const message = "louis"
+        const hash = sha512(message)
+        console.log("HASH =\n", `[${hash}]`)
+        let keyTag = `${STORAGE_NAMING.PRIVATE_KEY_NAME}-${this.props.user.id}`
+        RSAKeychain.sign(message, keyTag)
+            .then((signature) => {
+                console.log("SIGNATURE B64=\n", `[${signature}]`)
+                console.log("SIGNATURE HEX =\n", `[${base64ToHex(signature)}]`)
+            })
+            .catch((error) => console.log(error))
+        this.loading(false)
+        */
     }
     
     /**
