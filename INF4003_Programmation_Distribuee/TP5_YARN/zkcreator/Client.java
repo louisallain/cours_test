@@ -1,19 +1,10 @@
-package dshell;
+package zkcreator;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-// to install on cluster IRISA:
-// hcopyFromLocal dshell.jar <HDFS jar path>
-//
-// to launch on cluster-irisa execute:
-// yarn jar dshell.jar <command> <number> dshell.Client <HDFS jar path>
-//
-// to see the logs
-// yarn logs -applicationId application_XXXXXXXX_XXXX --log_files stdout
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
@@ -39,14 +30,14 @@ import org.apache.hadoop.yarn.util.Records;
 
 public class Client {
 
-  private static final String JAR_NAME= "dshell.jar";
-  private static final String PACKAGE_NAME= "dshell";
+  private static final String JAR_NAME= "zkcreator.jar";
+  private static final String PACKAGE_NAME= "zkcreator";
   private static final String APP_NAME= "AppMaster";    
   private Configuration conf = new YarnConfiguration();
 
   public void run(String[] args) throws YarnException, IOException, InterruptedException {
     
-    final String command = "$JAVA_HOME/bin/java dshell.PrintNode";
+    final String command = args[0];
     final int nodes = Integer.valueOf(args[1]);
     final Path jar_path = new Path(args[2]); // dans le HDFS
 
@@ -57,12 +48,20 @@ public class Client {
     YarnClientApplication yarnClientApplication = yarnClient.createApplication();
     //container launch context for application master
     ContainerLaunchContext applicationMasterContainer = Records.newRecord(ContainerLaunchContext.class);
-    applicationMasterContainer.setCommands(Collections.singletonList(
-                        "$JAVA_HOME/bin/java" +
-                                " dshell.PrintNode" +
-                                " 1>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stdout" +
-                                " 2>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stderr"
-                ));
+    
+    applicationMasterContainer.setCommands(
+        Collections.singletonList("$JAVA_HOME/bin/java " + PACKAGE_NAME+"."+APP_NAME+
+            " "      +
+            command  +
+            " "      +
+            nodes  +
+            " "      +
+            "1>"     +
+            ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stdout "  +
+            "2>"     +
+            ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stderr")
+        );
+        
     LocalResource applicationMasterJar = Records.newRecord(LocalResource.class);
     setupJarFileForApplicationMaster(jar_path, applicationMasterJar);
     applicationMasterContainer.setLocalResources(Collections.singletonMap(JAR_NAME, applicationMasterJar));
@@ -112,8 +111,7 @@ public class Client {
         ApplicationConstants.Environment.PWD.$() + File.separator + "*");
   }
 
-  public static void main(String[] args) throws Exception {
-
+  public static void main(String[] args) throws Exception {    
     Client shellClient = new Client();
     shellClient.run(args);
   }
