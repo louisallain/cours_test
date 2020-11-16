@@ -1,0 +1,1 @@
+gcc my_rsa_sign.c -o my_rsa_sign -I ../include -L ../library -lmbedcrypto -lmbedtls
