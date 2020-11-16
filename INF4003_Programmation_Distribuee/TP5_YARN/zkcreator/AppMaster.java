@@ -45,7 +45,6 @@ public class AppMaster {
         String command = args[0];
         int numberOfContainers = Integer.parseInt(args[1]);
 
-
         System.out.println("Starting Application Master");
         AMRMClient<AMRMClient.ContainerRequest> resourceManagerClient = AMRMClient.createAMRMClient();
         resourceManagerClient.init(configuration);
@@ -66,18 +65,21 @@ public class AppMaster {
 
 
         for(int i=0; i < numberOfContainers; i++){
+            //System.out.println("CONTAINER_ID = " + containerId);
             AMRMClient.ContainerRequest containerRequest = new AMRMClient.ContainerRequest(capability, null, null, priority);
             resourceManagerClient.addContainerRequest(containerRequest);
         }
         int completedContainers = 0;
         int containerId = 0;
+        int nbInstance = 0;
 
-        while(completedContainers < numberOfContainers){
+        while(completedContainers < numberOfContainers) {
+            
             AllocateResponse allocateResponse = resourceManagerClient.allocate(containerId);
             containerId++;
             for(Container container : allocateResponse.getAllocatedContainers()){
                 ContainerLaunchContext shellContainerContext = Records.newRecord(ContainerLaunchContext.class);
-                //
+                
                 LocalResource applicationJar = Records.newRecord(LocalResource.class);
                 Path jar_path = new Path("/user/e1602246/apps/zkcreator.jar"); // dans le HDFS
                 String JAR_NAME= "zkcreator.jar";
@@ -89,11 +91,12 @@ public class AppMaster {
                 shellContainerContext.setEnvironment(appMasterEnv);
 
                 shellContainerContext.setCommands(
-                        Collections.singletonList("$JAVA_HOME/bin/java " + command + " " + containerId +
+                        Collections.singletonList("$JAVA_HOME/bin/java " + command + " " + nbInstance +
                                  " 1>"  +
                                   ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stdout "  +
                                  " 2>"  +
                                   ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stderr"));
+                nbInstance++;
                 nodeManagerClient.startContainer(container, shellContainerContext);
             
             }

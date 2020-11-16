@@ -23,8 +23,9 @@ public class PrintNode implements Watcher {
   
   static final Logger LOG = LoggerFactory.getLogger(PrintNode.class);
   
-    public PrintNode() {
+    public PrintNode(int nbInstance) {
         
+        String zkPathToInstance = my_id+zooDataPath+"/p"+nbInstance;
         
         try {
             zk = new ZooKeeper(hostPort, 2000, this);
@@ -40,7 +41,8 @@ public class PrintNode implements Watcher {
                 catch (UnknownHostException e) {
                     e.printStackTrace();
                 }
-                this.createZnodePersistant(my_id+zooDataPath, hostname);
+
+                this.writeHostnameToZkNode(zkPathToInstance, hostname);
                 System.out.println("Writen on zookeeper node :" + hostname);
         }
         } catch (IOException e) {
@@ -48,11 +50,13 @@ public class PrintNode implements Watcher {
         }
     }
 
-    public void createZnodePersistant(String znodePath, String data){
+    public void writeHostnameToZkNode(String znodePath, String data){
         try {
-            if (zk.exists(znodePath, this) == null){
-                zk.create(znodePath, data.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE,CreateMode.PERSISTENT_SEQUENTIAL);
+            if (zk.exists(znodePath, this) != null) {
+                zk.delete(znodePath, 0);
             }
+            zk.create(znodePath, data.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE,CreateMode.PERSISTENT);
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (KeeperException e) {
@@ -66,8 +70,8 @@ public class PrintNode implements Watcher {
     }
   
     public static void main(String[] args) {
-
-        new PrintNode();
+        int nbInstance = Integer.valueOf(args[0]);
+        new PrintNode(nbInstance);
     }
   
 }
