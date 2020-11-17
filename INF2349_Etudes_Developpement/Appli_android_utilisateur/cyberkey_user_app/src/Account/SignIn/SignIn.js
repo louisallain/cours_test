@@ -6,6 +6,7 @@ import RNSecureKeyStore, {ACCESSIBLE} from "react-native-secure-key-store";
 import { RSAKeychain } from 'react-native-rsa-native';
 
 import * as STORAGE_NAMING from '../../utils/storage_naming';
+import * as UTILS_FUNCTION from '../../utils/functions';
 
 import styles from './SignInCSS'
 
@@ -87,16 +88,6 @@ class SignIn extends Component {
    */
   handleSignIn = () => {
     
-  
-    // Génère et sauvegarde les clefs
-    let keyTag = `${STORAGE_NAMING.PRIVATE_KEY_NAME}-${this.state.email}`
-    this.createRSAKeys(keyTag).then((pub) => {
-      
-      let key = PEM_PARSER.parsePEM_publicKey(pub)
-      console.log(key)
-    })
-
-    
     if(this.state.email.match(UBS_EMAIL_REGEX) && this.state.password.length >= 8 && this.state.password === this.state.passwordConfirmation) {
 
       auth()
@@ -113,8 +104,8 @@ class SignIn extends Component {
           // Génère et sauvegarde les clefs
           let keyTag = `${STORAGE_NAMING.PRIVATE_KEY_NAME}-${this.state.email}`
           this.createRSAKeys(keyTag).then((pub) => {
-            // Ajoute la clef publique à la BDD sous /public_key/<email_utilisateur> NOTE : EMAIL SANS LES POINTS CAR INTERDITS DANS BDD            
-            database().ref(`/public_keys/${userKey}`).set({public_key: pub})
+            // Ajoute la clef publique à la BDD sous /public_key/<email_utilisateur> NOTE : EMAIL SANS LES POINTS CAR INTERDITS DANS BDD        
+            database().ref(`/public_keys/${userKey}`).set({public_key: UTILS_FUNCTION.publicKey_PEM_to_hex(pub)})
             .then(() => console.log(`Public key added to the BDD for user : ${this.state.email}`))
             .catch((error) => console.log(error))
           })

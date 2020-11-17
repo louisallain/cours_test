@@ -53,7 +53,7 @@ void setup() {
   Serial.println(WiFi.localIP());
   Serial.println();
 
-  // Parie Firebase
+  // Partie Firebase
   Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
   Firebase.reconnectWiFi(true);
   Firebase.setReadTimeout(firebaseData, 1000 * 60);
@@ -81,17 +81,5 @@ void setup() {
 
 void loop() {
 
-    
-    if (Firebase.getInt(firebaseData, "/test/int")) {
 
-    //if (firebaseData.dataType() == "int")) {
-      Serial.println(firebaseData.intData());
-    //}
-
-  } else {
-    Serial.println(firebaseData.errorReason());
-  }
-  
-
-  delay(3000);
 }

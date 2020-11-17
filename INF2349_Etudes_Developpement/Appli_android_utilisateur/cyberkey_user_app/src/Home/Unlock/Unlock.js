@@ -53,8 +53,8 @@ export default class Unlock extends Component {
      */
     componentDidMount() {
 
-        this.handlerStopScan = bleManagerEmitter.addListener('BleManagerStopScan', this.handleEndOfScanning);
-        this.handlerDiscoverPeripheral = bleManagerEmitter.addListener('BleManagerDiscoverPeripheral', this.handleDiscoverPeripheral)
+        this.handlerStopScan = bleManagerEmitter.addListener('BleManagerStopScan', this.handler_StopBLEScanning);
+        this.handlerDiscoverPeripheral = bleManagerEmitter.addListener('BleManagerDiscoverPeripheral', this.handler_discoverNewBLEPeripheral)
     
         if (Platform.OS === 'android' && Platform.Version >= 23) {
           PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
@@ -116,6 +116,7 @@ export default class Unlock extends Component {
      * @param {Object} peripheral objet représentant un périphérique
      */
     handler_discoverNewBLEPeripheral = (peripheral) => {
+        console.log(peripheral.id)
         if(peripheral.id === CYBER_KEY_ESP32_MAC_ADDR) {
             BleManager.stopScan() // Arrête le scanning lorsque l'on trouve l'ESP32 de la serrure
             console.log("ID du ESP32 Cyker key = ", peripheral.id)
@@ -198,7 +199,8 @@ export default class Unlock extends Component {
      * Méthode rendant le bouton de déverouillage.
      */
     renderButton = () => {
-        let text = this.state.loading ? "" : "Déverrouillage"
+        let text = "Déverrouillage"
+        if(this.state.connectedTo_cykerKeyESP32) text = "Serrure trouvé !"
         return (
             <Button style={styles.unlockButton} onPress={this.unlock}>
                 <Text>{text}</Text>
@@ -240,38 +242,29 @@ export default class Unlock extends Component {
      * - Si la procédure d'authentification aboutie alors la serrure est déverrouillée et on informe l'utilisateur.
      */
     unlock = () => {
-        //let privKeytag = `${STORAGE_NAMING.PRIVATE_KEY_NAME}-${this.props.user.id}`
-        //RSAKeychain.getPublicKey(privKeytag).then((pubKey) => console.log(pubKey))
-        
-        
+
+        Toast.show({text: "Système de déverrouillage à faire"})
         /*
-        RSAKeychain.getPublicKey(`${STORAGE_NAMING.PRIVATE_KEY_NAME}-${this.props.user.id}`).then((pub_key) => console.log(pub_key))
-        RSAKeychain.signWithAlgorithm("louis", `${STORAGE_NAMING.PRIVATE_KEY_NAME}-${this.props.user.id}`, RSAKeychain.SHA512withRSA)
-            .then((signature) => console.log(signature))
+        let keyTag = `${STORAGE_NAMING.PRIVATE_KEY_NAME}-${this.props.user.id}`        
+        RSAKeychain.signWithAlgorithm("louis", keyTag, RSAKeychain.SHA256withRSA)
+            .then((signature) => console.log(base64ToHex(signature)))
             .catch((error) => console.log(error))
         */
 
-        /*
-        this.loading(true)
+        //this.loading(true)
         
+        /*
         // Vérifie qu'un créneau est actuellement disponible
         if(!this.isThereACurrentEvent()) {
             Toast.show({text: "Aucun créneau n'est actuellement disponible !"})
+            this.loading(false)
             return;
         }
-        
-        const message = "louis"
-        const hash = sha512(message)
-        console.log("HASH =\n", `[${hash}]`)
-        let keyTag = `${STORAGE_NAMING.PRIVATE_KEY_NAME}-${this.props.user.id}`
-        RSAKeychain.sign(message, keyTag)
-            .then((signature) => {
-                console.log("SIGNATURE B64=\n", `[${signature}]`)
-                console.log("SIGNATURE HEX =\n", `[${base64ToHex(signature)}]`)
-            })
-            .catch((error) => console.log(error))
-        this.loading(false)
         */
+
+        //this.beginBLEScanning()
+
+        //this.loading(false)
     }
     
     /**
