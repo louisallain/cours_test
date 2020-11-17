@@ -87,6 +87,16 @@ class SignIn extends Component {
    */
   handleSignIn = () => {
     
+  
+    // Génère et sauvegarde les clefs
+    let keyTag = `${STORAGE_NAMING.PRIVATE_KEY_NAME}-${this.state.email}`
+    this.createRSAKeys(keyTag).then((pub) => {
+      
+      let key = PEM_PARSER.parsePEM_publicKey(pub)
+      console.log(key)
+    })
+
+    
     if(this.state.email.match(UBS_EMAIL_REGEX) && this.state.password.length >= 8 && this.state.password === this.state.passwordConfirmation) {
 
       auth()

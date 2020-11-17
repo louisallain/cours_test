@@ -32,4 +32,6 @@ export function base64ToHex(str) {
       result += (hex.length === 2 ? hex : '0' + hex);
     }
     return result.toUpperCase();
-  }
+}
+
+//export function 
