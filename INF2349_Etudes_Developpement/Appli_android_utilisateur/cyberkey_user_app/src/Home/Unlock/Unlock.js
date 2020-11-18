@@ -71,7 +71,7 @@ export default class Unlock extends Component {
     componentWillUnmount() {
         this.handlerStopScan.remove()
         this.handlerDiscoverPeripheral.remove()
-        this.disconnectFromCyberKeyESP32()
+        this.resetForReason()
     }
 
     /**
@@ -92,7 +92,6 @@ export default class Unlock extends Component {
             })
         }
         if (Platform.OS === 'android' && Platform.Version >= 23 && Platform.Version < 29) {
-            console.log("PAS OK ")
             PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
                 if (result) console.log("PERMISSIONS.ACCESS_COARSE_LOCATION OK")
                 else {
@@ -136,13 +135,14 @@ export default class Unlock extends Component {
 
     /**
      * Se déconnecte de l'ESP32 CyberKey (si on était connecté).
+     * @param callback fonction exécutée lorsqu'on se déconncete effectivement de la serrure
      */
-    disconnectFromCyberKeyESP32 = () => {
+    disconnectFromCyberKeyESP32 = (callback) => {
         if(this.state.connectedTo_cykerKeyESP32) {
             BleManager.disconnect(this.state.cyberKeyESP32_peripheral.id)
             .then(() => {
                 console.log("Disconnected from CyberKey ESP32")
-                this.setState({connectToCyberKeyESP32: false,})
+                if(callback) callback()
             })
             .catch((error) => console.log(error))
         }
@@ -155,6 +155,7 @@ export default class Unlock extends Component {
         console.log("BLE Scanning ended...")
         this.setState({scanning: false})
         if(this.state.cyberKeyESP32Found === false) { // le scan n'a pas permis de trouver l'ESP32 de la serrure
+            console.log("OUI")
             this.resetForReason("Serrure non trouvée !")
         } 
     }
@@ -164,8 +165,8 @@ export default class Unlock extends Component {
      * @param {Object} peripheral objet représentant un périphérique
      */
     handler_discoverNewBLEPeripheral = (peripheral) => {
-        console.log(peripheral.id)
         if(peripheral.id === CYBER_KEY_ESP32_MAC_ADDR) {
+            console.log(peripheral.id)
             BleManager.stopScan() // Arrête le scanning lorsque l'on trouve l'ESP32 de la serrure
             console.log("ID du ESP32 Cyker key = ", peripheral.id)
             console.log(peripheral)
@@ -369,16 +370,30 @@ export default class Unlock extends Component {
      * @param {string} msg raison du reset de l'état
      */
     resetForReason = (msg) => {
-        this.disconnectFromCyberKeyESP32()
-        this.setState({
-            loading: false,
-            scanning: false, // état du scan BLE
-            cyberKeyESP32Found: false, // si l'ESP32 a été trouvé lors du scan
-            cyberKeyESP32_peripheral: null, // l'objet représentant le périphérique ESP32
-            connectedTo_cykerKeyESP32: false, // si on est connecté à l'ESP32
-            allPermissionsAndBT_ok: this.state.allPermissionsAndBT_ok,
-        })
-        if(msg) Toast.show({text: msg})
+        if(this.state.connectedTo_cykerKeyESP32 === true) {
+            this.disconnectFromCyberKeyESP32(() => {
+                this.setState({
+                    loading: false,
+                    scanning: false, // état du scan BLE
+                    cyberKeyESP32Found: false, // si l'ESP32 a été trouvé lors du scan
+                    cyberKeyESP32_peripheral: null, // l'objet représentant le périphérique ESP32
+                    connectedTo_cykerKeyESP32: false, // si on est connecté à l'ESP32
+                    allPermissionsAndBT_ok: this.state.allPermissionsAndBT_ok,
+                })
+                if(msg) Toast.show({text: msg})
+            })
+        }
+        else {
+            this.setState({
+                loading: false,
+                scanning: false, // état du scan BLE
+                cyberKeyESP32Found: false, // si l'ESP32 a été trouvé lors du scan
+                cyberKeyESP32_peripheral: null, // l'objet représentant le périphérique ESP32
+                connectedTo_cykerKeyESP32: false, // si on est connecté à l'ESP32
+                allPermissionsAndBT_ok: this.state.allPermissionsAndBT_ok,
+            })
+            if(msg) Toast.show({text: msg})
+        }
     }
 
     /**
@@ -392,6 +407,11 @@ export default class Unlock extends Component {
         this.checkPermissionsAndBT()
         this.loading(true)
         // Vérifie l'accès pour l'utilisateur
+        if(this.props.user.isVIP) {
+            this.beginBLEScanning() // démarre la procédure de déverrouillage (voir méthode beginBLEScanning)
+            return;
+        }
+
         let currentEvent = this.isThereACurrentEvent()[0]
         if(currentEvent === undefined) {
             Toast.show({text: "Aucun créneau n'est actuellement disponible !"})
@@ -423,6 +443,7 @@ export default class Unlock extends Component {
             }
             else {
                 this.beginBLEScanning() // démarre la procédure de déverrouillage (voir méthode beginBLEScanning)
+                return;
             }
         }
         if(this.props.user.requestForEvents !== undefined & this.props.user.acceptedForEvents !== undefined) {
@@ -439,6 +460,7 @@ export default class Unlock extends Component {
                 }
                 else {
                     this.beginBLEScanning() // démarre la procédure de déverrouillage (voir méthode beginBLEScanning)
+                    return;
                 }
             }
         }

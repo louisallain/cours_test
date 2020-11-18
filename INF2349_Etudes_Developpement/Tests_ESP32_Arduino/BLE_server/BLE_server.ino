@@ -113,6 +113,7 @@ class MyCharacteristicrCallbacks: public BLECharacteristicCallbacks {
             memset(path, 0, sizeof(path));
             Serial.printf("\n . Porte déverrouilée !!!");
             pCharacteristic->setValue("V"); // indique à l'utilisateur si il est authentifié ou non (si déverrouillage ou pas)
+            BLEDevice::startAdvertising();
           }
           else {
             memset(user_id, 0, sizeof(user_id));
