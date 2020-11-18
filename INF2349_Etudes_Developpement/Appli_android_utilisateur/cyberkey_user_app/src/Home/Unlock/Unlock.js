@@ -3,8 +3,7 @@ import { Dimensions, NativeModules, NativeEventEmitter, Platform, PermissionsAnd
 import { Container, Header, Content, Button, Text, Spinner, Toast } from 'native-base';
 import BleManager from 'react-native-ble-manager';
 import { stringToBytes, bytesToString } from "convert-string";
-import { RSAKeychain, RSA } from 'react-native-rsa-native';
-import { sha512 } from "js-sha512";
+import { RSAKeychain } from 'react-native-rsa-native';
 import { base64ToHex } from "../../utils/functions";
 
 import * as STORAGE_NAMING from '../../utils/storage_naming';
@@ -178,9 +177,6 @@ export default class Unlock extends Component {
             // Procédure de déverrouillage
             this.connectToCyberKeyESP32( // se connecte automatiquement à l'ESP32 CyberKey
                 () => {
-                    let infos = {
-                        user_id: this.props.user.id.replace(/[.]/g, '')
-                    }
                     this.launchUnlockProcedure(); 
                 },
                 () => {
@@ -268,8 +264,20 @@ export default class Unlock extends Component {
     renderButton = () => {
         let text = "Déverrouillage"
         if(!this.state.allPermissionsAndBT_ok) text = "Veuillez accepter les permissions et activer le Bluetooth."
+        if(this.state.allPermissionsAndBT_ok && this.state.loading) {
+            if(this.state.scanning) {
+                text = "Scan des BLE..."
+            }
+            if(this.state.cyberKeyESP32Found) {
+                text = "Connexion à la serrure..."
+            }
+            if(this.state.connectedTo_cykerKeyESP32) {
+                text = "Authentification..."
+            }
+        }
+        let disabled = !this.state.allPermissionsAndBT_ok || this.state.loading
         return (
-            <Button disabled={!this.state.allPermissionsAndBT_ok} style={styles.unlockButton} onPress={this.unlock}>
+            <Button disabled={disabled} style={styles.unlockButton} onPress={this.unlock}>
                 <Text>{text}</Text>
             </Button>
         )
@@ -280,7 +288,7 @@ export default class Unlock extends Component {
      */
     isThereACurrentEvent = () => {
         let currentDate = new Date()
-        currentDate.setHours(currentDate.getHours(), currentDate.getMinutes()+5, 0, 0)
+        currentDate.setHours(currentDate.getHours(), currentDate.getMinutes(), 0, 0)
         return (
             this.props.events.filter(e => {
                 let startDate = new Date(e.start)
@@ -308,6 +316,10 @@ export default class Unlock extends Component {
      * - Si la procédure d'authentification aboutie alors la serrure est déverrouillée et on informe l'utilisateur.
      */
     launchUnlockProcedure = () => {
+
+        let infos = {
+            user_id: this.props.user.id.replace(/[.]/g, '')
+        }
         // le # permet à l'ESP32 de repérer la fin de la valeur de la caractéristique étant donnée que le MTU par défaut est de 23 octets (20 + 3 protocol wrapper).
         this.writeToESP32(JSON.stringify(infos)+SEND_TYPE.USER_INFOS, 
             () => { 
@@ -410,8 +422,7 @@ export default class Unlock extends Component {
                 return;
             }
             else {
-                this.beginBLEScanning()
-                this.loading(false)
+                this.beginBLEScanning() // démarre la procédure de déverrouillage (voir méthode beginBLEScanning)
             }
         }
         if(this.props.user.requestForEvents !== undefined & this.props.user.acceptedForEvents !== undefined) {
@@ -427,8 +438,7 @@ export default class Unlock extends Component {
                     return;
                 }
                 else {
-                    this.beginBLEScanning()
-                    this.loading(false)
+                    this.beginBLEScanning() // démarre la procédure de déverrouillage (voir méthode beginBLEScanning)
                 }
             }
         }

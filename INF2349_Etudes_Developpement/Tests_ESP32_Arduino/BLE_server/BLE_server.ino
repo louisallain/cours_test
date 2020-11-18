@@ -107,9 +107,17 @@ class MyCharacteristicrCallbacks: public BLECharacteristicCallbacks {
 
           int isSigVerify = 1; // entier servant de booléan, 1 = signature envoyé par l'utilisteur vérifié, 0 = signature non vérifiée donc utilisateur non authentifié
           if(isSigVerify == 1) {
+            // TODO : Déverrouiller la porte
+            memset(user_id, 0, sizeof(user_id));
+            memset(buf, 0, sizeof(buf));
+            memset(path, 0, sizeof(path));
+            Serial.printf("\n . Porte déverrouilée !!!");
             pCharacteristic->setValue("V"); // indique à l'utilisateur si il est authentifié ou non (si déverrouillage ou pas)
           }
           else {
+            memset(user_id, 0, sizeof(user_id));
+            memset(buf, 0, sizeof(buf));
+            memset(path, 0, sizeof(path));
             pCharacteristic->setValue("F");
           }
         } 

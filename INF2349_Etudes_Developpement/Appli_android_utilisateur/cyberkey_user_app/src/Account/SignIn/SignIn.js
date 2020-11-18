@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Container, Header, Content, Form, Item, Input, Label, Body, Title, Left, Button, Text, Toast } from 'native-base';
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
-import RNSecureKeyStore, {ACCESSIBLE} from "react-native-secure-key-store";
 import { RSAKeychain } from 'react-native-rsa-native';
 
 import * as STORAGE_NAMING from '../../utils/storage_naming';

@@ -138,6 +138,20 @@ class Home extends Component {
                             Toast.show({text: "Compte supprimé !"})
                             auth().signOut()
                         })
+                        .catch(error => {
+                            if(error.code === 'auth/requires-recent-login') {
+                                Alert.alert(
+                                    "Suppression du compte",
+                                    "L'application va vous déconnecter. Veuillez vous reconnecter et recommencer pour s'assurer qu'il s'agit bien de vous.",
+                                    [{
+                                        text: 'OK',
+                                        onPress: () => {
+                                            auth().signOut()
+                                        }
+                                    }]
+                                )
+                            }
+                        })
                     }
                 },
                 {
