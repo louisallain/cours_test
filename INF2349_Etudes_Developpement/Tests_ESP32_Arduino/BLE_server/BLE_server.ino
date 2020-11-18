@@ -20,6 +20,7 @@
 const char challenge[] = "cyberkey";
 char * user_id;
 char buf[512];
+char path[256] = "/public_keys/";
 int i = 0;
 
 StaticJsonBuffer<MAX_JSON> jsonBuffer;
@@ -62,7 +63,7 @@ class MyCharacteristicrCallbacks: public BLECharacteristicCallbacks {
           return;
         }
         user_id = root["user_id"];
-        Serial.printf("\n  . user_id = %s", user_id);
+        strcat(path, user_id);
         i = 0;
 
         // écriture de la chaine challenge
@@ -70,24 +71,52 @@ class MyCharacteristicrCallbacks: public BLECharacteristicCallbacks {
       }
       else if(buf[i-1] == '!') { // le ! permet à l'ESP32 de repérer si c'est la signature + fin de l'envoi
         buf[i-1] = '\0'; // fin de la chaine donc
-        Serial.printf("\nsig = %s", buf);
-        Serial.printf("\n user_id = %s", user_id);
-        /*
+        Serial.printf("\n . sig = %s", buf);
+        Serial.printf("\n . path = %s", path);
+        
         // Va cherche la clef publique de l'utilisateur et vérifie la signature
-        char path[512] = "/public_keys/";
-        strcat(path, user_id);
-        strcat(path, "/public_key/e");
-        Serial.printf("exponent path = %s", path);
-        */
-        /*
-        if (Firebase.getString(firebaseData, "/test/int")) {
-    
-          Serial.println(firebaseData.stringData());    
+        char pathToExponent[256] = "";
+        strcpy(pathToExponent, path);
+        strcat(pathToExponent, "/public_key/e");
+        char pathToModulus[256] = "";
+        strcpy(pathToModulus, path);
+        strcat(pathToModulus, "/public_key/n");
+        
+        Serial.printf("\n . exponent path = %s", pathToExponent);
+        Serial.printf("\n . modulus path = %s", pathToModulus);
+        
+        Serial.printf("\n . Searching in database for the public key ...");
+        char exponent[20] = "";
+        char modulus[600] = "";
+        // Récupère l'exposant
+        if (Firebase.getString(firebaseData, pathToExponent)) {
+          strcpy(exponent, firebaseData.stringData().c_str());
+          Serial.printf("\n . Exponent = %s", exponent);    
         } 
         else {
           Serial.println(firebaseData.errorReason());
+          return;
         }
-        */
+        // Récupère le module
+        if (Firebase.getString(firebaseData, pathToModulus)) {
+          
+          strcpy(modulus, firebaseData.stringData().c_str());  
+          Serial.printf("\n . Modulus = %s", modulus);
+
+          // TODO : procédure de vérification de la signature
+
+          int isSigVerify = 1; // entier servant de booléan, 1 = signature envoyé par l'utilisteur vérifié, 0 = signature non vérifiée donc utilisateur non authentifié
+          if(isSigVerify == 1) {
+            pCharacteristic->setValue("V"); // indique à l'utilisateur si il est authentifié ou non (si déverrouillage ou pas)
+          }
+          else {
+            pCharacteristic->setValue("F");
+          }
+        } 
+        else {
+          Serial.println(firebaseData.errorReason());
+          return;
+        }
       }
     }
   }
