@@ -1,0 +1,1 @@
+javac -cp "C:\Program Files\Felix\felix-framework-6.0.3\bin\felix.jar" -d .\build\ .\src\louis\client\bonjourserviceclient\*.java .\src\louis\prod\bonjourserviceimpl\*.java .\src\louis\services\bonjourservice\*.java

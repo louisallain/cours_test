@@ -1,3 +1,4 @@
+Manifest-Version: 1.0
 Bundle-Name: BonjourServiceClient
 Bundle-Description: Client du service de salutation
 Bundle-Version: 1.0.0

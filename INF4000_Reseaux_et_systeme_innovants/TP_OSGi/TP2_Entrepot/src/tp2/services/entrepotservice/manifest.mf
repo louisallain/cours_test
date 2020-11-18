@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
-Bundle-Name: BonjourService
-Bundle-Description: Service de salutation
+Bundle-Name: EntrepotService
+Bundle-Description: Service d entrepot
 Bundle-Version: 1.0.0
 Bundle-Vendor: Louis
 Bundle-ContactAdress: allain.e1602246@etud.univ-ubs.fr
 Bundle-Copyright: Library GNU Public Licence
-Export-Package: louis.services.bonjourservice
+Export-Package: tp2.services.entrepotservice

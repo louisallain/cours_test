@@ -1,3 +1,4 @@
+Manifest-Version: 1.0
 Bundle-Name: BonjourServiceImpl
 Bundle-Description: Implementation du service de salutation
 Bundle-Version: 1.0.0
