@@ -60,4 +60,5 @@
 	
 		- Sur cette partie de la page d'accueil, un bouton permet de demander l'accès VIP
 		  (sans contraintes de créneaux), l'état de la demande est affiché dans le bouton.
-		  Un autre bouton permet de supprimer son compte.
+		  Un autre bouton permet de supprimer son compte. Si la dernière connexion de l'utilisateur
+		  est trop vieille alors il faudra d'abord se déconnecter puis se reconnecter.
