@@ -18,8 +18,8 @@
 #define MAX_JSON            200
 
 const char challenge[] = "cyberkey";
-char * user_id;
-char buf[512];
+char * user_id = NULL;
+char buf[512] = "";
 char path[256] = "/public_keys/";
 int i = 0;
 
@@ -48,8 +48,10 @@ class MyCharacteristicrCallbacks: public BLECharacteristicCallbacks {
   
   void onWrite(BLECharacteristic *pCharacteristic) {
     std::string value = pCharacteristic->getValue();
-    
+
+    // TODO : CORRIGER : parser tout value puis le traiter
     if (value.length() > 0) {
+      
       strcpy(buf+i, value.c_str()); // car lit 20 octets max par lecture la caractéristique
       i = i + value.length();
     
@@ -71,14 +73,19 @@ class MyCharacteristicrCallbacks: public BLECharacteristicCallbacks {
       }
       else if(buf[i-1] == '!') { // le ! permet à l'ESP32 de repérer si c'est la signature + fin de l'envoi
         buf[i-1] = '\0'; // fin de la chaine donc
+        
+        char pathToExponent[256] = "";
+        char pathToModulus[256] = "";
+        char exponent[20] = "";
+        char modulus[600] = "";
+        
         Serial.printf("\n . sig = %s", buf);
         Serial.printf("\n . path = %s", path);
         
         // Va cherche la clef publique de l'utilisateur et vérifie la signature
-        char pathToExponent[256] = "";
         strcpy(pathToExponent, path);
         strcat(pathToExponent, "/public_key/e");
-        char pathToModulus[256] = "";
+        
         strcpy(pathToModulus, path);
         strcat(pathToModulus, "/public_key/n");
         
@@ -86,15 +93,14 @@ class MyCharacteristicrCallbacks: public BLECharacteristicCallbacks {
         Serial.printf("\n . modulus path = %s", pathToModulus);
         
         Serial.printf("\n . Searching in database for the public key ...");
-        char exponent[20] = "";
-        char modulus[600] = "";
+        
         // Récupère l'exposant
         if (Firebase.getString(firebaseData, pathToExponent)) {
           strcpy(exponent, firebaseData.stringData().c_str());
           Serial.printf("\n . Exponent = %s", exponent);    
         } 
         else {
-          Serial.println(firebaseData.errorReason());
+          Serial.println("\n . " + firebaseData.errorReason());
           return;
         }
         // Récupère le module
@@ -108,12 +114,15 @@ class MyCharacteristicrCallbacks: public BLECharacteristicCallbacks {
           int isSigVerify = 1; // entier servant de booléan, 1 = signature envoyé par l'utilisteur vérifié, 0 = signature non vérifiée donc utilisateur non authentifié
           if(isSigVerify == 1) {
             // TODO : Déverrouiller la porte
-            memset(user_id, 0, sizeof(user_id));
-            memset(buf, 0, sizeof(buf));
-            memset(path, 0, sizeof(path));
+
+            // Réinitialisation
+            i = 0;
+            char * user_id = NULL;
+            char buf[512] = "";
+            char path[256] = "/public_keys/";
+            
             Serial.printf("\n . Porte déverrouilée !!!");
             pCharacteristic->setValue("V"); // indique à l'utilisateur si il est authentifié ou non (si déverrouillage ou pas)
-            BLEDevice::startAdvertising();
           }
           else {
             memset(user_id, 0, sizeof(user_id));
@@ -177,5 +186,4 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  delay(2000);
 }

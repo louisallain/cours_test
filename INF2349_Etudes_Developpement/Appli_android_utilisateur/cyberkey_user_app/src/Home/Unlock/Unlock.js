@@ -16,18 +16,9 @@ const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 // Informations en dur pour l'instant mais dans la BDD au final
 const CYBER_KEY_ESP32_MAC_ADDR = "24:0A:C4:58:4F:0A"; // @MAC de l'ESP32 serrure
-const CYBER_KEY_ESP32_SERVICE_UUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b"; // Identifiant du service BLE
-const CYBER_KEY_ESP32_CHARACTERISTIC_UUID = "beb5483e-36e1-4688-b7f5-ea07361b26a8"; // Identifiant de la caractéristique BLE
-
-// Constante permettant d'identifier le type d'envoi que l'on fournit à l'ESP32
-const SEND_TYPE = {
-    USER_INFOS: '#', // Les infos relatives à l'identification de l'ouverte (id de l'utilisateur dans la bdd, id de l'event pour lequel on souhaite déverrouiller la porte)
-    SIGNATURE: '!' // la signature du challenge envoyé par la serrure
-}
-
-const RCV_TYPE = {
-    AUTH_OK: 'V'
-}
+const CYBERKEY_SERVICE_UUID = "a4d6a5b6-2a84-11eb-adc1-0242ac120002"
+const CHAR_UUID_RX_USER_ID = "a4d6a7d2-2a84-11eb-adc1-0242ac120002"
+const CHAR_UUID_TX_CHALL = "a4d6ac1e-2a84-11eb-adc1-0242ac120002"
 
 /**
  * Classe représentant la page de déverrouillage de la porte.
@@ -59,7 +50,8 @@ export default class Unlock extends Component {
 
         this.handlerStopScan = bleManagerEmitter.addListener('BleManagerStopScan', this.handler_StopBLEScanning);
         this.handlerDiscoverPeripheral = bleManagerEmitter.addListener('BleManagerDiscoverPeripheral', this.handler_discoverNewBLEPeripheral)
-        
+        this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handler_updateValueForCharacteristic)
+
         this.checkPermissionsAndBT()
     }
     
@@ -71,6 +63,7 @@ export default class Unlock extends Component {
     componentWillUnmount() {
         this.handlerStopScan.remove()
         this.handlerDiscoverPeripheral.remove()
+        this.handlerUpdate.remove()
         this.resetForReason()
     }
 
@@ -80,6 +73,7 @@ export default class Unlock extends Component {
     checkPermissionsAndBT = () => {
         let perm_BT_ok = true
 
+        // Vérifications des permissions Android
         if(Platform.OS === 'android') {
             PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION).then((result) => {
                 if (result === true) console.log("PERMISSIONS.ACCESS_BACKGROUND_LOCATION OK")
@@ -113,9 +107,9 @@ export default class Unlock extends Component {
                 }
             })
         }
-    
+        // Initialisation du module Bluetooth
         BleManager.enableBluetooth()
-        .then(() => BleManager.start({ showAlert: false }).then(() => console.log("Module initialized")))
+        .then(() => BleManager.start().then(() => console.log("Module initialized")))
         .catch((error) => perm_BT_ok = false)
     
         this.setState({allPermissionsAndBT_ok: perm_BT_ok})
@@ -125,12 +119,15 @@ export default class Unlock extends Component {
      * Débute le scan BLE.
      */
     beginBLEScanning = () => {
-        BleManager
+        if(!this.state.scanning) {
+            BleManager
             .scan([], 3, true)
             .then((results) => {
                 console.log("BLE Scanning started...")
                 this.setState({scanning: true})
             })
+            .catch((error) => console.log(`[beginBLEScanning] error = ${error}`))
+        }
     }
 
     /**
@@ -144,94 +141,66 @@ export default class Unlock extends Component {
                 console.log("Disconnected from CyberKey ESP32")
                 if(callback) callback()
             })
-            .catch((error) => console.log(error))
+            .catch((error) => console.log(`[disconnectFromCyberKeyESP32] error = ${error}`))
         }
     }
 
     /**
      * Handler lorsque le scan BLE s'arrête
+     * Gère la connexion avec l'ESP32 de la serrure si celui-ci a été découvert lors du scan des BLE.
+     * S'il a été découvert, s'y connecte et négocie un MTU de 400 octets (ordre de grandeur des futures envois d'informations).
      */
-    handler_StopBLEScanning = () => {
-        console.log("BLE Scanning ended...")
+    handler_StopBLEScanning = (r) => {
+        console.log("BLE Scanning ended... ")
         this.setState({scanning: false})
-        if(this.state.cyberKeyESP32Found === false) { // le scan n'a pas permis de trouver l'ESP32 de la serrure
-            console.log("OUI")
+
+        // le scan n'a pas permis de trouver l'ESP32 de la serrure
+        if(this.state.cyberKeyESP32Found === false) { 
             this.resetForReason("Serrure non trouvée !")
-        } 
+        }
+        else {
+            BleManager.connect(this.state.cyberKeyESP32_peripheral.id)
+                .then(() => {
+                    console.log("Connected to CykerKey ESP32")
+                    this.setState({connectedTo_cykerKeyESP32: true})
+                    BleManager.requestMTU(this.state.cyberKeyESP32_peripheral.id, 400)
+                        .then((mtu) => {
+                            console.log(`MTU = ${mtu} bytes for this connection.\nAuthentication procedure launched...`)
+                            this.launchUnlockProcedure()
+                        })
+                        .catch((error) => console.log(`[handler_StopBLEScanning] error = ${error}`))
+                })
+                .catch((error) => console.log(`[handler_StopBLEScanning] error = ${error}`))  
+        }
     }
 
     /**
      * Handler lorsqu'un nouveau périphérique BLE est trouvé.
+     * Lorsque le nouveau périphérique BLE découvert correspond à la l'ESP32 de la serrure alors met à jour l'état du composant.
      * @param {Object} peripheral objet représentant un périphérique
      */
     handler_discoverNewBLEPeripheral = (peripheral) => {
-        if(peripheral.id === CYBER_KEY_ESP32_MAC_ADDR) {
-            console.log(peripheral.id)
-            BleManager.stopScan() // Arrête le scanning lorsque l'on trouve l'ESP32 de la serrure
+        console.log(peripheral.id)
+        
+        if(peripheral.id === CYBER_KEY_ESP32_MAC_ADDR && this.state.cyberKeyESP32Found === false) {
             console.log("ID du ESP32 Cyker key = ", peripheral.id)
-            console.log(peripheral)
             this.setState({
               cyberKeyESP32Found: true,
               cyberKeyESP32_peripheral: peripheral,
             })
-            
-            // Procédure de déverrouillage
-            this.connectToCyberKeyESP32( // se connecte automatiquement à l'ESP32 CyberKey
-                () => {
-                    this.launchUnlockProcedure(); 
-                },
-                () => {
-                    this.resetForReason("Erreur de connexion à l'ESP32 !")
-                }
-            ); 
         }
     }
 
     /**
-     * Se connecte en BLE à l'ESP32 de la serrure.
-     * Vérifie d'abord que l'ESP32 a été trouvé lors du scan.
-     * @param callback fonction exécutée lorsqu'on se connecte à l'ESP32.
-     * @param errorCallback fonction exécutée si une erreur survient.
+     * Handler lorsqu'une notification est émise de la part d'un périphérique BLE.
+     * @param {object} data données de la mise à jour de la caractéristique
      */
-    connectToCyberKeyESP32 = (callback, errorCallback) => {
-        if(this.state.cyberKeyESP32Found === true) {
-            BleManager.connect(this.state.cyberKeyESP32_peripheral.id)
-            .then(() => {
-                console.log("Connected to CykerKey ESP32")
-                this.setState({connectedTo_cykerKeyESP32: true})
-                if(callback) callback()
-            })
-            .catch((error) => {
-                if(errorCallback) errorCallback()
-            })   
+    handler_updateValueForCharacteristic = (data) => {
+        
+        console.log('Received data from ' + data.peripheral + ' characteristic ' + data.characteristic, data.value)
+        if(data.characteristic == CHAR_UUID_TX_CHALL) {
+            console.log("esp32 has written on tx_chall !")
         }
-    }
-
-    /**
-     * Ecrit du texte sur la caractéristique BLE de l'ESP32 concernant la serure
-     * @param {String} text le texte à envoyer à l'ESP32
-     * @param {Function} callback callback() lorsque l'on a écrit sur la caractéristique
-     */
-    writeToESP32 = (text, callback, errorCallback) => {
-
-        const data = stringToBytes(text)
-    
-        BleManager.retrieveServices(this.state.cyberKeyESP32_peripheral.id)
-        .then((peripheralInfo) => {
-            
-            BleManager.write(
-                this.state.cyberKeyESP32_peripheral.id,
-                CYBER_KEY_ESP32_SERVICE_UUID,
-                CYBER_KEY_ESP32_CHARACTERISTIC_UUID,
-                data
-            )
-            .then(() => {
-                if(callback) callback()
-            })
-            .catch((error) => {
-                if(errorCallback) errorCallback()
-            })
-        })
     }
 
     /**
@@ -250,38 +219,6 @@ export default class Unlock extends Component {
         .catch((error) => {
             if(errorCallback) errorCallback()
         })
-    }
-
-    /**
-     * Méthode rendant un élément indiquant le chargement.
-     */
-    renderLoading = () => {
-        if(this.state.loading) return <Spinner size={Dimensions.get("screen").width * 0.96} style={styles.loading} color="#FFBE00"/>
-    }
-
-    /**
-     * Méthode rendant le bouton de déverouillage.
-     */
-    renderButton = () => {
-        let text = "Déverrouillage"
-        if(!this.state.allPermissionsAndBT_ok) text = "Veuillez accepter les permissions et activer le Bluetooth."
-        if(this.state.allPermissionsAndBT_ok && this.state.loading) {
-            if(this.state.scanning) {
-                text = "Scan des BLE..."
-            }
-            if(this.state.cyberKeyESP32Found) {
-                text = "Connexion à la serrure..."
-            }
-            if(this.state.connectedTo_cykerKeyESP32) {
-                text = "Authentification..."
-            }
-        }
-        let disabled = !this.state.allPermissionsAndBT_ok || this.state.loading
-        return (
-            <Button disabled={disabled} style={styles.unlockButton} onPress={this.unlock}>
-                <Text>{text}</Text>
-            </Button>
-        )
     }
 
     /**
@@ -318,50 +255,28 @@ export default class Unlock extends Component {
      */
     launchUnlockProcedure = () => {
 
-        let infos = {
-            user_id: this.props.user.id.replace(/[.]/g, '')
-        }
-        // le # permet à l'ESP32 de repérer la fin de la valeur de la caractéristique étant donnée que le MTU par défaut est de 23 octets (20 + 3 protocol wrapper).
-        this.writeToESP32(JSON.stringify(infos)+SEND_TYPE.USER_INFOS, 
-            () => { 
-                this.readFromESP32(
-                    (value) => {
-                        let challenge = value
-                        let keyTag = `${STORAGE_NAMING.PRIVATE_KEY_NAME}-${this.props.user.id}`        
-                        RSAKeychain.signWithAlgorithm(challenge, keyTag, RSAKeychain.SHA256withRSA)
-                            .then((signature) => {
-                                this.writeToESP32(base64ToHex(signature)+SEND_TYPE.SIGNATURE, 
-                                    () => {
-                                        this.readFromESP32(
-                                            (value) => {
-                                                if(value == RCV_TYPE.AUTH_OK) { // signature valide donc je suis authentifié
-                                                    this.resetForReason("Porte ouverte !")
-                                                }
-                                                else { // signature non validée
-                                                    this.resetForReason("Erreur d'authenfication !")
-                                                }
-                                            },
-                                            () => {
-                                                this.resetForReason("Erreur de lecture de la réponse d'autorisation !")
-                                            }
-                                        )
-                                    },
-                                    () => {
-                                        this.resetForReason("Erreur d'envoi de la signature RSA !")
-                                    }
-                                )
-                            })
-                            .catch((error) => console.log(error))
-                    },
-                    () => {
-                        this.resetForReason("Erreur de lecture du challenge !")
-                    }
-                )
-            },
-            () => {
-                this.resetForReason("Erreur d'envoi des infos utilisateur !")
-            }
-        )
+        let user_id_db = this.props.user.id.replace(/[.]/g, '')
+        let keyTag = `${STORAGE_NAMING.PRIVATE_KEY_NAME}-${this.props.user.id}`
+        //RSAKeychain.signWithAlgorithm(challenge, keyTag, RSAKeychain.SHA256withRSA).then(sig => console.log(sig)).catch(error => console.log(error))
+
+        // Oblige d'exécuter cette méthode avant d'écrire ou de lire ...
+        BleManager.retrieveServices(this.state.cyberKeyESP32_peripheral.id)
+        .then((peripheralInfo) => {
+            
+            BleManager.write(
+                this.state.cyberKeyESP32_peripheral.id,
+                CYBERKEY_SERVICE_UUID,
+                CHAR_UUID_RX_USER_ID,
+                stringToBytes(user_id_db)
+            )
+            .then(() => {
+                // Continuer le protocole ... ie. attendre une réponse sur tx_chall
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+        })
+        .catch(error => console.log(error))
     }
 
     /**
@@ -464,6 +379,38 @@ export default class Unlock extends Component {
                 }
             }
         }
+    }
+
+    /**
+     * Méthode rendant un élément indiquant le chargement.
+     */
+    renderLoading = () => {
+        if(this.state.loading) return <Spinner size={Dimensions.get("screen").width * 0.96} style={styles.loading} color="#FFBE00"/>
+    }
+
+    /**
+     * Méthode rendant le bouton de déverouillage.
+     */
+    renderButton = () => {
+        let text = "Déverrouillage"
+        if(!this.state.allPermissionsAndBT_ok) text = "Veuillez accepter les permissions et activer le Bluetooth."
+        if(this.state.allPermissionsAndBT_ok && this.state.loading) {
+            if(this.state.scanning) {
+                text = "Scan des BLE..."
+            }
+            if(this.state.cyberKeyESP32Found) {
+                text = "Connexion à la serrure..."
+            }
+            if(this.state.connectedTo_cykerKeyESP32) {
+                text = "Authentification..."
+            }
+        }
+        let disabled = !this.state.allPermissionsAndBT_ok || this.state.loading
+        return (
+            <Button disabled={disabled} style={styles.unlockButton} onPress={this.unlock}>
+                <Text>{text}</Text>
+            </Button>
+        )
     }
     
     /**
