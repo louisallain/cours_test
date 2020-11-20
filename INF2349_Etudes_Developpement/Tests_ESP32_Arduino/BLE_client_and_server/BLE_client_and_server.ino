@@ -8,11 +8,15 @@
 #define CHAR_UUID_TX_CHALL    "a4d6ac1e-2a84-11eb-adc1-0242ac120002" // uuid de la caractéristique sur laquelle on écrit le challenge
 #define CHAR_UUID_TX_IS_AUTH  "c15079b0-2a84-11eb-adc1-0242ac120002" // uuid de la caractéristique sur laquelle on écrit la réponse à la procédure d'authentification
 
+#define MTU_SIZE 512
+
 BLEServer *cyberKeyServer = NULL;
 BLECharacteristic *tx_chall = NULL;
 BLECharacteristic *tx_isAuth = NULL;
 bool userConnected = false;
 bool oldUserConnected = false;
+
+char user_id[512] = {'\0'};
 
 #define MAX_JSON 200
 
@@ -21,7 +25,7 @@ bool oldUserConnected = false;
  */
 class CyberKeyServerCallback: public BLEServerCallbacks {
     void onConnect(BLEServer* pServer) {
-      Serial.printf("\n . New BLE connectoin");
+      Serial.printf("\n . New BLE connection");
       userConnected = true;
     };
 
@@ -35,15 +39,16 @@ class CyberKeyServerCallback: public BLEServerCallbacks {
  * Classe où sont définis les callbacks de la char. rx_user_id
  */
 class Rx_user_id_callback: public BLECharacteristicCallbacks {
-  
+
   void onWrite(BLECharacteristic *pCharacteristic) {
     std::string value = pCharacteristic->getValue();
 
     if(value.length() > 0) {
       Serial.printf("\n . New value on rx_user_id :");
-      Serial.printf("\n . %s\n", value.c_str());
+      user_id[0] = 0;
+      strcpy(user_id, value.c_str());
+      Serial.printf("\n . %s\n", user_id);
       if(userConnected) {
-        // TODO : aller chercher la clef publique de l'utilisateur en BDD
         tx_chall->setValue("cyberkey");
         tx_chall->notify();
       }
@@ -61,11 +66,14 @@ class Rx_user_sig_callback: public BLECharacteristicCallbacks {
 
     if(value.length() > 0) {
       Serial.printf("\n . New value on rx_user_sig :");
+      Serial.printf("\n . user_id = %s", user_id);
       Serial.printf("\n . %s\n", value.c_str());
       if(userConnected) {
-        // TODO répondre en vérifiant la signature avant ...
+        // TODO : aller chercher la clef publique de l'utilisateur en BDD pour ensuite vérifier la signature reçu
         tx_isAuth->setValue("V");
         tx_isAuth->notify();
+
+        // Réinitialisation des pointeurs
       }
     }
   }
@@ -77,6 +85,8 @@ void setup() {
   Serial.printf("\n . Starting BLE");
 
   BLEDevice::init("CyberKey BLE");
+  uint16_t mtu = MTU_SIZE;
+  BLEDevice::setMTU(mtu);
   cyberKeyServer = BLEDevice::createServer();
   cyberKeyServer->setCallbacks(new CyberKeyServerCallback());
   
@@ -112,7 +122,7 @@ void setup() {
   pAdvertising->setMinPreferred(0x06);  // functions that help with iPhone connections issue
   pAdvertising->setMinPreferred(0x12);
   BLEDevice::startAdvertising();
-  Serial.printf("\n CyberKey BLE Service operationnal !");
+  Serial.printf("\n . CyberKey BLE Service operationnal !");
 }
 
 void loop() {
