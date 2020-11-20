@@ -276,7 +276,7 @@ export default class Unlock extends Component {
                                         console.log(`[launchUnlockProcedure] read from tx_isAuth error = ${error}`)
                                         this.resetForReason("Erreur de procédure, recommencer")
                                     })
-                                }, 5000) // 50 ms le temps pour l'ESP32 de vérifier la signature (VOIRE BEAUCOUP PLUS DE TEMPS CAR L ESP32 VA DEVOIR SE CONNECTER LA BDD)
+                                }, 500) // 50 ms le temps pour l'ESP32 de vérifier la signature (VOIRE BEAUCOUP PLUS DE TEMPS CAR L ESP32 VA DEVOIR SE CONNECTER LA BDD)
                                 
                             })
                             .catch((error) => {
