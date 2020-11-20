@@ -157,9 +157,15 @@ export default class Unlock extends Component {
                             console.log(`MTU = ${mtu} bytes for this connection`)
                             this.launchUnlockProcedure()
                         })
-                        .catch((error) => console.log(`[handler_StopBLEScanning] requestMTU error = ${error}`))
+                        .catch((error) => {
+                            console.log(`[handler_StopBLEScanning] requestMTU error = ${error}`)
+                            this.resetForReason("Erreur de procédure, recommencer !")
+                        })
                 })
-                .catch((error) => console.log(`[handler_StopBLEScanning] connection error = ${error}`))  
+                .catch((error) => {
+                    console.log(`[handler_StopBLEScanning] connection error = ${error}`)
+                    this.resetForReason("Erreur de connexion à la serrure !")
+                })  
         }
     }
 
@@ -270,11 +276,11 @@ export default class Unlock extends Component {
                                         console.log(`[launchUnlockProcedure] read from tx_isAuth error = ${error}`)
                                         this.resetForReason("Erreur de procédure, recommencer")
                                     })
-                                }, 50) // 50 ms le temps pour l'ESP32 de vérifier la signature (VOIRE BEAUCOUP PLUS DE TEMPS CAR L ESP32 VA DEVOIR SE CONNECTER LA BDD)
+                                }, 5000) // 50 ms le temps pour l'ESP32 de vérifier la signature (VOIRE BEAUCOUP PLUS DE TEMPS CAR L ESP32 VA DEVOIR SE CONNECTER LA BDD)
                                 
                             })
                             .catch((error) => {
-                                console.log(`[launchUnlockProcedure] write error = ${error}`)
+                                console.log(`[launchUnlockProcedure] write on rx_user_sig error = ${error}`)
                                 this.resetForReason("Erreur de procédure, recommencer")
                             })
                         })
@@ -287,7 +293,7 @@ export default class Unlock extends Component {
                 
             })
             .catch((error) => {
-                console.log(`[launchUnlockProcedure] write error = ${error}`)
+                console.log(`[launchUnlockProcedure] write on rx_user_id error = ${error}`)
                 this.resetForReason("Erreur de procédure, recommencer")
             })
         })

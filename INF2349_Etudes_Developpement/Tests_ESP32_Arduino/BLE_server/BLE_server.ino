@@ -157,6 +157,7 @@ void setup() {
   
   Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
   Firebase.reconnectWiFi(true);
+  Firebase.setMaxRetry(firebaseData, 3);
   Firebase.setReadTimeout(firebaseData, 1000 * 60);
   Firebase.setwriteSizeLimit(firebaseData, "tiny");
   
