@@ -20,7 +20,6 @@ const CYBERKEY_SERVICE_UUID = "a4d6a5b6-2a84-11eb-adc1-0242ac120002"
 const CHAR_UUID_RX_USER_ID = "a4d6a7d2-2a84-11eb-adc1-0242ac120002"
 const CHAR_UUID_TX_CHALL = "a4d6ac1e-2a84-11eb-adc1-0242ac120002"
 const CHAR_UUID_RX_USER_SIG = "a4d6a8c2-2a84-11eb-adc1-0242ac120002"
-const CHAR_UUID_TX_IS_AUTH = "c15079b0-2a84-11eb-adc1-0242ac120002"
 
 // MTU des transmissions
 const MTU_SIZE = 512
@@ -260,23 +259,13 @@ export default class Unlock extends Component {
                                 MTU_SIZE
                             )
                             .then(() => {
-                                // Continuer le protocole ... ie. attendre une réponse sur rx_isAuth
+                                // Ici, pendant ce temps l'ESP32 de la serrure consulte la BDD pour obtenir la clef publique de l'utilisateur afin
+                                // de vérifier la signature envoyée précédemment.
+                                // TODO : faire une timeout plus précis avec des tests pour savoir environ le nombre de ms nécessaires 
+                                //        à l'ESP32 pour faire ces opérations.
                                 setTimeout(() => {
-                                    BleManager.read(
-                                        this.state.cyberKeyESP32_peripheral.id,
-                                        CYBERKEY_SERVICE_UUID,
-                                        CHAR_UUID_TX_IS_AUTH
-                                    )
-                                    .then((readData) => {
-                                        let isAuth = bytesToString(readData)
-                                        console.log(`Received from tx_isAuth = ${isAuth}`)
-                                        this.resetForReason("Authentification bien reçu !!!")
-                                    })
-                                    .catch((error) => {
-                                        console.log(`[launchUnlockProcedure] read from tx_isAuth error = ${error}`)
-                                        this.resetForReason("Erreur de procédure, recommencer")
-                                    })
-                                }, 500) // 50 ms le temps pour l'ESP32 de vérifier la signature (VOIRE BEAUCOUP PLUS DE TEMPS CAR L ESP32 VA DEVOIR SE CONNECTER LA BDD)
+                                    this.resetForReason("La porte est ouverte !")
+                                }, 10000)
                                 
                             })
                             .catch((error) => {

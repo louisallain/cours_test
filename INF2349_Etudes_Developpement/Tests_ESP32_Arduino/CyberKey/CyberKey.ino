@@ -15,7 +15,6 @@
 #define CHAR_UUID_RX_USER_ID  "a4d6a7d2-2a84-11eb-adc1-0242ac120002" // uuid de la caractéristique sur laquelle on reçoit l'identifiant en BDD de l'utilisateur
 #define CHAR_UUID_RX_USER_SIG "a4d6a8c2-2a84-11eb-adc1-0242ac120002" // uuid de la caractéristique sur laquelle on reçoit la signature de l'utilisateur en réponse au challenge
 #define CHAR_UUID_TX_CHALL    "a4d6ac1e-2a84-11eb-adc1-0242ac120002" // uuid de la caractéristique sur laquelle on écrit le challenge
-#define CHAR_UUID_TX_IS_AUTH  "c15079b0-2a84-11eb-adc1-0242ac120002" // uuid de la caractéristique sur laquelle on écrit la réponse à la procédure d'authentification
 
 // Ordre de grandeur des transmissions BLE
 #define MTU_SIZE 512
@@ -37,11 +36,8 @@
 // Variables utilisées pour la connexion et les transmissions BLE
 BLEServer *cyberKeyServer = NULL;
 BLECharacteristic *tx_chall = NULL;
-BLECharacteristic *tx_isAuth = NULL;
-bool userConnected = false;
-bool oldUserConnected = false;
-char user_id[512] = {'\0'}; // Id de l'utilisateur courant en BDD
-char user_sig[512] = {'\0'}; // Signature de challenge de l'utilisateur courant
+String user_id; // Id de l'utilisateur courant en BDD
+String user_sig; // Signature de challenge de l'utilisateur courant
 
 // Variables utilisés pour récupérer les données depuis la base de données
 FirebaseData firebaseData;
@@ -61,12 +57,10 @@ bool newUserSentAllData = false;
 class CyberKeyServerCallback: public BLEServerCallbacks {
     void onConnect(BLEServer* pServer) {
       Serial.printf("\n . New BLE connection");
-      userConnected = true;
     };
 
     void onDisconnect(BLEServer* pServer) {
       Serial.printf("\n . BLE connection lost");
-      userConnected = false;
     }
 };
 
@@ -82,15 +76,12 @@ class Rx_user_id_callback: public BLECharacteristicCallbacks {
       
       Serial.printf("\n . New value on rx_user_id :");
 
-      // Sauvegarde globallement l'id de l'utilisateur courant en BDD
-      user_id[0] = 0;
-      strcpy(user_id, value.c_str());
-      Serial.printf("\n . %s\n", user_id);
+      user_id = String(value.c_str());
+      Serial.print("\n . user_id=");
+      Serial.print(user_id);
       
-      if(userConnected) {
-        tx_chall->setValue("cyberkey");
-        tx_chall->notify();
-      }
+      tx_chall->setValue("cyberkey");
+      tx_chall->notify();
     }
   }
 };
@@ -105,22 +96,13 @@ class Rx_user_sig_callback: public BLECharacteristicCallbacks {
 
     if(value.length() > 0) {
       Serial.printf("\n . New value on rx_user_sig :");
-      Serial.printf("\n . user_id=%s", user_id);
       
-      if(userConnected) {
-
-        // Ici, on sauvegarde en globale la nouvelle signature pour ensuite la vérifier dans la boucle loop()
-        user_sig[0] = 0;
-        strcpy(user_sig, value.c_str());
-        Serial.printf("\n . sig=%s\n", user_sig);
-        
-        newUserSentAllData = true; // toutes les infos nécessaires au déverrouillage ont été envoyées.
-        
-        /*
-        tx_isAuth->setValue("V");
-        tx_isAuth->notify();
-        */
-      }
+      // Ici, on sauvegarde en globale la nouvelle signature pour ensuite la vérifier dans la boucle loop()
+      user_sig = String(value.c_str());
+      Serial.print("\n . user_sig=");
+      Serial.print(user_sig);
+      
+      newUserSentAllData = true; // toutes les infos nécessaires au déverrouillage ont été envoyées.
     }
   }
 };
@@ -135,10 +117,7 @@ void connectToWifi() {
   Serial.print("\n . Connected to "); Serial.print(WIFI_SSID); Serial.print(" with IP="); Serial.print(WiFi.localIP());
 }
 
-void setup() {
-  Serial.begin(115200);
-
-  // Initialisation BLE
+void initBLEServer() {
   Serial.printf("\n . Starting BLE");
 
   BLEDevice::init("CyberKey BLE");
@@ -165,12 +144,6 @@ void setup() {
                                                     BLECharacteristic::PROPERTY_INDICATE
                                                   );
 
-  // Char. tx_isAuth
-  tx_isAuth = cyberKeyService->createCharacteristic(CHAR_UUID_TX_IS_AUTH, 
-                                                    BLECharacteristic::PROPERTY_READ | 
-                                                    BLECharacteristic::PROPERTY_NOTIFY |
-                                                    BLECharacteristic::PROPERTY_INDICATE
-                                                  );
 
   cyberKeyService->start();
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
@@ -179,33 +152,26 @@ void setup() {
   pAdvertising->setMinPreferred(0x06);  // functions that help with iPhone connections issue
   pAdvertising->setMinPreferred(0x12);
   BLEDevice::startAdvertising();
-  Serial.printf("\n . CyberKey BLE Service operationnal !");  
+  Serial.printf("\n . CyberKey BLE Service operationnal !"); 
+}
+
+void setup() {
+  Serial.begin(115200);
+
+  // Initialisation BLE
+  initBLEServer();
 }
 
 void loop() {
-
-  // Routine permettant de renouveler les connexions BLE
-  // Déconnexion
-  if(!userConnected && oldUserConnected) {
-    delay(500); // give the bluetooth stack the chance to get things ready
-    cyberKeyServer->startAdvertising(); // restart adverstising
-    Serial.printf("\n . Advertising again");
-    oldUserConnected = userConnected;
-  }
-
-  // Connexion
-  if(userConnected && !oldUserConnected) {
-    oldUserConnected = userConnected;
-  }
-
+  
   // Routine permettant de vérifier si un nouvel utilisateur a envoyé toutes les infos nécessaires au déverrouillage
   if(newUserSentAllData) {
-
-    Serial.printf("\n A new user sent all data");
+    
+    Serial.printf("\n . A new user sent all data");
   
     // Arrêt du BLE
     BLEDevice::deinit(false);
-    delay(300);
+    delay(200);
     
     // Initialisation Wifi
     connectToWifi();
@@ -215,24 +181,45 @@ void loop() {
     Firebase.reconnectWiFi(true);
     Firebase.setReadTimeout(firebaseData, 1000 * 60); // Timeout de lecture des données depuis la base = 60 secondes
 
-    if (Firebase.getInt(firebaseData, "/test/int"))
+    Serial.print("\n . user_id=");
+    Serial.print(user_id);
+    Serial.print("\n . user_sig=");
+    Serial.print(user_sig);
+
+    String pathToPublicKey = "/public_keys/" + user_id + "/public_key";
+    if (Firebase.get(firebaseData, pathToPublicKey.c_str()))
     {
-      Serial.println("PASSED");
-      Serial.println("PATH: " + firebaseData.dataPath());
-      Serial.println("TYPE: " + firebaseData.dataType());
-      Serial.println("ETag: " + firebaseData.ETag());
-      Serial.print("VALUE: ");
-      Serial.print(firebaseData.intData());
-      Serial.println("------------------------------------");
-      Serial.println();
+      Serial.println(" . Récupération de clef publique OK");
+      Serial.println(" . Chemin de la clef publique: " + firebaseData.dataPath());
+      Serial.println(" . Type de données de la clef publique: " + firebaseData.dataType());
+      
+      String modulus, exponent;
+
+      if(firebaseData.dataType() == "json") {
+          FirebaseJson json = firebaseData.jsonObject();
+          FirebaseJsonData jsonObj;
+          
+          json.get(jsonObj, "/e");
+          exponent = String(jsonObj.stringValue);
+
+          json.get(jsonObj, "/n");
+          modulus = String(jsonObj.stringValue);
+          Serial.print("\n . Exponent = "); Serial.print(exponent);
+          Serial.print("\n . Modulus = "); Serial.print(modulus);
+      }
     }
     else
     {
-      Serial.println("FAILED");
-      Serial.println("REASON: " + firebaseData.errorReason());
-      Serial.println("------------------------------------");
-      Serial.println();
+      Serial.println(" . Récupération de clef publique ECHOUE");
+      Serial.println(" . Raison: " + firebaseData.errorReason());
     }
+    
+    
+    Serial.printf("\n . TODO : vérifier la signature reçue et en conséquence ouvrir ou ne pas ouvrir la pote");
+    Serial.printf("\n . Redémarrage\n\n\n");
     newUserSentAllData = false;
+
+    // Meilleur moyen (le plus rapide) que j'ai trouver pour tout réinitialiser sans problème de mémoire
+    ESP.restart();
   }
 }
