@@ -247,7 +247,7 @@ export default class Unlock extends Component {
                     )
                     .then((readData) => {
                         let challenge = bytesToString(readData)
-                        console.log(`Received from tx_chall = ${challenge}`)
+                        console.log(`Received from tx_chall = "${challenge}"`)
                         // Ecriture de la signature de l'utilisateur
                         RSAKeychain.signWithAlgorithm(challenge, keyTag, RSAKeychain.SHA256withRSA).then((sig) => {
                             console.log(`Sig = ${base64ToHex(sig)}`)
