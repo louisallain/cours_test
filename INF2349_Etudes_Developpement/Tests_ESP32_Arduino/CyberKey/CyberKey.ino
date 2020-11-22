@@ -328,43 +328,44 @@ void loop() {
       String modulus, exponent;
 
       if(firebaseData.dataType() == "json") {
-          FirebaseJson json = firebaseData.jsonObject();
-          FirebaseJsonData jsonObj;
-          
-          json.get(jsonObj, "/e");
-          exponent = String(jsonObj.stringValue);
+        FirebaseJson json = firebaseData.jsonObject();
+        FirebaseJsonData jsonObj;
+        
+        json.get(jsonObj, "/e");
+        exponent = String(jsonObj.stringValue);
 
-          json.get(jsonObj, "/n");
-          modulus = String(jsonObj.stringValue);
-          Serial.print("\n . Exponent = "); Serial.print(exponent);
-          Serial.print("\n . Modulus = "); Serial.print(modulus);
-          int isVerify = -1;
-          if ((isVerify = verifySHA256WithRSA(modulus.c_str(), exponent.c_str(), user_sig.c_str(), challenge_str.c_str())) != 0) {
-            Serial.printf("\n  . La signature n'est pas vérifiée !");
-            display.clearDisplay();
-            display.setTextSize(1);
-            display.setTextColor(WHITE);
-            display.setCursor(0, 10);
-            display.println("Signature RSA");
-            display.println("Invalide");
-            display.println("Porte verrouillée");
-            display.display();
+        json.get(jsonObj, "/n");
+        modulus = String(jsonObj.stringValue);
+        Serial.print("\n . Exponent = "); Serial.print(exponent);
+        Serial.print("\n . Modulus = "); Serial.print(modulus);
+        int isVerify = -1;
+        if ((isVerify = verifySHA256WithRSA(modulus.c_str(), exponent.c_str(), user_sig.c_str(), challenge_str.c_str())) != 0) {
+          Serial.printf("\n  . La signature n'est pas vérifiée !");
+          display.clearDisplay();
+          display.setTextSize(1);
+          display.setTextColor(WHITE);
+          display.setCursor(0, 10);
+          display.println("Signature RSA");
+          display.println("Invalide");
+          display.println("Porte verrouillée");
+          display.display();
+        }
+        else {
+          Serial.printf("\n . Signature vérifiée !");
+          Serial.printf("\n . TODO : ouvrir la porte !!!");
+          
+          display.clearDisplay();
+          display.setTextSize(1);
+          display.setTextColor(WHITE);
+          display.setCursor(0, 10);
+          display.println("Signature RSA");
+          display.println("Verifiee");
+          display.println("Bienvenue !");
+          display.display();
+          for(int k = 0; k < 30; k++) {
+            digitalWrite(ONBOARD_LED, HIGH); delay(50); digitalWrite(ONBOARD_LED, LOW); delay(50);
           }
-          else {
-            Serial.printf("\n . Signature vérifiée !");
-            Serial.printf("\n . TODO : ouvrir la porte !!!");
-            digitalWrite(ONBOARD_LED, HIGH);
-            display.clearDisplay();
-            display.setTextSize(1);
-            display.setTextColor(WHITE);
-            display.setCursor(0, 10);
-            display.println("Signature RSA");
-            display.println("Verifiee");
-            display.println("Bienvenue !");
-            display.display();
-            delay(3000);
-            digitalWrite(ONBOARD_LED, LOW);
-          }  
+        }  
       }
     }
     else
