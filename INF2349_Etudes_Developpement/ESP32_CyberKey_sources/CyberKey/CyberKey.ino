@@ -53,7 +53,7 @@
 #define ONBOARD_LED  2
 
 // Durée du timeout en ms d'un client mettant trop de temps à répondre
-#define TIEMOUT_PROCEDURE_MS 30000 // 3 secondes
+#define TIEMOUT_PROCEDURE_MS 3000 // 3 secondes
 
 // Déclaration de l'afficheur OLED SSD1306 (SCL sur le pin 22 et SDA sur le pin 21)
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
