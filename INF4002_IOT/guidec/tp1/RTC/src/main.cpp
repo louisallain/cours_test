@@ -73,16 +73,15 @@ void showBits(uint8_t v) {
 // --------------------------------------------------------------------------
 // Read the DS3231's registers and display their values in binary form
 void showRegisters() {
-  Serial.println("Registers :");
+  
   Wire.beginTransmission(DS3231_ADDR);
-  int nbRegisters = 0;
-  if((nbRegisters = Wire.requestFrom(DS3231_ADDR, 19)) != 19) { // 19 = nombre de registre
-    Serial.println("Cant request");
-    return;
-  }
+  Wire.write(0x00); // Début de la mémoire
+  Wire.endTransmission();
+
+  // Lecture des registres
+  Wire.requestFrom(DS3231_ADDR, 19); // 19 registres selon le datasheet
   while(Wire.available()) { // tant qu'il y a des registres
-    uint8_t b = Wire.read();
-    showBits(b);
+    showBits(Wire.read());
     Serial.println();
   }
   Wire.endTransmission();
@@ -92,14 +91,43 @@ void showRegisters() {
 // Read the date and time from the DS3231 and set dt's structure accordingly
 void getTime(tm *dt) {
 
-  Serial.println("TO BE COMPLETED");
+  Wire.beginTransmission(DS3231_ADDR);
+  Wire.write(0x00); // Début de la mémoire
+  Wire.endTransmission();
+
+  // Lecture de la date
+  Wire.requestFrom(DS3231_ADDR, 7); // Registre 0x00 à 0x06 concernent la date
+  int secondes = bcd2int(Wire.read() & 0x7F);
+  int minutes = bcd2int(Wire.read() & 0x7F);
+  int hours = bcd2int(Wire.read() & 0x3F); // le bit 6 de ce registre est à 0 donc mode 24h
+  int dayOfTheWeek = bcd2int(Wire.read() & 0x07); // lundi = 1, dimanche = 7 à traduire pour la strucutre tm
+  int dayOfTheMonth = bcd2int(Wire.read() & 0x3F);
+  int month = bcd2int(Wire.read() & 0x1F);
+  int year = bcd2int(Wire.read() & 0xFF);
+  
+  dt->tm_sec = secondes;
+  dt->tm_min = minutes;
+  dt->tm_hour = hours;
+  dt->tm_mday = dayOfTheMonth;
+  dt->tm_mon = month - 1; // convert en 0-11
+  dt->tm_year = 100+year; // car année depuis 1900
+  dt->tm_wday = dayOfTheWeek-1; // converti dimanche = 1, samedi = 7 en dimanche = 0, samedi = 6
 }
 
 // --------------------------------------------------------------------------
 // Set the date and time in the DS3231 based on the values in dt's structure
 void setTime(tm *dt) {
-
-  Serial.println("TO BE COMPLETED");
+  
+  Wire.beginTransmission(DS3231_ADDR);
+  Wire.write(0x00); // Début de la mémoire
+  Wire.write(int2bcd(dt->tm_sec)); // secondes
+  Wire.write(int2bcd(dt->tm_min)); // minutes
+  Wire.write(int2bcd(dt->tm_hour)); // heures
+  Wire.write(int2bcd(dt->tm_wday+1)); // jour de la semaine ; converti le jour de la semaine dimanche = 0, samedi = 6 en dimache = 1, samedi = 7
+  Wire.write(int2bcd(dt->tm_mday)); // jour du mois
+  Wire.write(int2bcd(dt->tm_mon+1)); // mois ; converti 0-11 en 1-12
+  Wire.write(int2bcd(dt->tm_year)); // année
+  Wire.endTransmission();
 }
 
 // --------------------------------------------------------------------------
