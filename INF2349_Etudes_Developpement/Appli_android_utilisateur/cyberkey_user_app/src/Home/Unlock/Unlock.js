@@ -71,6 +71,7 @@ export default class Unlock extends Component {
 
     /**
      * Demandes toutes les permissions nécessaires et demande d'activer le Bluetooth.
+     * Retourne faux si le BT n'était pas activé initialement.
      */
     checkPermissionsAndBT = () => {
         let perm_BT_ok = true

@@ -373,6 +373,8 @@ void loop() {
     Serial.print("\n . user_sig=");
     Serial.print(user_sig);
 
+    // TODO : récupérer le créneau courant ET vérifier si l'utilisateur a effectivement accès à ce créneau
+    
     String pathToPublicKey = "/public_keys/" + user_id + "/public_key";
     display.clearDisplay();
     display.setTextSize(1);
