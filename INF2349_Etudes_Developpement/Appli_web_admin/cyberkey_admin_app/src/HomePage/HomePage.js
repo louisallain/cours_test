@@ -14,6 +14,9 @@ const WAITING_FOR_ACCEPTATION_USERS_PAGE = "waiting_for_accpt_users_page"
 const VIP_USERS_PAGE = "vip_users_page"
 const SHOW_ACCEPTED_USERS_PAGE = "show_accepted_users_page"
 
+// URL des créneaux de cours définis sur ADE dans un fichier ics
+const ICS_EVENTS_ADE_FILE_URL = "https://planning.univ-ubs.fr/jsp/custom/modules/plannings/anonymous_cal.jsp?data=8241fc3873200214b0ceef9e5de578d6e0fa50826f0818af4a82a8fde6ce3f14906f45af276f59ae8fac93f781e86152d0472efb473cb41ff4beca69cf904027c2973627c2eb073ba5b915c2167188168d3f4109b6629391"
+
 /**
  * Classe représentant le composant de la page d'accueil (après connexion) de l'application.
  */
@@ -32,17 +35,36 @@ class HomePage extends React.Component {
             eventsRetrieved: false,
             users: [],
             usersRetrieved: false,
+            ADE_Events: null,
+            ADE_EventsRetrieved: false,
         };
     } 
 
     /**
      * Fonction exécuté après le montage du composant.
      * Récupère les créneaux et les utilisateurs depuis la BDD.
+     * Récupère également les créneaux définis sur l'emploi du temps ADE de l'université.
      */
     componentDidMount() {
         this.retrieveEventsFromDB();
         this.retrieveUsersFromDB();
-        // TODO : récupérer les créneaux de cours depuis ADE à partir de l'URL : https://planning.univ-ubs.fr/jsp/custom/modules/plannings/anonymous_cal.jsp?data=8241fc3873200214b0ceef9e5de578d6e0fa50826f0818af4a82a8fde6ce3f14906f45af276f59ae8fac93f781e86152d0472efb473cb41ff4beca69cf904027c2973627c2eb073b50f5af2d519aeab98d3f4109b6629391
+        this.retrieveADE_Events();
+    }
+
+    /**
+     * Récupère depuis ADE les créneaux de cours définis par l'administration.
+     */
+    retrieveADE_Events = () => {
+        const CORS_PROXY_URL = "https://api.allorigins.win/get?url=" // CORS proxy
+        fetch(CORS_PROXY_URL + ICS_EVENTS_ADE_FILE_URL) // passe par un proxy CORS
+        .then(res => res.json())
+        .then(json => {
+            this.setState({
+                ADE_Events: utils_function.parseICS(json.contents),
+                ADE_EventsRetrieved: true
+            })
+        })
+        .catch((error) => console.log(error))
     }
 
     /**
@@ -248,7 +270,8 @@ class HomePage extends React.Component {
 
         case CALENDAR_PAGE:
             centerContent = (
-                <EventsCalendar 
+                <EventsCalendar
+                    ADEevents={this.state.ADE_Events} 
                     events={this.state.events} 
                     users={this.state.users} 
                     denieAcessForThisUser={this.denieAccessForThisUser}
@@ -335,8 +358,8 @@ class HomePage extends React.Component {
                 <button className="leftMenuButton" onClick={this.props.handleLogoutButton}>Se déconnecter</button>
             </div>
             <div className="centerMain">
-                {(this.state.eventsRetrieved === true && this.state.usersRetrieved === true) && centerContent}
-                {(this.state.eventsRetrieved === false || this.state.usersRetrieved === false) && <p>Chargement...</p>}
+                {(this.state.eventsRetrieved === true && this.state.usersRetrieved === true && this.state.ADE_EventsRetrieved === true) && centerContent}
+                {(this.state.eventsRetrieved === false || this.state.usersRetrieved === false || this.state.ADE_EventsRetrieved === false) && <p>Chargement...</p>}
             </div>
         </div>
     )

@@ -35,3 +35,11 @@
     height: 60%;
     overflow: auto;
 }
+
+.eventInfos {
+    font-size: 12px;
+}
+
+.courseInfos {
+    color: orange;
+}

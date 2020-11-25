@@ -67,15 +67,27 @@ class CustomToolbar extends React.Component {
  * @param {*} props propriétés héritées du parent.
  */
 function CustomEvent(props) {
-    return (
-        <div className="customEventContainer" title="Double cliquer pour plus d'infos">
-            <p>
-                {props.usersAcceptedForThisEvent.length} accès<br/>
-                {props.usersRequestForThisEvent.length} demandes
-            </p>
-            <button className="deleteEventButton" title="Supprimer ce créneau" onClick={() => props.deleteEvent(props.event)}>X</button>
-        </div>
-    )
+    if(props.event.isCourse) { // cours défini par ADE
+        return (
+            <div className="customEventContainer" title="Cours défini par ADE !">
+                <p className="eventInfos courseInfos">
+                    {props.event.title}
+                </p>
+            </div>
+        )
+    }
+    else { // cours défini par l'adminitrateur
+        return (
+            <div className="customEventContainer" title="Double cliquer pour plus d'infos">
+                <p className="eventInfos">
+                    {props.event.title}<br/>
+                    {props.usersAcceptedForThisEvent.length} accès<br/>
+                    {props.usersRequestForThisEvent.length} demandes
+                </p>
+                <button className="deleteEventButton" title="Supprimer ce créneau" onClick={() => props.deleteEvent(props.event)}>X</button>
+            </div>
+        )
+    }
 }
 
 /**
@@ -93,8 +105,28 @@ class EventsCalendar extends React.Component {
         this.JSONEventsFileInput = React.createRef()
         this.keepExistingEventsCheckbox = React.createRef()
         this.fileReader = new FileReader()
+
+        /**
+         * Join les créneaux libres définis par l'administrateur aux créneaux de cours 
+         * définis par l'administration de l'université ("ADE"). Si il y a un conflit entre ces deux listes,
+         * on gardera le créneau définit par ADE.
+         */
+        let joinedEvents = this.props.ADEevents.filter(e => e.isCourse == true)
+        this.props.events.map(e => {
+            let startDate = new Date(e.start)
+            let endDate = new Date(e.end)
+            if(this.props.ADEevents.filter(e => e.isCourse == true).filter(v => {
+                let startDateADE = new Date(v.start)
+                let endDateADE = new Date(v.end)
+                return ((startDateADE >= startDate && startDateADE <= endDate) || (endDateADE <= endDate && endDateADE >= startDate))
+            }).length === 0) {
+                joinedEvents.push(e)
+            }
+        })
+
         this.state = {
-            events: this.props.events,
+            ADEevents: this.props.ADEevents,
+            events: joinedEvents,
             dayLayoutAlgorithm: 'no-overlap',
             slotLengthCalendar: 30,
             slotLengthChosen: 90,
@@ -216,12 +248,14 @@ class EventsCalendar extends React.Component {
      * Handler permettant d'afficher le modal affichangt les détails d'un créneau.
      */
     handleShowMoreOfTheEvent = (event) => {
-        this.setState({
-            showShowMoreForEventModal: true, 
-            usersOfTheSelectedEvent: Object.values(this.props.users).filter(u => u.acceptedForEvents).filter(u => u.acceptedForEvents.includes(event.id)), 
-            usersRequestOfTheSelectedEvent: Object.values(this.props.users).filter(u => u.requestForEvents).filter(u => u.requestForEvents.includes(event.id)), 
-            selectedEvent: event
-        })
+        if(!event.isCourse) {
+            this.setState({
+                showShowMoreForEventModal: true, 
+                usersOfTheSelectedEvent: Object.values(this.props.users).filter(u => u.acceptedForEvents).filter(u => u.acceptedForEvents.includes(event.id)), 
+                usersRequestOfTheSelectedEvent: Object.values(this.props.users).filter(u => u.requestForEvents).filter(u => u.requestForEvents.includes(event.id)), 
+                selectedEvent: event
+            })
+        }
     }
 
     /**
