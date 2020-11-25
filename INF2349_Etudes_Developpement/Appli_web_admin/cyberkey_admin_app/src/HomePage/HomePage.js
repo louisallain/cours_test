@@ -56,7 +56,7 @@ class HomePage extends React.Component {
      */
     retrieveADE_Events = () => {
         const CORS_PROXY_URL = "https://api.allorigins.win/get?url=" // CORS proxy
-        fetch(CORS_PROXY_URL + ICS_EVENTS_ADE_FILE_URL) // passe par un proxy CORS
+        fetch(CORS_PROXY_URL+ICS_EVENTS_ADE_FILE_URL, {method: 'POST'}) // passe par un proxy CORS
         .then(res => res.json())
         .then(json => {
             this.setState({
