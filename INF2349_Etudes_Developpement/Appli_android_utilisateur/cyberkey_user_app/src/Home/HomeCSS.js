@@ -9,6 +9,6 @@ export default StyleSheet.create({
         backgroundColor: "#4285F4",
     },
     settingsTab: {
-        backgroundColor: "red",
+        backgroundColor: "white",
     }
 })

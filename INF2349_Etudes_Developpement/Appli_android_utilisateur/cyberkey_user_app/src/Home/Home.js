@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Container, Header, Content, Body, Title, Left, Tabs, Tab, Text, TabHeading, Icon, Spinner, Toast } from 'native-base';
 import { Alert } from 'react-native';
+import prompt from 'react-native-prompt-android';
 import { Notifications } from 'react-native-notifications';
 import Settings from './Settings/Settings';
 import Unlock from './Unlock/Unlock';
@@ -127,40 +128,66 @@ class Home extends Component {
     }
 
     deleteAccount = () => {
-        Alert.alert(
-            "Suppression du compte",
-            "La suppression du compte est irréverssible. Il sera toujours possible d'en re-créer un par la suite mais tous les accès liés à ce compte seront supprimés.",
+        prompt(
+            "Entrer votre mot de passe",
+            "Veuillez confirmer votre mot de passe pour supprimer votre compte.",
             [
                 {
-                    text: 'Supprimer mon compte',
-                    onPress: () => {
-                        auth().currentUser.delete().then(() => {
-                            Toast.show({text: "Compte supprimé !"})
-                            auth().signOut()
-                        })
-                        .catch(error => {
-                            if(error.code === 'auth/requires-recent-login') {
-                                Alert.alert(
-                                    "Suppression du compte",
-                                    "L'application va vous déconnecter. Veuillez vous reconnecter et recommencer pour s'assurer qu'il s'agit bien de vous.",
-                                    [{
-                                        text: 'OK',
-                                        onPress: () => {
-                                            auth().signOut()
-                                        }
-                                    }]
-                                )
-                            }
-                        })
-                    }
+                    text: "Annuler",
+                    onPress: () => Toast.show({text: "Annulation !"}),
+                    style: "cancel"
                 },
                 {
-                    text: 'Annuler',
-                    onPress: () => Toast.show({text: "Annulation !"}),
-                    style: 'cancel'
+                    text: "OK",
+                    onPress: (password) => {
+                        const credential = auth.EmailAuthProvider.credential(
+                            auth().currentUser.email, 
+                            password
+                        );
+                        auth().currentUser
+                            .reauthenticateWithCredential(credential)
+                            .then(() => {
+                                let userKey = auth().currentUser.email.replace(/[.]/g, '')
+                                database() 
+                                    .ref(`/users/${userKey}`)
+                                    .once("value", 
+                                        (snapshot) => {
+                                            let userBackup = snapshot.val()
+                                            
+                                            database() 
+                                                .ref(`/users/${userKey}`)
+                                                .remove()
+                                                .then(() => {
+                                                    auth().currentUser.delete().then(() => {
+                                                        Toast.show({text: "Compte supprimé !"})
+                                                        auth().signOut()
+                                                    })
+                                                    .catch(error => {
+                                                        // Backup
+                                                        database() 
+                                                            .ref(`/users/${userKey}`)
+                                                            .set(userBackup)
+                                                    })
+                                                })
+                                                .catch(error => {
+                                                    // Backup
+                                                    database() 
+                                                        .ref(`/users/${userKey}`)
+                                                        .set(userBackup)
+                                                })
+                                        },
+                                        (error) => console.log(error)
+                                    )
+                            })
+                            .catch((error) => Toast.show({text: "Mauvais mot de passe !"}))
+                    }
                 }
             ],
-            { cancelable: false }
+            {
+                type: 'secure-text',
+                cancelable: false,
+                placeholder: 'Mot de passe'
+            },
         )
     }
 
