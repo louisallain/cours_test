@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/cyberkey_admin/static/css/main.c6fdb717.chunk.css",
+    "main.js": "/cyberkey_admin/static/js/main.54b6df05.chunk.js",
+    "main.js.map": "/cyberkey_admin/static/js/main.54b6df05.chunk.js.map",
+    "runtime-main.js": "/cyberkey_admin/static/js/runtime-main.e13cf59b.js",
+    "runtime-main.js.map": "/cyberkey_admin/static/js/runtime-main.e13cf59b.js.map",
+    "static/js/2.5ec8bcb5.chunk.js": "/cyberkey_admin/static/js/2.5ec8bcb5.chunk.js",
+    "static/js/2.5ec8bcb5.chunk.js.map": "/cyberkey_admin/static/js/2.5ec8bcb5.chunk.js.map",
+    "index.html": "/cyberkey_admin/index.html",
+    "precache-manifest.9b2e004b3b5a5bf024f7d39a657354e7.js": "/cyberkey_admin/precache-manifest.9b2e004b3b5a5bf024f7d39a657354e7.js",
+    "service-worker.js": "/cyberkey_admin/service-worker.js",
+    "static/css/main.c6fdb717.chunk.css.map": "/cyberkey_admin/static/css/main.c6fdb717.chunk.css.map",
+    "static/js/2.5ec8bcb5.chunk.js.LICENSE.txt": "/cyberkey_admin/static/js/2.5ec8bcb5.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.e13cf59b.js",
+    "static/js/2.5ec8bcb5.chunk.js",
+    "static/css/main.c6fdb717.chunk.css",
+    "static/js/main.54b6df05.chunk.js"
+  ]
+}
