@@ -6,4 +6,4 @@ Bundle-Vendor: Louis
 Bundle-ContactAdress: allain.e1602246@etud.univ-ubs.fr
 Bundle-Copyright: Library GNU Public Licence
 Bundle-Activator: tp2.prod.entrepotserviceimpl.Activator
-Import-Package: tp2.services.entrepotservice, org.osgi.framework
+Import-Package: tp2.services.entrepotservice, org.osgi.framework, javax.swing
