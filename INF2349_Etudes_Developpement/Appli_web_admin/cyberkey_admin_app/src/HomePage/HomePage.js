@@ -42,6 +42,7 @@ class HomePage extends React.Component {
     componentDidMount() {
         this.retrieveEventsFromDB();
         this.retrieveUsersFromDB();
+        // TODO : récupérer les créneaux de cours depuis ADE à partir de l'URL : https://planning.univ-ubs.fr/jsp/custom/modules/plannings/anonymous_cal.jsp?data=8241fc3873200214b0ceef9e5de578d6e0fa50826f0818af4a82a8fde6ce3f14906f45af276f59ae8fac93f781e86152d0472efb473cb41ff4beca69cf904027c2973627c2eb073b50f5af2d519aeab98d3f4109b6629391
     }
 
     /**
