@@ -13,6 +13,7 @@ const CALENDAR_PAGE = "calendar_page"
 const WAITING_FOR_ACCEPTATION_USERS_PAGE = "waiting_for_accpt_users_page"
 const VIP_USERS_PAGE = "vip_users_page"
 const SHOW_ACCEPTED_USERS_PAGE = "show_accepted_users_page"
+const LOGS_PAGE = "logs_page"
 
 // URL des créneaux de cours définis sur ADE dans un fichier ics
 const ICS_EVENTS_ADE_FILE_URL = "https://planning.univ-ubs.fr/jsp/custom/modules/plannings/anonymous_cal.jsp?data=8241fc3873200214b0ceef9e5de578d6e0fa50826f0818af4a82a8fde6ce3f14906f45af276f59ae8fac93f781e86152d0472efb473cb41ff4beca69cf904027c2973627c2eb073ba5b915c2167188168d3f4109b6629391"
@@ -37,6 +38,8 @@ class HomePage extends React.Component {
             usersRetrieved: false,
             ADE_Events: null,
             ADE_EventsRetrieved: false,
+            logs: null,
+            logsRetrieved: false,
         };
     } 
 
@@ -49,6 +52,19 @@ class HomePage extends React.Component {
         this.retrieveEventsFromDB();
         this.retrieveUsersFromDB();
         this.retrieveADE_Events();
+        this.retrieveLogsFromDB();
+    }
+
+    retrieveLogsFromDB = () => {
+        firebase.fbDatabase
+            .ref("/logs")
+            .on("value", (snapshot) => {
+                this.setState({
+                    logs: snapshot.val(),
+                    logsRetrieved: true
+                })
+            })
+
     }
 
     /**
@@ -146,6 +162,13 @@ class HomePage extends React.Component {
      */
     handleShowAcceptedUsers = () => {
         this.setState({currentPage: SHOW_ACCEPTED_USERS_PAGE})
+    }
+
+    /**
+     * Handler du bouton permettant d'afficher les journaux.
+     */
+    handleShowLogs = () => {
+        this.setState({currentPage: LOGS_PAGE})
     }
 
     /**
@@ -343,6 +366,14 @@ class HomePage extends React.Component {
             )
             break;
 
+        case LOGS_PAGE:
+            let logs = Object.values(this.state.logs).sort((l1, l2) => l2.timestamp - l1.timestamp).map(l => {
+                let dateObject = new Date(l.timestamp*1000)
+                return (<p key={uuidv4()}>. {l.user_id} est entré dans le CyberLab à la date du {dateObject.toLocaleString()}</p>)
+            })
+            centerContent = <div className="logsContainer">{logs}</div>
+            break;
+
         default: centerContent = (<a>Erreur de routage</a>)
 
     }
@@ -355,11 +386,12 @@ class HomePage extends React.Component {
                 <button className="leftMenuButton" onClick={this.handleWaitingForAcceptationUsersButton}>En attente ({Object.values(this.state.users).filter(u => u.requestForEvents).map(u => u.requestForEvents).flat().length})</button>
                 <button className="leftMenuButton" onClick={this.handleVIPUsersButton}>Utilisateurs en accès libre ({Object.values(this.state.users).filter(u => u.requestVIP === true).length})</button>
                 <button className="leftMenuButton" onClick={this.handleShowAcceptedUsers}>Utilisateurs acceptés</button>
+                <button className="leftMenuButton" onClick={this.handleShowLogs}>Journaux</button>
                 <button className="leftMenuButton" onClick={this.props.handleLogoutButton}>Se déconnecter</button>
             </div>
             <div className="centerMain">
-                {(this.state.eventsRetrieved === true && this.state.usersRetrieved === true && this.state.ADE_EventsRetrieved === true) && centerContent}
-                {(this.state.eventsRetrieved === false || this.state.usersRetrieved === false || this.state.ADE_EventsRetrieved === false) && <p>Chargement...</p>}
+                {(this.state.eventsRetrieved === true && this.state.usersRetrieved === true && this.state.ADE_EventsRetrieved === true && this.state.logsRetrieved === true) && centerContent}
+                {(this.state.eventsRetrieved === false || this.state.usersRetrieved === false || this.state.ADE_EventsRetrieved === false || this.state.logsRetrieved === false) && <p>Chargement...</p>}
             </div>
         </div>
     )
