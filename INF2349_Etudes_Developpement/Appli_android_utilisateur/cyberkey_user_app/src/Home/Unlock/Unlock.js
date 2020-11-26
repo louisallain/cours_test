@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Dimensions, NativeModules, NativeEventEmitter, Platform, PermissionsAndroid } from "react-native";
-import { Container, Header, Content, Button, Text, Spinner, Toast } from 'native-base';
+import { Container, Button, Text, Spinner, Toast } from 'native-base';
 import BleManager from 'react-native-ble-manager';
+import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import { stringToBytes, bytesToString } from "convert-string";
 import { RSAKeychain } from 'react-native-rsa-native';
 import { base64ToHex } from "../../utils/functions";
@@ -41,21 +42,17 @@ export default class Unlock extends Component {
             cyberKeyESP32Found: false, // si l'ESP32 a été trouvé lors du scan
             cyberKeyESP32_peripheral: null, // l'objet représentant le périphérique ESP32
             connectedTo_cykerKeyESP32: false, // si on est connecté à l'ESP32
-            allPermissionsAndBT_ok: false,
         }
     }
 
     /**
      * Méthode exécutée après le rendu du composant.
-     * Ajoute les handler nécessaires à la connexion à l'ESP32
-     * Demande les permissions nécéssaires à l'utilisation du BLE sur l'appareil.
+     * Ajoute les handler nécessaires à la connexion à l'ESP32.
      */
     componentDidMount() {
 
         this.handlerStopScan = bleManagerEmitter.addListener('BleManagerStopScan', this.handler_StopBLEScanning);
         this.handlerDiscoverPeripheral = bleManagerEmitter.addListener('BleManagerDiscoverPeripheral', this.handler_discoverNewBLEPeripheral)
-
-        this.checkPermissionsAndBT()
     }
     
     /**
@@ -71,51 +68,58 @@ export default class Unlock extends Component {
 
     /**
      * Demandes toutes les permissions nécessaires et demande d'activer le Bluetooth.
-     * Retourne faux si le BT n'était pas activé initialement.
+     * Retourne un Promise résolu si toutes les permissions sont OK et si le BT est activé.
      */
     checkPermissionsAndBT = () => {
-        let perm_BT_ok = true
 
-        // Vérifications des permissions Android
-        if(Platform.OS === 'android') {
-            PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION).then((result) => {
-                if (result === true) console.log("PERMISSIONS.ACCESS_BACKGROUND_LOCATION OK")
-                else if(result === false) {
-                    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION).then((result) => {
-                        if (result) console.log("PERMISSIONS.ACCESS_BACKGROUND_LOCATION OK accepted")
-                        else perm_BT_ok = false
+        return new Promise((resolve, reject) => {
+            
+            if(Platform.OS === 'android') {
+                let requestedPermissions = [PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION]
+                if(Platform.Version >= 23 && Platform.Version < 29) {
+                    requestedPermissions.push(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION)
+                    PermissionsAndroid.requestMultiple(requestedPermissions)
+                    .then((granted) => {
+                        if(Object.values(granted).filter(p => p != PermissionsAndroid.RESULTS.GRANTED).length === 0) {
+                            // Initialisation du module Bluetooth
+                            BleManager.enableBluetooth()
+                            .then(() => BleManager.start().then(() => resolve("All permissions and BT are ok.")))
+                            .catch((error) => reject("Bluetooth non activé !"))
+                        }
+                        else {
+                            reject("Permissions d'accès à la localisation non accordées !")
+                        }
                     })
                 }
-            })
-        }
-        if (Platform.OS === 'android' && Platform.Version >= 23 && Platform.Version < 29) {
-            PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
-                if (result) console.log("PERMISSIONS.ACCESS_COARSE_LOCATION OK")
-                else {
-                    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
-                        if (result) console.log("PERMISSIONS.ACCESS_COARSE_LOCATION accepted")
-                        else perm_BT_ok = false
+                if(Platform.Version >= 29) {
+                    requestedPermissions.push(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+                    PermissionsAndroid.requestMultiple(requestedPermissions)
+                    .then((granted) => {
+                        if(Object.values(granted).filter(p => p != PermissionsAndroid.RESULTS.GRANTED).length === 0) {
+
+                            // Activation de la localisation pour BLE
+                            RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({interval: 10000, fastInterval: 5000})
+                            .then(data => {
+                                // Initialisation du module Bluetooth
+                                BleManager.enableBluetooth()
+                                .then(() => BleManager.start().then(() => resolve("All permissions and BT are ok.")))
+                                .catch((error) => reject("Bluetooth non activé !"))
+                            }).catch(err => {
+                                //  - ERR00 : The user has clicked on Cancel button in the popup
+                                //  - ERR01 : If the Settings change are unavailable
+                                //  - ERR02 : If the popup has failed to open
+                                console.log(err.code)
+                                console.log(err.message)
+                                reject("Localisation non activée !")
+                            });
+                        }
+                        else {
+                            reject("Permissions d'accès à la localisation non accordées !")
+                        }
                     })
                 }
-            })
-        }
-        if(Platform.OS === 'android' && Platform.Version >= 29) {
-            PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then((result) => {
-                if (result) console.log("PERMISSIONS.ACCESS_FINE_LOCATION OK")
-                else {
-                    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then((result) => {
-                        if (result) console.log("PERMISSIONS.ACCESS_FINE_LOCATION accepted")
-                        else perm_BT_ok = false
-                    })
-                }
-            })
-        }
-        // Initialisation du module Bluetooth
-        BleManager.enableBluetooth()
-        .then(() => BleManager.start().then(() => console.log("Module initialized")))
-        .catch((error) => perm_BT_ok = false)
-    
-        this.setState({allPermissionsAndBT_ok: perm_BT_ok})
+            }
+        })
     }
 
     /**
@@ -309,7 +313,6 @@ export default class Unlock extends Component {
                         cyberKeyESP32Found: false, // si l'ESP32 a été trouvé lors du scan
                         cyberKeyESP32_peripheral: null, // l'objet représentant le périphérique ESP32
                         connectedTo_cykerKeyESP32: false, // si on est connecté à l'ESP32
-                        allPermissionsAndBT_ok: this.state.allPermissionsAndBT_ok,
                     })
                     if(msg) Toast.show({text: msg})
                 })
@@ -322,7 +325,6 @@ export default class Unlock extends Component {
                 cyberKeyESP32Found: false, // si l'ESP32 a été trouvé lors du scan
                 cyberKeyESP32_peripheral: null, // l'objet représentant le périphérique ESP32
                 connectedTo_cykerKeyESP32: false, // si on est connecté à l'ESP32
-                allPermissionsAndBT_ok: this.state.allPermissionsAndBT_ok,
             })
             if(msg) Toast.show({text: msg})
         }
@@ -330,6 +332,7 @@ export default class Unlock extends Component {
 
     /**
      * Handler du bouton de déverrouillage.
+     * - Demandes les permissions et d'activer le Bluetooth.
      * - Regarde si un créneau est actuellement en cours.
      * - Regarde si l'utilisateur a accès à ce créneau ou non.
      * - Scan les périphériques BLE alentours afin de se connecter à la serrure.
@@ -337,54 +340,38 @@ export default class Unlock extends Component {
     unlock = () => {
 
         this.checkPermissionsAndBT()
-        this.loading(true)
-        // Vérifie l'accès pour l'utilisateur
-        if(this.props.user.isVIP) {
-            this.beginBLEScanning() // démarre la procédure de déverrouillage (voir méthode beginBLEScanning)
-            return;
-        }
-
-        let currentEvent = this.isThereACurrentEvent()[0]
-        if(currentEvent === undefined) {
-            Toast.show({text: "Aucun créneau n'est actuellement disponible !"})
-            this.loading(false)
-            return;
-        }
-        if(this.props.user.requestForEvents === undefined & this.props.user.acceptedForEvents === undefined) {
-            Toast.show({text: "Accès non demandé !"})
-            this.loading(false)
-            return;
-        }
-        if(this.props.user.requestForEvents !== undefined & this.props.user.acceptedForEvents === undefined) {
-            if(this.props.user.requestForEvents.filter(id => id === currentEvent.id).length > 0) {
-                Toast.show({text: "Accès à ce créneau en attente !"})
-                this.loading(false)
-                return;
-            }
-            else {
-                Toast.show({text: "Accès non demandé pour ce créneau !"})
-                this.loading(false)
-                return;
-            }
-        }
-        if(this.props.user.requestForEvents === undefined & this.props.user.acceptedForEvents !== undefined) {
-            if(this.props.user.acceptedForEvents.filter(id => id === currentEvent.id).length === 0) {
-                Toast.show({text: "Vous n'avez pas accès à ce créneau !"})
-                this.loading(false)
-                return;
-            }
-            else {
+        .then(() => {
+            this.loading(true)
+            // Vérifie l'accès pour l'utilisateur
+            if(this.props.user.isVIP) {
                 this.beginBLEScanning() // démarre la procédure de déverrouillage (voir méthode beginBLEScanning)
                 return;
             }
-        }
-        if(this.props.user.requestForEvents !== undefined & this.props.user.acceptedForEvents !== undefined) {
-            if(this.props.user.requestForEvents.filter(id => id === currentEvent.id).length > 0) {
-                Toast.show({text: "Accès à ce créneau en attente !"})
+
+            let currentEvent = this.isThereACurrentEvent()[0]
+            if(currentEvent === undefined) {
+                Toast.show({text: "Aucun créneau n'est actuellement disponible !"})
                 this.loading(false)
                 return;
             }
-            else {
+            if(this.props.user.requestForEvents === undefined & this.props.user.acceptedForEvents === undefined) {
+                Toast.show({text: "Accès non demandé !"})
+                this.loading(false)
+                return;
+            }
+            if(this.props.user.requestForEvents !== undefined & this.props.user.acceptedForEvents === undefined) {
+                if(this.props.user.requestForEvents.filter(id => id === currentEvent.id).length > 0) {
+                    Toast.show({text: "Accès à ce créneau en attente !"})
+                    this.loading(false)
+                    return;
+                }
+                else {
+                    Toast.show({text: "Accès non demandé pour ce créneau !"})
+                    this.loading(false)
+                    return;
+                }
+            }
+            if(this.props.user.requestForEvents === undefined & this.props.user.acceptedForEvents !== undefined) {
                 if(this.props.user.acceptedForEvents.filter(id => id === currentEvent.id).length === 0) {
                     Toast.show({text: "Vous n'avez pas accès à ce créneau !"})
                     this.loading(false)
@@ -395,7 +382,29 @@ export default class Unlock extends Component {
                     return;
                 }
             }
-        }
+            if(this.props.user.requestForEvents !== undefined & this.props.user.acceptedForEvents !== undefined) {
+                if(this.props.user.requestForEvents.filter(id => id === currentEvent.id).length > 0) {
+                    Toast.show({text: "Accès à ce créneau en attente !"})
+                    this.loading(false)
+                    return;
+                }
+                else {
+                    if(this.props.user.acceptedForEvents.filter(id => id === currentEvent.id).length === 0) {
+                        Toast.show({text: "Vous n'avez pas accès à ce créneau !"})
+                        this.loading(false)
+                        return;
+                    }
+                    else {
+                        this.beginBLEScanning() // démarre la procédure de déverrouillage (voir méthode beginBLEScanning)
+                        return;
+                    }
+                }
+            }
+        })
+        .catch((error) => {
+            console.log(error)
+            this.resetForReason(error)
+        })
     }
 
     /**
@@ -410,8 +419,7 @@ export default class Unlock extends Component {
      */
     renderButton = () => {
         let text = "Déverrouillage"
-        if(!this.state.allPermissionsAndBT_ok) text = "Veuillez accepter les permissions et activer le Bluetooth."
-        if(this.state.allPermissionsAndBT_ok && this.state.loading) {
+        if(this.state.loading) {
             if(this.state.scanning) {
                 text = "Scan des BLE..."
             }
@@ -422,7 +430,7 @@ export default class Unlock extends Component {
                 text = "Authentification..."
             }
         }
-        let disabled = !this.state.allPermissionsAndBT_ok || this.state.loading
+        let disabled = this.state.loading
         return (
             <Button disabled={disabled} style={styles.unlockButton} onPress={this.unlock}>
                 <Text>{text}</Text>
