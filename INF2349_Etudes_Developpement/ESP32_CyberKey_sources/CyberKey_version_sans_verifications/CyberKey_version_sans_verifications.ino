@@ -6,6 +6,9 @@
 // Wifi
 #include <WiFi.h>
 
+// Time
+#include "time.h"
+
 // Firebase
 #include <FirebaseESP32.h>
 
@@ -40,6 +43,9 @@
 // SSID et mot de passe du point d'accès Wifi sur lequelle on se connecte
 #define WIFI_SSID "Bbox-80CDC60A"
 #define WIFI_PASSWORD "7y2uDWWK92utNXdCpq"
+
+// Serveur ntp 
+#define NTP_SERVER "pool.ntp.org"
 
 // Crédentials d'accès à la base de données
 #define FIREBASE_HOST "https://gestionnairesallesparempreinte.firebaseio.com"
@@ -363,6 +369,9 @@ void loop() {
     // Initialisation Wifi
     connectToWifi();
 
+    // Initialisation NTP
+    configTime(0, 0, NTP_SERVER);
+
     // Initialisation Firebase
     Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
     Firebase.reconnectWiFi(true);
@@ -372,8 +381,6 @@ void loop() {
     Serial.print(user_id);
     Serial.print("\n . user_sig=");
     Serial.print(user_sig);
-
-    // TODO : récupérer le créneau courant ET vérifier si l'utilisateur a effectivement accès à ce créneau
     
     String pathToPublicKey = "/public_keys/" + user_id + "/public_key";
     display.clearDisplay();
@@ -424,6 +431,22 @@ void loop() {
         else {
           Serial.printf("\n . Signature vérifiée !");
           Serial.printf("\n . TODO : ouvrir la porte !!!");
+
+          // Log sur la base de données
+          struct tm timeinfo;
+          if(getLocalTime(&timeinfo)) {
+            unsigned long nowTimeStamp = mktime(&timeinfo);
+            Serial.println(nowTimeStamp);  
+            FirebaseJson logJSON;
+            logJSON.set("user_id", String(user_id));
+            logJSON.set("timestamp", String(nowTimeStamp));
+            if(Firebase.pushJSON(firebaseData, "/logs", logJSON)) {
+              Serial.println(" . Added log to database");
+            }
+            else {
+              Serial.println(firebaseData.errorReason());
+            }
+          }
           
           display.clearDisplay();
           display.setTextSize(1);
@@ -433,7 +456,7 @@ void loop() {
           display.println("Verifiee");
           display.println("Bienvenue !");
           display.display();
-          for(int k = 0; k < 30; k++) {
+          for(int k = 0; k < 30; k++) { // délais de 3s
             digitalWrite(ONBOARD_LED, HIGH); delay(50); digitalWrite(ONBOARD_LED, LOW); delay(50);
           }
         }  
