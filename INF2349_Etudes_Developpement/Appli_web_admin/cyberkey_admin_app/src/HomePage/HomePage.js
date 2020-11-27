@@ -283,6 +283,13 @@ class HomePage extends React.Component {
     }
 
     /**
+     * Télécharge le fichier des logs.
+     */
+    downloadLogsFile = () => {
+        utils_function.downloadFileFromText(JSON.stringify(Object.values(this.state.logs)), "logs.json")
+    }
+
+    /**
      * Méthode de rendu du composant.
      */
     render() {
@@ -369,9 +376,9 @@ class HomePage extends React.Component {
         case LOGS_PAGE:
             let logs = Object.values(this.state.logs).sort((l1, l2) => l2.timestamp - l1.timestamp).map(l => {
                 let dateObject = new Date(l.timestamp*1000)
-                return (<p key={uuidv4()}>. {l.user_id} est entré dans le CyberLab à la date du {dateObject.toLocaleString()}</p>)
+                return (<code key={uuidv4()}>. {l.user_id} est entré dans le CyberLab à la date du {dateObject.toLocaleString()}<br/></code>)
             })
-            centerContent = <div className="logsContainer">{logs}</div>
+            centerContent = <div className="logsContainer"><button onClick={this.downloadLogsFile}>Exporter</button><br/>{logs}</div>
             break;
 
         default: centerContent = (<a>Erreur de routage</a>)

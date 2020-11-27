@@ -150,7 +150,7 @@ class EventsCalendar extends React.Component {
         this.fileReader.onload = (event) => {
             try {
                 if(this.keepExistingEventsCheckbox.current.checked === false) {
-                    this.setState({events: []})
+                    this.setState({events: this.props.ADEevents.filter(e => e.isCourse == true)})
                 }
                 let tmpEvents = JSON.parse(event.target.result);
                 tmpEvents.forEach(e => {
@@ -356,7 +356,9 @@ class EventsCalendar extends React.Component {
                 <Modal 
                     isOpen={this.state.showLoadJSONModal}
                     contentLabel="Load JSON custom events"
-                    className="modal loadJSONModal">
+                    className="modal loadJSONModal"
+                    overlayClassName="overlayModal">
+
                     <button className="closeJSONModal" onClick={this.handleCloseLoadJSONModal}>Fermer</button>
                     <p>
                         Charger un fichier de créneaux JSON contenant un tableau où chaque élément contient :<br/>
@@ -380,7 +382,9 @@ class EventsCalendar extends React.Component {
                 <Modal 
                     isOpen={this.state.showShowMoreForEventModal}
                     contentLabel="Show more of event"
-                    className="modal showMoreOfTheEventModal">
+                    className="modal"
+                    overlayClassName="overlayModal">
+
                     <div className="closeShowMoreModalContainer">
                         <button className="closeShowMoreOfEventModalButton" onClick={this.handleCloseShowMoreOfEventModal}>Fermer</button>
                     </div>

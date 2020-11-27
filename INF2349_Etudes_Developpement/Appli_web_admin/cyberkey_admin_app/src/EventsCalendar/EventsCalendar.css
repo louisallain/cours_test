@@ -9,9 +9,20 @@
     margin-top: 25vh;
     padding: 20px;
     background-color: white;
-    border: 2px solid;
-    border-radius: 4px;
+    border: 1px solid black;
 }
+
+.modal:focus {outline:0;}
+
+.overlayModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    backdrop-filter: blur(4px);  
+}
+
 
 .listContainerShowMore {
     height: 100%;
