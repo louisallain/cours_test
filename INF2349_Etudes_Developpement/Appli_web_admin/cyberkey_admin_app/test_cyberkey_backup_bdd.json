@@ -1,0 +1,121 @@
+{
+  "admin_email" : "admin-cyberkey@univ-ubs.fr",
+  "events" : "[{\"title\":\"TD Réseaux et systèmes pour applications innovantes\",\"start\":\"2020-12-02T15:15:00.000Z\",\"end\":\"2020-12-02T16:45:00.000Z\",\"isCourse\":true},{\"title\":\"TD Internet des objets\",\"start\":\"2020-12-08T10:30:00.000Z\",\"end\":\"2020-12-08T12:00:00.000Z\",\"isCourse\":true},{\"title\":\"TD Programmation distribuée\",\"start\":\"2020-12-14T08:45:00.000Z\",\"end\":\"2020-12-14T10:15:00.000Z\",\"isCourse\":true},{\"title\":\"TD Technologies des réseaux sans fil-INF2340\",\"start\":\"2021-01-08T08:45:00.000Z\",\"end\":\"2021-01-08T10:15:00.000Z\",\"isCourse\":true},{\"title\":\"TD Intergiciels répartis et mobiles\",\"start\":\"2020-12-15T07:00:00.000Z\",\"end\":\"2020-12-15T08:30:00.000Z\",\"isCourse\":true},{\"title\":\"TD Internet des objets\",\"start\":\"2021-01-07T08:45:00.000Z\",\"end\":\"2021-01-07T10:15:00.000Z\",\"isCourse\":true},{\"title\":\"TD Intergiciels répartis et mobiles\",\"start\":\"2020-12-15T08:45:00.000Z\",\"end\":\"2020-12-15T10:15:00.000Z\",\"isCourse\":true},{\"title\":\"TD Réseaux et systèmes pour applications innovantes\",\"start\":\"2020-12-16T13:30:00.000Z\",\"end\":\"2020-12-16T15:00:00.000Z\",\"isCourse\":true},{\"title\":\"TD Internet des objets\",\"start\":\"2020-12-15T10:30:00.000Z\",\"end\":\"2020-12-15T12:00:00.000Z\",\"isCourse\":true},{\"title\":\"TD Programmation distribuée\",\"start\":\"2020-12-07T08:45:00.000Z\",\"end\":\"2020-12-07T10:15:00.000Z\",\"isCourse\":true},{\"title\":\"TD Intergiciels répartis et mobiles\",\"start\":\"2020-12-01T07:00:00.000Z\",\"end\":\"2020-12-01T08:30:00.000Z\",\"isCourse\":true},{\"title\":\"TD Technologies des réseaux sans fil-INF2340\",\"start\":\"2020-11-27T08:45:00.000Z\",\"end\":\"2020-11-27T10:15:00.000Z\",\"isCourse\":true},{\"title\":\"TD Internet des objets\",\"start\":\"2020-12-01T10:30:00.000Z\",\"end\":\"2020-12-01T12:00:00.000Z\",\"isCourse\":true},{\"title\":\"TD Internet des objets\",\"start\":\"2021-01-05T10:30:00.000Z\",\"end\":\"2021-01-05T12:00:00.000Z\",\"isCourse\":true},{\"title\":\"TD Technologies des réseaux sans fil-INF2340\",\"start\":\"2020-12-04T08:45:00.000Z\",\"end\":\"2020-12-04T10:15:00.000Z\",\"isCourse\":true},{\"title\":\"Introduction aux systèmes distribués-TP\",\"start\":\"2020-11-25T08:45:00.000Z\",\"end\":\"2020-11-25T10:15:00.000Z\",\"isCourse\":true},{\"title\":\"TD Intergiciels répartis et mobiles\",\"start\":\"2020-12-08T07:00:00.000Z\",\"end\":\"2020-12-08T08:30:00.000Z\",\"isCourse\":true},{\"title\":\"TD Réseaux et systèmes pour applications innovantes\",\"start\":\"2020-12-09T15:15:00.000Z\",\"end\":\"2020-12-09T16:45:00.000Z\",\"isCourse\":true},{\"title\":\"TD Internet des objets\",\"start\":\"2020-12-17T08:45:00.000Z\",\"end\":\"2020-12-17T10:15:00.000Z\",\"isCourse\":true},{\"title\":\"TD Internet des objets\",\"start\":\"2020-11-24T10:30:00.000Z\",\"end\":\"2020-11-24T12:00:00.000Z\",\"isCourse\":true},{\"title\":\"TD Intergiciels répartis et mobiles\",\"start\":\"2020-12-15T15:15:00.000Z\",\"end\":\"2020-12-15T16:45:00.000Z\",\"isCourse\":true},{\"title\":\"TD Technologies des réseaux sans fil-INF2340\",\"start\":\"2020-12-11T08:45:00.000Z\",\"end\":\"2020-12-11T10:15:00.000Z\",\"isCourse\":true},{\"title\":\"TD Intergiciels répartis et mobiles\",\"start\":\"2020-11-24T07:00:00.000Z\",\"end\":\"2020-11-24T08:30:00.000Z\",\"isCourse\":true},{\"title\":\"TD Internet des objets\",\"start\":\"2020-12-03T08:45:00.000Z\",\"end\":\"2020-12-03T10:15:00.000Z\",\"isCourse\":true},{\"title\":\"TD Technologies des réseaux sans fil-INF2340\",\"start\":\"2020-12-18T08:45:00.000Z\",\"end\":\"2020-12-18T10:15:00.000Z\",\"isCourse\":true},{\"title\":\"Technologies Web\",\"start\":\"2020-11-27T13:30:00.000Z\",\"end\":\"2020-11-27T15:00:00.000Z\",\"isCourse\":true},{\"title\":\"TD Programmation distribuée\",\"start\":\"2021-01-04T08:45:00.000Z\",\"end\":\"2021-01-04T10:15:00.000Z\",\"isCourse\":true},{\"title\":\"Introduction aux systèmes distribués-TP\",\"start\":\"2020-12-02T08:45:00.000Z\",\"end\":\"2020-12-02T10:15:00.000Z\",\"isCourse\":true},{\"title\":\"TD Internet des objets\",\"start\":\"2020-11-26T08:45:00.000Z\",\"end\":\"2020-11-26T10:15:00.000Z\",\"isCourse\":true},{\"title\":\"TD Programmation distribuée\",\"start\":\"2020-11-23T08:45:00.000Z\",\"end\":\"2020-11-23T10:15:00.000Z\",\"isCourse\":true},{\"title\":\"TD Internet des objets\",\"start\":\"2020-12-10T08:45:00.000Z\",\"end\":\"2020-12-10T10:15:00.000Z\",\"isCourse\":true},{\"title\":\"TD Réseaux et systèmes pour applications innovantes\",\"start\":\"2020-11-25T15:15:00.000Z\",\"end\":\"2020-11-25T16:45:00.000Z\",\"isCourse\":true},{\"title\":\"Introduction aux systèmes distribués-TP\",\"start\":\"2020-12-09T08:45:00.000Z\",\"end\":\"2020-12-09T10:15:00.000Z\",\"isCourse\":true},{\"title\":\"TD Programmation distribuée\",\"start\":\"2020-11-30T08:45:00.000Z\",\"end\":\"2020-11-30T10:15:00.000Z\",\"isCourse\":true},{\"id\":\"8ef5f52d-94fe-4db8-86ec-2cb6f92d486e\",\"start\":\"2020-10-14T12:45:00.000Z\",\"end\":\"2020-10-14T14:15:00.000Z\",\"title\":\"CyberLab dispo\"},{\"id\":\"b0c5d52a-e193-4e28-9a00-572cac747b8d\",\"start\":\"2020-10-13T09:15:00.000Z\",\"end\":\"2020-10-13T10:45:00.000Z\",\"title\":\"CyberLab dispo\"},{\"id\":\"40ad0a11-c339-4335-8824-c1c3dc86abec\",\"start\":\"2020-10-16T13:00:00.000Z\",\"end\":\"2020-10-16T14:30:00.000Z\",\"title\":\"CyberLab dispo\"},{\"id\":\"ec256482-23b0-4387-9697-836ec24ceaf9\",\"start\":\"2020-10-14T06:00:00.000Z\",\"end\":\"2020-10-14T07:30:00.000Z\",\"title\":\"CyberLab dispo\"},{\"id\":\"95060592-8d16-405c-87ec-52f5ca3ee44e\",\"start\":\"2020-10-23T14:00:00.000Z\",\"end\":\"2020-10-23T15:30:00.000Z\",\"title\":\"CyberLab dispo\"},{\"id\":\"6ddbb5b8-8346-4091-85d9-b39ddf349f3e\",\"start\":\"2020-10-21T08:30:00.000Z\",\"end\":\"2020-10-21T10:00:00.000Z\",\"title\":\"CyberLab dispo\"},{\"id\":\"2b6505cb-3ac9-43f6-8f7d-d6f5a8a55c05\",\"start\":\"2020-10-19T08:30:00.000Z\",\"end\":\"2020-10-19T10:00:00.000Z\",\"title\":\"CyberLab dispo\"},{\"id\":\"40c3a6fe-17da-4150-84e4-c67c067dcf29\",\"start\":\"2020-10-15T08:15:00.000Z\",\"end\":\"2020-10-15T09:45:00.000Z\",\"title\":\"CyberLab dispo\"},{\"id\":\"8f7e79e7-0dae-4f2f-8f67-2fa99bf8ce2d\",\"start\":\"2020-10-16T07:15:00.000Z\",\"end\":\"2020-10-16T08:45:00.000Z\",\"title\":\"CyberLab dispo\"},{\"id\":\"4e88390e-02be-4751-b041-e242698dbb9d\",\"start\":\"2020-10-21T12:00:00.000Z\",\"end\":\"2020-10-21T13:30:00.000Z\",\"title\":\"CyberLab dispo\"},{\"id\":\"582522b6-af3a-4651-8c59-35f9b9254ec5\",\"start\":\"2020-11-24T15:45:00.000Z\",\"end\":\"2020-11-24T17:15:00.000Z\",\"title\":\"CyberLab dispo\"},{\"id\":\"c4a3df35-6626-440b-b56a-09196c302788\",\"start\":\"2020-11-25T12:00:00.000Z\",\"end\":\"2020-11-25T13:30:00.000Z\",\"title\":\"CyberLab dispo\"},{\"id\":\"e80a3765-d41c-498d-ac49-c4188544d22b\",\"start\":\"2020-11-27T11:30:00.000Z\",\"end\":\"2020-11-27T13:00:00.000Z\",\"title\":\"CyberLab dispo\"},{\"id\":\"188f71d5-51a3-48b1-91d8-e0c1bb7873d2\",\"start\":\"2020-12-09T07:00:00.000Z\",\"end\":\"2020-12-09T08:30:00.000Z\",\"title\":\"CyberLab dispo\"}]",
+  "logs" : {
+    "-MN5OVIjeU7fY5u6A9YJ" : {
+      "timestamp" : "1606425117",
+      "user_id" : "allaine1602246@etuduniv-ubsfr"
+    },
+    "-MN5O_hSUsgzQK5b_BNS" : {
+      "timestamp" : "1606425139",
+      "user_id" : "allaine1602246@etuduniv-ubsfr"
+    },
+    "-MN5OvH6YO4Sgu_wFpDI" : {
+      "timestamp" : "1606425228",
+      "user_id" : "allaine1602246@etuduniv-ubsfr"
+    },
+    "-MN5OzqwPzD69AT50M7s" : {
+      "timestamp" : "1606425247",
+      "user_id" : "allaine1602246@etuduniv-ubsfr"
+    },
+    "-MN5UavwvmpaAO0dSX50" : {
+      "timestamp" : "1606426717",
+      "user_id" : "allaine1602246@etuduniv-ubsfr"
+    },
+    "-MN5UehWmFadKpiCrG9-" : {
+      "timestamp" : "1606426733",
+      "user_id" : "allaine1602246@etuduniv-ubsfr"
+    },
+    "-MN5V6Ff2Vdr5ptv8uga" : {
+      "timestamp" : "1606426850",
+      "user_id" : "allaine1602246@etuduniv-ubsfr"
+    }
+  },
+  "public_keys" : {
+    "allaine1602246@etuduniv-ubsfr" : {
+      "public_key" : {
+        "e" : "010001",
+        "n" : "00f3e551712d29338450167a5f5f51e3b89d27cdf60580646bb382a596f48ecb2ef9fea054d964abb2aae95e151018789e54052bff101decf6b15d71679bfc6db83b1cf276e6447b4e6c1ae7909262536e654e2d636b91a04fd4c81ec8e1e169bb546cee11a7172fb709bd24908be8dee76fda214d408483b43f1352c8fae6f21d60373363012f273ab2698954f5e16dc8e7fd07393df58f5a22ef28ab49d2d7d08d48a755f3555d31fd38a097ed15f69abc11c1e8f426f8e9245332f2f5641f44c7995bd4e250d7e01d3a17cedf5d83302565ad2679839bdbd2b3d13fa8806dd61291cfdb03e1c896ff1732e1281bebf1e380289649559e2773f4d5119d936a4b"
+      }
+    }
+  },
+  "users" : {
+    "allaine1602246@etuduniv-ubsfr" : {
+      "acceptedForEvents" : [ "188f71d5-51a3-48b1-91d8-e0c1bb7873d2" ],
+      "id" : "allain.e1602246@etud.univ-ubs.fr",
+      "isVIP" : true,
+      "requestVIP" : false
+    },
+    "user1@etuduniv-ubsfr" : {
+      "acceptedForEvents" : [ "188f71d5-51a3-48b1-91d8-e0c1bb7873d2" ],
+      "id" : "allain.e1602246@etud.univ-ubs.fr",
+      "isVIP" : true,
+      "requestVIP" : false
+    },
+    "user2@etuduniv-ubsfr" : {
+      "acceptedForEvents" : [ "188f71d5-51a3-48b1-91d8-e0c1bb7873d2" ],
+      "id" : "allain.e1602246@etud.univ-ubs.fr",
+      "isVIP" : true,
+      "requestVIP" : false
+    },
+    "user3@etuduniv-ubsfr" : {
+      "acceptedForEvents" : [ "188f71d5-51a3-48b1-91d8-e0c1bb7873d2" ],
+      "id" : "allain.e1602246@etud.univ-ubs.fr",
+      "isVIP" : true,
+      "requestVIP" : false
+    },
+    "user4@etuduniv-ubsfr" : {
+      "acceptedForEvents" : [ "188f71d5-51a3-48b1-91d8-e0c1bb7873d2" ],
+      "id" : "allain.e1602246@etud.univ-ubs.fr",
+      "isVIP" : true,
+      "requestVIP" : false
+    },
+    "user5@etuduniv-ubsfr" : {
+      "acceptedForEvents" : [ "188f71d5-51a3-48b1-91d8-e0c1bb7873d2" ],
+      "id" : "allain.e1602246@etud.univ-ubs.fr",
+      "isVIP" : true,
+      "requestVIP" : false
+    },
+    "user6@etuduniv-ubsfr" : {
+      "acceptedForEvents" : [ "188f71d5-51a3-48b1-91d8-e0c1bb7873d2" ],
+      "id" : "allain.e1602246@etud.univ-ubs.fr",
+      "isVIP" : true,
+      "requestVIP" : false
+    },
+    "user7@etuduniv-ubsfr" : {
+      "acceptedForEvents" : [ "188f71d5-51a3-48b1-91d8-e0c1bb7873d2" ],
+      "id" : "allain.e1602246@etud.univ-ubs.fr",
+      "isVIP" : true,
+      "requestVIP" : false
+    },
+    "user8@etuduniv-ubsfr" : {
+      "acceptedForEvents" : [ "188f71d5-51a3-48b1-91d8-e0c1bb7873d2" ],
+      "id" : "allain.e1602246@etud.univ-ubs.fr",
+      "isVIP" : true,
+      "requestVIP" : false
+    },
+    "user9@etuduniv-ubsfr" : {
+      "acceptedForEvents" : [ "188f71d5-51a3-48b1-91d8-e0c1bb7873d2" ],
+      "id" : "allain.e1602246@etud.univ-ubs.fr",
+      "isVIP" : true,
+      "requestVIP" : false
+    },
+    "user10@etuduniv-ubsfr" : {
+      "acceptedForEvents" : [ "188f71d5-51a3-48b1-91d8-e0c1bb7873d2" ],
+      "id" : "allain.e1602246@etud.univ-ubs.fr",
+      "isVIP" : true,
+      "requestVIP" : false
+    },
+    "user11@etuduniv-ubsfr" : {
+      "acceptedForEvents" : [ "188f71d5-51a3-48b1-91d8-e0c1bb7873d2" ],
+      "id" : "allain.e1602246@etud.univ-ubs.fr",
+      "isVIP" : true,
+      "requestVIP" : false
+    },
+    "default" : {
+      "id" : "default",
+      "isVIP" : "default",
+      "requestVIP" : "default"
+    }
+  }
+}
