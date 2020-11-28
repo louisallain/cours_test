@@ -50,13 +50,16 @@ end
 boucle = function()
         client:connect("", "")
         while(running == true) do
+                if(client:connected() == false) then client:connect("", "") end
                 client:publish(TOPIC_NOMBRE_FEUX, nb_feux, mqtt.QOS0) -- publie périodiquement le nombre de feu qu'il connait afin de permettre aux feux rentrants de connaître le nombre de feu
                 tmr.delayms(2000)
+                if(client:connected() == false) then client:connect("", "") end
                 client:publish(TOPIC_NOMBRE_FEUX, nb_feux, mqtt.QOS0) -- publie périodiquement le nombre de feu qu'il connait afin de permettre aux feux rentrants de connaître le nombre de feu
                 client:publish(TOPIC_FEUX_PRET, uuid, mqtt.QOS0) -- publie pour indiquer qu'il est prêt à changer de couleur
                 tmr.delayms(2000)
                 while(nb_feux_pret == nb_feux) do 
                         tmr.delayms(10)
+                        if(client:connected() == false) then client:connect("", "") end
                         client:publish(TOPIC_FEUX_PRET, uuid, mqtt.QOS0) -- re-publique "prêt" en cas de mauvais envoi
                 end -- met en pause la boucle tant que tous les feux ne sont pas arrivés au même point
         end
@@ -65,16 +68,16 @@ end
 
 -- arrête le feu (pour maintenance par exemple)
 stopFeu = function()
+    
+        -- Arrête la boucle
+        running = false
+    
         pio.pin.setlow(pio.GPIO2)
         pio.pin.setlow(pio.GPIO4)
         
         -- Déclare que le feu n'existe plus en publiant dans le sujet TOPIC_COMPTEUR_FEUX
-        client:connect("", "")
+        if(client:connected() == false) then client:connect("", "") end
         client:publish(TOPIC_COMPTEUR_FEUX, -1, mqtt.QOS0) -- ie. -1 feu
-        client:disconnect()
-
-        -- Arrête la boucle
-        running = false
 end
 
 initFeu = function(color)
