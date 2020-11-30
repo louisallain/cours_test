@@ -1,0 +1,1 @@
+javac -d ./philosophers_V0/build/ -cp "/home/forum/m2info/INF4003/javaspaces/lib/*:." ./philosophers_V0/allain1/philosophers_V0/*.java
