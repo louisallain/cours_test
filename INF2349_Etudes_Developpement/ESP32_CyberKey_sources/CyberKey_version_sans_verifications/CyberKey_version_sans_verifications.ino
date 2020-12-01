@@ -61,6 +61,9 @@
 // Durée du timeout en ms d'un client mettant trop de temps à répondre
 #define TIEMOUT_PROCEDURE_MS 3000 // 3 secondes
 
+// Pin sur lequel est branché l'interrupteur du relais
+#define RELAY_PIN 4
+
 // Déclaration de l'afficheur OLED SSD1306 (SCL sur le pin 22 et SDA sur le pin 21)
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
@@ -314,7 +317,11 @@ void setup() {
   Serial.begin(115200);
 
   // Initialisation de la led de test
-  pinMode(ONBOARD_LED,OUTPUT);
+  pinMode(ONBOARD_LED, OUTPUT);
+  digitalWrite(ONBOARD_LED, LOW);
+  // Initialisation du relais
+  pinMode(RELAY_PIN, OUTPUT);
+  digitalWrite(RELAY_PIN, 1);
 
   // Initialisation du booléen permettant de savoir si l'utilisateur courant a envoyé toutes les données nécessaires à l'ouverture de la porte
   newUserSentAllData = false;
@@ -456,9 +463,14 @@ void loop() {
           display.println("Verifiee");
           display.println("Bienvenue !");
           display.display();
+
+          // ON de l'interrupteur du relais = porte ouverte
+          digitalWrite(RELAY_PIN, 0);
           for(int k = 0; k < 30; k++) { // délais de 3s
             digitalWrite(ONBOARD_LED, HIGH); delay(50); digitalWrite(ONBOARD_LED, LOW); delay(50);
           }
+          // OFF de l'interrupteur du relais = porte fermée
+          digitalWrite(RELAY_PIN, 1);
         }  
       }
     }
