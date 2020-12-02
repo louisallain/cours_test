@@ -11,9 +11,9 @@ JAVASPACE_CLASSPATH=$JAVASPACE_HOME/lib/*
 # fichier policy.all
 POLICY_FILE=$PWD/policy.all
 # jar contenant le programme a executer
-JAR_FILE=$PWD/philosophers_V0/build/philosophers.jar
+JAR_FILE=$PWD/build/philosophers_V1.jar
 # classe de la tache contenant le programme principal 
-MAIN_CLASS=allain1.philosophers_V0.MyEntry
+MAIN_CLASS=allain1.philosophers_V1.MyEntry
 
 echo "$JAVA -Djava.security.policy=$POLICY_FILE -cp $JAVASPACE_CLASSPATH:$JAR_FILE $MAIN_CLASS $1"
 $JAVA -Djava.security.policy=$POLICY_FILE -cp $JAVASPACE_CLASSPATH:$JAR_FILE $MAIN_CLASS $1

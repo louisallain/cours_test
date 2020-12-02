@@ -19,9 +19,9 @@ POLICY_FILE=$PWD/policy.all
 # prefixe du nom des machines sur le cluster
 NODE=np
 # jar contenant le programme a executer
-JAR_FILE=$PWD/philosophers_V0/build/philosophers.jar
+JAR_FILE=$PWD/philosophers_V1.jar
 # classe de la tache contenant le programme principal 
-MAIN_CLASS=allain1.philosophers_V0.Philosopher
+MAIN_CLASS=allain1.philosophers_V1.Philosopher
 
 # lancement du Philosophe i sur la machine i+1
 for phi in {0..9}
