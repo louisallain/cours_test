@@ -1,0 +1,1200 @@
+Manifest-Version: 1.0
+Built-By: genie.californium
+Build-Jdk: 1.7.0_80
+Created-By: Apache Maven 3.5.4
+
+Name: org/eclipse/californium/core/network/class-use/Outbox.html
+SHA-256-Digest: Kf5jv6uqtcLuZ50hY0UHamg9ccpsy8hTEx+l2OvpQck=
+
+Name: org/eclipse/californium/core/network/stack/BlockwiseStatus.html
+SHA-256-Digest: OTuimMfX+5yqMAVjyyTjQY3siw4QNpAlNQMWgLtgNXk=
+
+Name: org/eclipse/californium/core/server/resources/class-use/Resource
+ Attributes.html
+SHA-256-Digest: Zyfu42UbqHzbGMT9xxlD3xeIhaGDVgod7IqFyRrc+/A=
+
+Name: org/eclipse/californium/core/network/CoapEndpoint.OutboxImpl.htm
+ l
+SHA-256-Digest: uvBnJ7M3GKiY89TGmInyY6TiRDGmnDQn142Fh/RHHGQ=
+
+Name: org/eclipse/californium/core/network/stack/class-use/TcpAdaption
+ Layer.html
+SHA-256-Digest: Kk9h7avidGv8CFM6JoigYmUXAZo8n4A2XQ1e4An+aQ8=
+
+Name: org/eclipse/californium/core/class-use/CoapObserveRelation.html
+SHA-256-Digest: j5RDOz6DcB7luZwt6VTdNa4w7aqm2bdPC7jd5CH6ILs=
+
+Name: org/eclipse/californium/core/network/stack/CoapStack.html
+SHA-256-Digest: EC2LsMmuEJiR06Dfw0ridyA0osG6iQ0evG3XewSHEmA=
+
+Name: org/eclipse/californium/core/network/deduplication/package-tree.
+ html
+SHA-256-Digest: I0B+/rIXLn4dznJ8qYwdEduKU2exJN4Z6NGbXH8Z6l0=
+
+Name: org/eclipse/californium/core/network/stack/class-use/ObserveLaye
+ r.html
+SHA-256-Digest: qO8eHO/THjvz3fPy9odcEA2CPsWP4bVKp4iGLPPOtbk=
+
+Name: org/eclipse/californium/core/network/stack/CoapUdpStack.html
+SHA-256-Digest: 9x7zjZGV5pQw2hgG3cubqclxtvaxCH1B2tephQ0s0IM=
+
+Name: org/eclipse/californium/core/network/package-frame.html
+SHA-256-Digest: lJDk3P+iTwYsxE8x4tunqXSGAi1gJESlBvxxmfmLEmI=
+
+Name: org/eclipse/californium/core/server/resources/package-summary.ht
+ ml
+SHA-256-Digest: j2U+iXA/P46IgDpMKzWE60ZOtLvQgWDfoLNEKYPNYQo=
+
+Name: org/eclipse/californium/core/network/stack/CongestionControlLaye
+ r.html
+SHA-256-Digest: RRA/+OeEnhBPRVJ1Zfhlt4QjhLOmYdin6rXGRxUK8Hs=
+
+Name: org/eclipse/californium/core/network/class-use/RemoteEndpointMan
+ ager.LimitedRemoteEndpointHashmap.html
+SHA-256-Digest: CX0jypxmBw37PzEu7q6yTaUjm/3z6DuaPKhuA7vgN5g=
+
+Name: org/eclipse/californium/core/server/resources/RequestProcessor.h
+ tml
+SHA-256-Digest: ErqAHjQL2Dob355r4Z5rnxjYxhWm3LepCABS6Z0oJRc=
+
+Name: org/eclipse/californium/core/network/serialization/TcpDataSerial
+ izer.html
+SHA-256-Digest: 4f28+V/+6Lpo0m6EaRE32aP89XGnUFJoGbxJ7YgyijA=
+
+Name: org/eclipse/californium/core/server/resources/class-use/CoapExch
+ ange.html
+SHA-256-Digest: H8hLnxZRzeUaLfMYRrXB4QDYNVLebLn0H49pEf/oQSk=
+
+Name: org/eclipse/californium/core/network/serialization/class-use/Tcp
+ DataSerializer.html
+SHA-256-Digest: 32x/q+W2WOAMcUECIvvgSN+w477lFXaelDW+JbV6iPA=
+
+Name: constant-values.html
+SHA-256-Digest: QafmzNnZYe5bbIej9JBPDCEOnnlYprO5esJHvAbdOJM=
+
+Name: org/eclipse/californium/core/network/class-use/GroupedMessageIdT
+ racker.html
+SHA-256-Digest: hFGJGj8BuopUNbDYlJWbR+bUONUMwho8dVPI/sJJdV8=
+
+Name: org/eclipse/californium/core/server/resources/package-frame.html
+SHA-256-Digest: Dg6SoIcD8/exnP/m7SAyFSkm+gtzsn7Q5np6XM0Veh4=
+
+Name: org/eclipse/californium/core/observe/Observation.html
+SHA-256-Digest: 3M4Kbc/naemAdFhOgPubbvQbSkwfW8N/hqENPns1bXE=
+
+Name: org/eclipse/californium/core/network/stack/class-use/KeyUri.html
+SHA-256-Digest: Fu8kp6kcaiF517+4hS2lVbQUfETkID+j4Tn66BhZ9UE=
+
+Name: org/eclipse/californium/core/server/resources/class-use/Discover
+ yResource.html
+SHA-256-Digest: Z7kW5/nPjK9TzrjwukjqJTquFsk4e/8FWE7+bsGOgN4=
+
+Name: stylesheet.css
+SHA-256-Digest: k23atBmmWV7vZsThcUYOp9Q9ifOgwL1wiJZ33e1Q/Fc=
+
+Name: org/eclipse/californium/core/network/UdpMatcher.html
+SHA-256-Digest: VsmsQa5aalGKYAw9MF/WXZdfoJaVX3mUxzAMnn5H4OM=
+
+Name: org/eclipse/californium/core/CoapServer.html
+SHA-256-Digest: DoSe9cw1jNcqCz7E464aDgR1sA9norynfeBwPpOw35I=
+
+Name: org/eclipse/californium/core/network/deduplication/SweepDeduplic
+ ator.html
+SHA-256-Digest: 90nTsj//48UwTiURIBNQK8gIb5kN3n6C7pudieZ9q3I=
+
+Name: org/eclipse/californium/core/coap/class-use/MessageFormatExcepti
+ on.html
+SHA-256-Digest: 6yo7bAd7OAqAhF+DghiqwxlD4n3dXRiyzwhqShaO0Cs=
+
+Name: org/eclipse/californium/core/coap/package-use.html
+SHA-256-Digest: 0/zryj1LZDLp53kGRB7oOeXQfI8IBu1KBFTJ3uHB7uY=
+
+Name: org/eclipse/californium/core/network/deduplication/class-use/Ded
+ uplicator.html
+SHA-256-Digest: H7opN15Olo2PExHqfjDHmE0i6kEEusHTgei3gy4XPdA=
+
+Name: deprecated-list.html
+SHA-256-Digest: etskEdVssT6q+7gEXi75bOscsjp5SK6B1NzbwYOneXc=
+
+Name: org/eclipse/californium/core/network/interceptors/class-use/Mess
+ ageTracer.html
+SHA-256-Digest: Bzd25OetOrKuAZpVw3mvWtlwL0M2x301ipzz8NR2AKw=
+
+Name: org/eclipse/californium/core/network/stack/class-use/Reliability
+ Layer.html
+SHA-256-Digest: lKKeMvbjG6rbFy9XW4F8068NteESNKRsE0dehEqyC28=
+
+Name: org/eclipse/californium/core/network/stack/CoapTcpStack.html
+SHA-256-Digest: lbxQAF1kPNnMcNZmO5SFuLPQIn7YlL+vhu7gDc7BkiM=
+
+Name: org/eclipse/californium/core/coap/OptionNumberRegistry.optionFor
+ mats.html
+SHA-256-Digest: /TiEwU04qJkcNsTVUS+b3hmjMBmG1i+AWCJ3V5sWRMg=
+
+Name: org/eclipse/californium/core/network/stack/class-use/Layer.html
+SHA-256-Digest: 6hU0lla8+5wVIqHI6txIhBqGczepBr4PnIxUeDSIdF4=
+
+Name: org/eclipse/californium/core/network/EndpointObserver.html
+SHA-256-Digest: EXoY0nBfmAlNITkAcpXLeix8q4NxarT05ZETwXbCU1Y=
+
+Name: allclasses-noframe.html
+SHA-256-Digest: RmzjsMUbk+Rw9bgNwwnr3GvuJOfSvJD5SjsuZULVryI=
+
+Name: org/eclipse/californium/core/network/serialization/UdpDataParser
+ .html
+SHA-256-Digest: GJFV37wiSo8FRD4TZcZdkxKrH4g5AFxv6vZBhrwZz+w=
+
+Name: org/eclipse/californium/core/network/stack/congestioncontrol/pac
+ kage-summary.html
+SHA-256-Digest: gAf3iFTjsCk3P3GWdF03oF9ocgXjbPOqhZQyz5hVbNU=
+
+Name: org/eclipse/californium/core/server/resources/Resource.html
+SHA-256-Digest: WXMdAj9d3UxzSbsZGOyk5NJcGvkGECUo6LDEY2h6+8Q=
+
+Name: org/eclipse/californium/core/class-use/WebLink.html
+SHA-256-Digest: qyMvF5c56TxtFJQs0Nf34brYIpme7nSpzR2mA9Si5Tk=
+
+Name: org/eclipse/californium/core/network/config/NetworkConfig.html
+SHA-256-Digest: TWM0T31K3VXOBzivZ87c70nbvIzxWG9wqzlGFEr92TU=
+
+Name: org/eclipse/californium/core/network/interceptors/MessageInterce
+ ptor.html
+SHA-256-Digest: qd8U1FySb4QwoyafEWePRK40czIvHQEgtDOE43Wbr/E=
+
+Name: org/eclipse/californium/core/network/interceptors/package-tree.h
+ tml
+SHA-256-Digest: GjB+0WhwT3OaxMIXsdhvIPkWCM1Twgm8Ugvjv+r6zU0=
+
+Name: org/eclipse/californium/core/network/config/package-frame.html
+SHA-256-Digest: NZc7RI1HgfPHmJLVqzxGIGY5h+aQv447r6ih51CMmXc=
+
+Name: org/eclipse/californium/core/network/TcpMatcher.html
+SHA-256-Digest: 6KQLiyC/QLa1U4MmVYypx9qBcGWcF/YawxkUHD34tbw=
+
+Name: org/eclipse/californium/core/network/config/NetworkConfigDefault
+ Handler.html
+SHA-256-Digest: OiXmDD96kbt38d752wk4ujWUwNSft5Q0SSQ5jiRZGTc=
+
+Name: org/eclipse/californium/core/network/class-use/CoapEndpoint.Coap
+ EndpointBuilder.html
+SHA-256-Digest: vm+DzIAzhiFGzmgrsPmFi5peg+EUzq+ZZO6BA/G0k3c=
+
+Name: org/eclipse/californium/core/observe/package-frame.html
+SHA-256-Digest: DVcsU6PnPdSq7dOWtZjB5wJeitw4LKfv4t5spg9m0GE=
+
+Name: org/eclipse/californium/core/network/stack/class-use/BlockwiseSt
+ atus.html
+SHA-256-Digest: huvNg3vAdeJI3ofJJgQ13HdkYdWqZrrailshGYpqvmo=
+
+Name: org/eclipse/californium/core/observe/ObservingEndpoint.html
+SHA-256-Digest: 4tuhgTAP6QTipg7pWJQTHpVkarfX7JnN1Pkwq0DDHr8=
+
+Name: org/eclipse/californium/core/CoapObserveRelation.html
+SHA-256-Digest: 4KTkdfjczrXTgdcP6WPH2d3g4KdMR8nN4qXhXforTGQ=
+
+Name: org/eclipse/californium/core/coap/BlockOption.html
+SHA-256-Digest: QHASS3nE0fUHsktD7R13vhbpUoxo12TBSAz2d/ZcsTI=
+
+Name: org/eclipse/californium/core/network/StripedExchangeJob.html
+SHA-256-Digest: obdFTL2mrEkuiHY9ERd0XsESrKBH/b8Q18eQH56uTpI=
+
+Name: org/eclipse/californium/core/coap/OptionNumberRegistry.Names.htm
+ l
+SHA-256-Digest: 0L1ALdxApjwPlGT544Pk+LH/qt03Qwx+s2hTxXXBiUU=
+
+Name: org/eclipse/californium/core/coap/CoAP.Type.html
+SHA-256-Digest: 6WRLmSYBdLbxTbUsNNQS8ssM5qadC9Nmb6Bz9dPEsxY=
+
+Name: org/eclipse/californium/core/network/class-use/EndpointContextMa
+ tcherFactory.MatcherMode.html
+SHA-256-Digest: 0QKRuTDI0P6L98PUS5aj0h07dNdSkfuaQPs6Gm3s7KE=
+
+Name: org/eclipse/californium/core/network/stack/ReliabilityLayer.html
+SHA-256-Digest: 1NfyDZY2GcuTKrt4Y2ZnZOoCnIWS0Dn3Pf2Hoq2TXMA=
+
+Name: org/eclipse/californium/core/CoapHandler.html
+SHA-256-Digest: MWuOtRFpzXvfs9AhHp8EM0cy4/41+EroJP91k8Se+ss=
+
+Name: org/eclipse/californium/core/network/InMemoryMessageIdProvider.h
+ tml
+SHA-256-Digest: DhGN9WjwfzLFKBN8vmKKqMg4wIN+c5wDI+CFkcsr44w=
+
+Name: org/eclipse/californium/core/server/package-use.html
+SHA-256-Digest: WHulnhPxrfP9v1E6xBoEf4K8l6WATkwX6tnmfDmDS0I=
+
+Name: org/eclipse/californium/core/network/stack/ReliabilityLayer.Retr
+ ansmissionTask.html
+SHA-256-Digest: 14a3M0cKWpgzWs3aipzkIq8pNSrLJYJPiZ/biPAm/UY=
+
+Name: org/eclipse/californium/core/coap/class-use/CoAP.Code.html
+SHA-256-Digest: z4qZfB2FD5+A5qV8q3YEIZWL6hNu3XJCWxDAwtPGY6g=
+
+Name: org/eclipse/californium/core/network/class-use/ExchangeCompleteE
+ xception.html
+SHA-256-Digest: m3jGawPypDYUDhSSzb8vR/pSxGrJgoBKBop8NawxHyI=
+
+Name: org/eclipse/californium/core/network/stack/class-use/ExchangeCle
+ anupLayer.html
+SHA-256-Digest: Kd0c067zBn5bEUGueTjybx8oasLwMwBwyLxxpmDaYc4=
+
+Name: org/eclipse/californium/core/server/ServerMessageDeliverer.html
+SHA-256-Digest: WnDi/a9lbkWntwNxiMH/Zkxt4dqLjvrc2fI6TqA9Bjs=
+
+Name: allclasses-frame.html
+SHA-256-Digest: VtGEhQv/ReZpwb40zb6+bo0isjU8gSo5I6ta1BGeV9k=
+
+Name: org/eclipse/californium/core/network/config/package-summary.html
+SHA-256-Digest: FYSU5DCh5XaFqsHqxHo+f8u2juGXj2OxLXht/kgKFUQ=
+
+Name: org/eclipse/californium/core/network/MessageIdTracker.html
+SHA-256-Digest: PtQEoqyxA4I/vUgrCujO0RvbjNljdXg97PUy+qheK8U=
+
+Name: org/eclipse/californium/core/observe/ObserveNotificationOrderer.
+ html
+SHA-256-Digest: m6LM+QQfN/kimgpnSqU91yAIJaXBSI42Gpswz/ALTC0=
+
+Name: org/eclipse/californium/core/network/stack/TcpAdaptionLayer.html
+SHA-256-Digest: 1YVqjX6zYiLzs4z6er7Z//UPGbY4451894RJ+w516Kc=
+
+Name: org/eclipse/californium/core/class-use/CoapHandler.html
+SHA-256-Digest: v1WozQtK35/bRZx+9knxkmDzhEEA/e7n0VYwdvnwUjE=
+
+Name: org/eclipse/californium/core/coap/class-use/LinkFormat.html
+SHA-256-Digest: 4+Kmxo6MyofqaAyTc+p3TzPmLCZTEM3Foz290FVSFAY=
+
+Name: org/eclipse/californium/core/network/deduplication/CropRotation.
+ html
+SHA-256-Digest: K5XGg4YUkw2bdns3OOWy2e0aaD5+WjNZ3+HIIFXRnho=
+
+Name: org/eclipse/californium/core/network/stack/ExchangeCleanupLayer.
+ html
+SHA-256-Digest: m0/NnW21PIqP4WlmqCYWfvOmdk60fBDiLeCHHTjKHAU=
+
+Name: org/eclipse/californium/core/network/stack/congestioncontrol/cla
+ ss-use/LinuxRto.html
+SHA-256-Digest: X+tcy0vJe6XvOSaf1I9JdId14KDcPy1C6HDP1/ULdZA=
+
+Name: org/eclipse/californium/core/network/class-use/UdpMatcher.html
+SHA-256-Digest: TwuKSnamDP3nbmztx6ac9stjJOVJRXGnFruBghcZwhw=
+
+Name: org/eclipse/californium/core/network/InMemoryMessageIdProvider.T
+ rackerMode.html
+SHA-256-Digest: JSctz6sx8GYkHK7b0tX0CJWQTqssFmevHFAasixdjWQ=
+
+Name: org/eclipse/californium/core/coap/class-use/CoAP.html
+SHA-256-Digest: TvieVYGARKxJ3tnXbgYRxgnAKo2Dhe+2rrnST0L3tg0=
+
+Name: org/eclipse/californium/core/network/serialization/class-use/Udp
+ DataParser.html
+SHA-256-Digest: Ajp90RtgBg5L8Yc9o4aHlo1aL/WTcnROpiox+KKOHI4=
+
+Name: org/eclipse/californium/core/network/stack/class-use/CoapUdpStac
+ k.html
+SHA-256-Digest: IDWuEMIHVkrtB59mtm7+FT/PB0CW/uZAeeoSnqgPSRM=
+
+Name: org/eclipse/californium/core/CoapResponse.html
+SHA-256-Digest: stx1XcriZELAfkNp7NEqBuSPB+buzWB0KA91OgVk9d4=
+
+Name: org/eclipse/californium/core/network/interceptors/class-use/Mess
+ ageInterceptorAdapter.html
+SHA-256-Digest: yr6EPzPWBycPVkJBCrpTtNUvQ1xmzHWaD4+9aDf2BUA=
+
+Name: org/eclipse/californium/core/network/class-use/EndpointObserver.
+ html
+SHA-256-Digest: OokZbqKrs+jm2QXDjN9yhMViQAhCCZ4nT0jKTWSkiHg=
+
+Name: org/eclipse/californium/core/network/Matcher.html
+SHA-256-Digest: QIlz+my8WBAxSfXt9gCkrle/UTfr1L0ZdAeoVBpCAlw=
+
+Name: org/eclipse/californium/core/network/serialization/DataSerialize
+ r.html
+SHA-256-Digest: ADdoBaYjbf71exLol85NtLmgDMYM2HTW8cRcH1OLnUc=
+
+Name: org/eclipse/californium/core/coap/LinkFormat.html
+SHA-256-Digest: RJgQe4+hbiAZdV6DISKe3XYo87YfEMqt2QhxDzUhfRw=
+
+Name: org/eclipse/californium/core/network/stack/congestioncontrol/Pea
+ khopperRto.html
+SHA-256-Digest: sP9nSdRp39rBzmt7BDafGmsPOc4Yf5duvNc5ci1970M=
+
+Name: org/eclipse/californium/core/network/class-use/Exchange.KeyMID.h
+ tml
+SHA-256-Digest: 4Ff8LDn9w6FUuCceAf8r+bLgHQagWb7l9jBA1Jbfesk=
+
+Name: index.html
+SHA-256-Digest: b0TP6ysKbmOdKgycf5VCzRRKDyuqWAGQ0mANs5ksQlU=
+
+Name: org/eclipse/californium/core/coap/class-use/Token.html
+SHA-256-Digest: 052yThaM7/UpWx+w4AKfvXXONpab16GLfJQ9bl5uUMw=
+
+Name: org/eclipse/californium/core/network/serialization/class-use/Dat
+ aParser.html
+SHA-256-Digest: Yj+VnS2ARcN/Hfy6N04jyMOajhm36Qy55acuQJXB8EA=
+
+Name: package-list
+SHA-256-Digest: FMiKDT4wuADYU8fWcvgpNJUF93jHIjguor1WZCXB6ZM=
+
+Name: org/eclipse/californium/core/network/stack/ObserveLayer.html
+SHA-256-Digest: 7eh7c/uZahZgUtUIT4+v9amsfn4yVpgLBZOe03OH3SI=
+
+Name: org/eclipse/californium/core/network/stack/congestioncontrol/pac
+ kage-tree.html
+SHA-256-Digest: 0aDZzvqYNTklrX8ulAaFJR3iDq7jVVeTozFiP6URwyk=
+
+Name: org/eclipse/californium/core/server/MessageDeliverer.html
+SHA-256-Digest: f1xzZMn/+E9F4mL3yDA1YGo5ldG0AzL0mXKkyGKbr00=
+
+Name: org/eclipse/californium/core/network/TokenGenerator.html
+SHA-256-Digest: zMcnIb6Zx1sGOASB4XunI1Ul1fHu29H38VEXhq22hiQ=
+
+Name: org/eclipse/californium/core/class-use/CoapClient.html
+SHA-256-Digest: LdjQy0T7ktLa2tRMZJx3RPHjXv8IX0/G74YrBU48d7c=
+
+Name: org/eclipse/californium/core/network/class-use/TcpMatcher.html
+SHA-256-Digest: T6KVjFooaTqCvuSEOXfLtbS0K/qo6wn9ge2I1dMB2po=
+
+Name: org/eclipse/californium/core/network/CoapEndpoint.CoapEndpointBu
+ ilder.html
+SHA-256-Digest: LUA4QFShBgmQ8gRNnsTztNa7f6NCr91RVx/Sdy9BINY=
+
+Name: org/eclipse/californium/core/network/deduplication/DeduplicatorF
+ actory.html
+SHA-256-Digest: 6mGyBMAPH9qucNEr5Isg/zrNEulRlPyE3kceMC6HTEY=
+
+Name: org/eclipse/californium/core/network/class-use/Exchange.Origin.h
+ tml
+SHA-256-Digest: 5IqAy/Fuic1fOaIkCZu02SygeA6xFMHFZVm7JVcx68w=
+
+Name: org/eclipse/californium/core/network/Endpoint.html
+SHA-256-Digest: 8fIpB8ZjYKRgOjxqkTDFRoquaZ+azziJBb69oVv6Y+g=
+
+Name: org/eclipse/californium/core/server/resources/CoapExchange.html
+SHA-256-Digest: MVphImyDRxqN554jr4eOUtnwq9Ds4gbcD08UyXEs3bg=
+
+Name: org/eclipse/californium/core/network/stack/Layer.html
+SHA-256-Digest: xFOfFUMiCk04Osr66qpk+Brao4qg8fE5vaPKiQEEZt4=
+
+Name: org/eclipse/californium/core/network/config/package-use.html
+SHA-256-Digest: aqGdrx8DM8qAQU1Uu3QOmmN949enFW+HvnrotLihqc4=
+
+Name: org/eclipse/californium/core/network/class-use/MessageIdProvider
+ .html
+SHA-256-Digest: 8vDzRXixpMqbCV2xoM2xQullC9/f1HN+IWS4L/uD14A=
+
+Name: org/eclipse/californium/core/network/config/package-tree.html
+SHA-256-Digest: l++o+v4Qgdy5w7wcx191AX1bq3zs+7/Ope6QHZZ5P4E=
+
+Name: org/eclipse/californium/core/network/CoapEndpoint.html
+SHA-256-Digest: k4RaQc+eBHO4Z28VJXM8qGzegegtKG0z6hjUU7j+NqQ=
+
+Name: org/eclipse/californium/core/network/stack/class-use/BlockwiseLa
+ yer.html
+SHA-256-Digest: rOxgWGSShKrS7rW2xeqUn7HcSaFbBDK1Q0Q/p/FTxWA=
+
+Name: org/eclipse/californium/core/coap/Token.html
+SHA-256-Digest: CJJfsKaeNfNcpM8JI/0BFwoJZHrDHs2BZARcRlsCp3U=
+
+Name: org/eclipse/californium/core/network/config/class-use/NetworkCon
+ figDefaultHandler.html
+SHA-256-Digest: xfNsjyGGcB/ZWUnkRfkuNQdIUBTaX9bcJ6bd+2Gtte8=
+
+Name: org/eclipse/californium/core/network/deduplication/NoDeduplicato
+ r.html
+SHA-256-Digest: dsCDW+8G4D1TSte+uxCRImOgr0Z6OWZDM0ydx2spPTE=
+
+Name: org/eclipse/californium/core/coap/OptionNumberRegistry.Defaults.
+ html
+SHA-256-Digest: fa9sl4sU9XUaJAGD606N363wHWNn1VmNgjqQ8qSOuV4=
+
+Name: index-all.html
+SHA-256-Digest: Dy00z/7cSyKZjWCyiVByr3lPcjygl5fYnGD02x8kxQY=
+
+Name: org/eclipse/californium/core/network/stack/Layer.TopDownBuilder.
+ html
+SHA-256-Digest: f/wKLR4sJ6AocxF0X+KZ/72937KTln/zK/dq0935Taw=
+
+Name: org/eclipse/californium/core/server/resources/ConcurrentCoapReso
+ urce.html
+SHA-256-Digest: OQ49SdHS7LlH3zBaSbLWYBzNN4alY374G6biDv6mo8g=
+
+Name: org/eclipse/californium/core/network/interceptors/class-use/Orig
+ inTracer.html
+SHA-256-Digest: RQ1A7V7JJBE0G5HSqWyQE/aOi+6qhvCJBdWKf67yrKg=
+
+Name: org/eclipse/californium/core/network/package-use.html
+SHA-256-Digest: 9QgZSk+f7ccei7ilSVp/iau5BQa4H9zFj8ZSAzO7F+E=
+
+Name: org/eclipse/californium/core/coap/class-use/CoAP.ResponseCode.ht
+ ml
+SHA-256-Digest: FMA6p2h8ArxYiojH3XBmoyq/sFNCsWFnWPTjkTX86XI=
+
+Name: org/eclipse/californium/core/network/config/NetworkConfigDefault
+ s.html
+SHA-256-Digest: RMHIGcYa015Z/9VB45+veGn9FCElOmiSbuJISq6/X/c=
+
+Name: org/eclipse/californium/core/network/serialization/DataParser.ht
+ ml
+SHA-256-Digest: /druV/9hr0FOc6inZyAeUXA2gDSTPSec+3oCjPJ7RM0=
+
+Name: org/eclipse/californium/core/observe/class-use/ObserveRelationFi
+ lter.html
+SHA-256-Digest: aKPpvrcgh9yeVPVzL0LBsmggz2MFi9Tujh3V8LlSykY=
+
+Name: org/eclipse/californium/core/network/config/class-use/NetworkCon
+ fig.html
+SHA-256-Digest: HwxN1GJY8ZvCwQ+n2Saf9AeXg0jtJzFfM8/nzZ+KTt4=
+
+Name: org/eclipse/californium/core/network/class-use/CoapEndpoint.html
+SHA-256-Digest: lBurqaRkc12PPBIwmHgRV1TC9zLAgX46rk/9a5JbKt4=
+
+Name: org/eclipse/californium/core/network/package-tree.html
+SHA-256-Digest: 8odfzhbBZIYNJ2sE3n3kgFXqO/6hlNDqxzcpHR0MCX4=
+
+Name: org/eclipse/californium/core/network/class-use/InMemoryMessageEx
+ changeStore.html
+SHA-256-Digest: NGyR6Eiq0q9gXhFf12rtVLkl/TiuzWYpwqImYQx7GdU=
+
+Name: org/eclipse/californium/core/server/resources/DiscoveryResource.
+ html
+SHA-256-Digest: QCYQmecmylwtNFjub4HIVvAT7Yvq1xEwRhwJQPugk6E=
+
+Name: org/eclipse/californium/core/network/stack/congestioncontrol/cla
+ ss-use/Cocoa.html
+SHA-256-Digest: Dr2eELF1/Eot6mwgc3bif1CRZfQ8rEjxMeN9fzFlgeg=
+
+Name: org/eclipse/californium/core/network/stack/package-frame.html
+SHA-256-Digest: lcihLFIb1/3qKmxJxlpwTrcBx6oAUeeV7dgts8st/tw=
+
+Name: org/eclipse/californium/core/network/MessageIdProvider.html
+SHA-256-Digest: Ma5f4BaqbndRfCmT3XcoNZvQoA0sJx7BVvcmcSpgWSM=
+
+Name: org/eclipse/californium/core/network/class-use/StripedExchangeJo
+ b.html
+SHA-256-Digest: dVe6Ds5lPfb1UGPZQHPVtldY1/GkW3BHgOay2CXDG5k=
+
+Name: org/eclipse/californium/core/observe/class-use/ObservationStore.
+ html
+SHA-256-Digest: 8dUEH51OdPrmjVzq66sPvCVV8FFsWxnthcAlvftZ3ss=
+
+Name: org/eclipse/californium/core/network/class-use/TokenGenerator.ht
+ ml
+SHA-256-Digest: lRpROi1Nf7jn1gCtCJg8mL7VHg2q47WRQ+vQf/7sdLU=
+
+Name: org/eclipse/californium/core/network/serialization/package-frame
+ .html
+SHA-256-Digest: OgIAx4t3eIYDPlxiwdvpYGnXLsHZ1bvFIvU4Mdf+EUE=
+
+Name: org/eclipse/californium/core/network/serialization/package-use.h
+ tml
+SHA-256-Digest: bngnjquKe2Oxybxr9LR9mulpJM9aBlN6FMbI/xWhYJ8=
+
+Name: org/eclipse/californium/core/package-tree.html
+SHA-256-Digest: E8x1zki5SKv9B+5t/X9gSsxc1wyRG6YBmExMR7hvo0w=
+
+Name: org/eclipse/californium/core/coap/EmptyMessage.html
+SHA-256-Digest: SYCCF2MuIcs+zDHaglxYhlsmmg1zxu/iQJKwYu+fb60=
+
+Name: org/eclipse/californium/core/observe/class-use/ObserveManager.ht
+ ml
+SHA-256-Digest: M4ZilnrYx3lc7I7FseAgu9m6iDyVtDBwyo+Oh25EccA=
+
+Name: org/eclipse/californium/core/network/stack/BlockwiseLayer.html
+SHA-256-Digest: lgayJijOIkoyso8awuwGTqXAI/vSAsc+rhFZg20RNDQ=
+
+Name: org/eclipse/californium/core/network/EndpointManager.html
+SHA-256-Digest: ZNCLPpKTvk9h45fhPlyffUVzc9pB7vtnq8W8KIkUp48=
+
+Name: org/eclipse/californium/core/coap/MessageObserverAdapter.html
+SHA-256-Digest: D2BMJpwU1xkh+JEW0g0u+z+qpK+KkG9UitZ6FqyK/ZY=
+
+Name: org/eclipse/californium/core/network/deduplication/class-use/Swe
+ epDeduplicator.html
+SHA-256-Digest: FugavOo6OGQIzkg3zbkCQU+cCiVw+EoIaJGaykC9OUo=
+
+Name: org/eclipse/californium/core/network/stack/class-use/TcpObserveL
+ ayer.html
+SHA-256-Digest: +ywAgOGQeuy+0n4oBkIEudSULFoFSFR3LoXj8yM27/s=
+
+Name: org/eclipse/californium/core/observe/class-use/ObserveRelation.h
+ tml
+SHA-256-Digest: LYPKPDRHaAdsBZVNbs3QDNb7Kx/h1Ei/4LGcBXoHQho=
+
+Name: org/eclipse/californium/core/coap/class-use/OptionNumberRegistry
+ .Names.html
+SHA-256-Digest: Q1g9Rn+xbUpzHsLCZlscobj1vZJT3uXkpb0EQygb+S4=
+
+Name: org/eclipse/californium/core/network/config/NetworkConfig.Keys.h
+ tml
+SHA-256-Digest: p8vnKK2Vcw0LJup5kUfpUjoWXRfqBJERJTFO10KwDsM=
+
+Name: org/eclipse/californium/core/network/stack/congestioncontrol/pac
+ kage-frame.html
+SHA-256-Digest: 2+mfEh7/mgse9hXtNa7Hqz94GAXFLuJlxAb8mznHHpc=
+
+Name: org/eclipse/californium/core/network/class-use/RemoteEndpointMan
+ ager.html
+SHA-256-Digest: zwhBj/4hWac3zTmfEdgdz6UMNRP7W6GP635i2iJFmrA=
+
+Name: org/eclipse/californium/core/network/interceptors/package-use.ht
+ ml
+SHA-256-Digest: jE4aa1FXzYiNlLDSHp/nEgq8s892uvcmwjcrLjUttS4=
+
+Name: org/eclipse/californium/core/network/interceptors/class-use/Mess
+ ageInterceptor.html
+SHA-256-Digest: lXx/RRAvuhdA541xo36iBvkhlxTXWWmezMOV5Yc4/ic=
+
+Name: org/eclipse/californium/core/network/stack/class-use/CongestionC
+ ontrolLayer.html
+SHA-256-Digest: m6ce5rCu767u2wA6A0aOe9lQ6rZ2XOXgqICs7AfKThw=
+
+Name: org/eclipse/californium/core/observe/package-summary.html
+SHA-256-Digest: NWNHAtZWOEigJWmeZrfMhX6/1m269cms1Ew1g3E6+Ak=
+
+Name: org/eclipse/californium/core/network/config/NetworkConfigObserve
+ r.html
+SHA-256-Digest: j/Bb/vOw7appC1EXJg7/TBAeqmhpecIDhhtLLUycgAo=
+
+Name: org/eclipse/californium/core/network/stack/class-use/CoapTcpStac
+ k.html
+SHA-256-Digest: jesuK/lGGu3YD7C8tX1wpyGlBRB7+yqI80Pq6A8+YSY=
+
+Name: org/eclipse/californium/core/network/class-use/CoapStackFactory.
+ html
+SHA-256-Digest: 26ktmX2PNEzdlqR3VItMFnW5bvkC4sdHbcJCZ6S5QTs=
+
+Name: org/eclipse/californium/core/network/stack/package-summary.html
+SHA-256-Digest: 9qF6vWE4487L17bWXeWj1AAAaWbwEGdSokpxAC07BHQ=
+
+Name: org/eclipse/californium/core/coap/class-use/CoAP.MessageFormat.h
+ tml
+SHA-256-Digest: sdV8ifQ4dKX3q6uPQ0ds6iPUyEJqtfG/1Z+Pb88bFdE=
+
+Name: org/eclipse/californium/core/network/class-use/MapBasedMessageId
+ Tracker.html
+SHA-256-Digest: pLw5KE3rvVnOOSzruY/DkLW1OX1GF6qPScKX2Ppmp9o=
+
+Name: org/eclipse/californium/core/network/deduplication/package-frame
+ .html
+SHA-256-Digest: nom4LpiwaVx7ucsIdoNYp6u4mRtE9b3TNvmvVUUlkpY=
+
+Name: org/eclipse/californium/core/server/resources/class-use/RequestP
+ rocessor.html
+SHA-256-Digest: TBg7AHbCxHEXS1a2Sf60NX+y/PRpu2MxlsvLtHCHpM8=
+
+Name: org/eclipse/californium/core/server/class-use/ServerInterface.ht
+ ml
+SHA-256-Digest: AhNa2LnMcrwyfsuiP81tBqfO6Dc9MEyX54JqkBRAoDk=
+
+Name: org/eclipse/californium/core/network/config/class-use/NetworkCon
+ figObserverAdapter.html
+SHA-256-Digest: qim7ulPvc/jJNNYn6FF01P8zDLt1EPx/pm1pwvuSRQE=
+
+Name: org/eclipse/californium/core/package-use.html
+SHA-256-Digest: b9x3DDq94dvoAkdyzDndtR3qZ7lCQuu1YRyGJvpMxVk=
+
+Name: org/eclipse/californium/core/coap/class-use/CoAPMessageFormatExc
+ eption.html
+SHA-256-Digest: uBkrhe1rvMMQFG01++SI0UMPI0ebQltJr5ED7mvCdRM=
+
+Name: org/eclipse/californium/core/server/package-tree.html
+SHA-256-Digest: aWYS6mhnwPBWIA/x6PEBaZ4RwdlO7Lg/xZ9AeFHb4J0=
+
+Name: org/eclipse/californium/core/network/stack/class-use/Block1Block
+ wiseStatus.html
+SHA-256-Digest: c3j54f/H46vBRbN7a3nj7YM8/PdSFnv33pvbxvt9+ww=
+
+Name: org/eclipse/californium/core/network/Exchange.Origin.html
+SHA-256-Digest: fX2HVdvuQRGdGVgvWxqqAkQYAuB3tuW9F2ALP0NIjHI=
+
+Name: org/eclipse/californium/core/network/stack/congestioncontrol/Lin
+ uxRto.html
+SHA-256-Digest: Y1CdtpmqghEq9cV0CvmEAfGtxogiD0lU3zeVtXeJrNw=
+
+Name: org/eclipse/californium/core/network/RemoteEndpoint.html
+SHA-256-Digest: 99zmVAJUzmlXAe1W1nDRrAKbmCDxXLnAO2p+do5Nh3M=
+
+Name: org/eclipse/californium/core/network/RemoteEndpointManager.Limit
+ edRemoteEndpointHashmap.html
+SHA-256-Digest: tdfHpM5xS/ntwO0jsfa8tV2NfXStikqsr7pT5IfeUNs=
+
+Name: org/eclipse/californium/core/server/resources/ResourceObserver.h
+ tml
+SHA-256-Digest: 8rIpLk/3MtJwQlaDPvpKZ67vWSbiyRBS+JgjtNnQyxE=
+
+Name: org/eclipse/californium/core/class-use/CoapServer.html
+SHA-256-Digest: O0i3ks3z7Sswko7TClL68uWvbEwvDCS4rpQANn1s9Vk=
+
+Name: org/eclipse/californium/core/network/class-use/RemoteEndpoint.ht
+ ml
+SHA-256-Digest: ECm7b8W/GSFM9UCDv5hrq535D/wRzuULJs2iqORPn7g=
+
+Name: org/eclipse/californium/core/network/interceptors/OriginTracer.h
+ tml
+SHA-256-Digest: oKNaeQbv94l4ITkkdVi8fMnx8hX5HoznrJKCdWZCrWU=
+
+Name: org/eclipse/californium/core/network/CoapStackFactory.html
+SHA-256-Digest: CpTmKB5VuK8m6aZ/jZ+WdCKXpo2ynAfipbuUrXA8u68=
+
+Name: org/eclipse/californium/core/observe/ObserveRelation.html
+SHA-256-Digest: 4YoOdUQrmXS9d5egW63WH29kyO1ZQ0s91etEH5tyaOg=
+
+Name: org/eclipse/californium/core/network/stack/AbstractLayer.LogOnly
+ Layer.html
+SHA-256-Digest: bn/pSNettBlIfxw849t0nLA/f0tMUtrqe+7fBYoqj9I=
+
+Name: org/eclipse/californium/core/observe/class-use/ObservingEndpoint
+ .html
+SHA-256-Digest: rWuMOLJ51EfXdpbzk7kyqIXeeA/YqxJ3I0NZ6tPBHms=
+
+Name: org/eclipse/californium/core/coap/class-use/OptionNumberRegistry
+ .html
+SHA-256-Digest: ZBFpys049/QW/M3yG6gC85AI9FYL33mHW5mAFFUUL2I=
+
+Name: org/eclipse/californium/core/coap/class-use/Option.html
+SHA-256-Digest: Tv7aR4HGdf9C7aR8FjTPA0SKxI9obGV7E9MtFv1INlU=
+
+Name: org/eclipse/californium/core/network/stack/congestioncontrol/cla
+ ss-use/BasicRto.html
+SHA-256-Digest: Z7lkbedumXkKNZ0K/s4ckRI/VMOJTOroPhvA4c2w/iU=
+
+Name: resources/titlebar_end.gif
+SHA-256-Digest: kdw6TIrhgbg5r/3pMzMcGr4OabRIs3J9hQfdkWbLpnU=
+
+Name: org/eclipse/californium/core/network/serialization/UdpDataSerial
+ izer.html
+SHA-256-Digest: PxckmgBV2FQZHi6J+lJGtDnG0cGnldr2GP8k95W9FG8=
+
+Name: org/eclipse/californium/core/network/stack/class-use/AbstractLay
+ er.html
+SHA-256-Digest: bdEdzsTHVzZ4FBfWQyz8TqNS05oQTEUzX8snJ61yrPI=
+
+Name: org/eclipse/californium/core/network/EndpointContextMatcherFacto
+ ry.html
+SHA-256-Digest: tWEakukAkGyW83mFP2lVr4L3o5SsqSJHFz0vq5jNX2o=
+
+Name: org/eclipse/californium/core/network/NullMessageIdTracker.html
+SHA-256-Digest: zpGxjGGqXftv2f11tXYOmeCvwu9sF7VlehRZ5UJhURE=
+
+Name: org/eclipse/californium/core/coap/class-use/MessageObserverAdapt
+ er.html
+SHA-256-Digest: dZn1CvTECysHY5PEri+yo72Lq8r2j4ircIHDAML/PMU=
+
+Name: org/eclipse/californium/core/network/serialization/class-use/Udp
+ DataSerializer.html
+SHA-256-Digest: yE4fSHccck+bDh1DS41c+YyLapfo6nKZLCPPuvXQTSs=
+
+Name: org/eclipse/californium/core/class-use/CoapResponse.html
+SHA-256-Digest: TuhuFIl0k6I3kgJjiM6wTxqtm1FXPcS4TNiqicb02uc=
+
+Name: org/eclipse/californium/core/network/config/class-use/NetworkCon
+ fig.Keys.html
+SHA-256-Digest: y/b/aMyO415g0w9pd8emeKsePXOjJlqj0/ZdT7fUjpA=
+
+Name: org/eclipse/californium/core/network/serialization/class-use/Mes
+ sageHeader.html
+SHA-256-Digest: 5Sevg7PW2RhMJmhuQ8gszAQap5IBOC4mZAIAbNC4Obc=
+
+Name: org/eclipse/californium/core/network/stack/AbstractLayer.html
+SHA-256-Digest: zh4b90MxrGX7Xzw04VgdRSd8T+3iO5ot6cfETX1vQGY=
+
+Name: org/eclipse/californium/core/network/stack/package-tree.html
+SHA-256-Digest: HipRDawohWgijtq70jCn/NggQpCA4yd9WgDRuyBZpH0=
+
+Name: org/eclipse/californium/core/network/serialization/TcpDataParser
+ .html
+SHA-256-Digest: TaXbGfar7ie5AZ9JgpAU1n0a+nlwz4Izo3Li8VAp/0w=
+
+Name: org/eclipse/californium/core/observe/ObservationUtil.html
+SHA-256-Digest: 75ox9GSj8jszET/lDcrEZ+OR+FRyPY9Xu/WF2GIeOY8=
+
+Name: org/eclipse/californium/core/class-use/CoapResource.html
+SHA-256-Digest: hcl3HX6f1NWmgWPuXgwq4/rrdElCvVokpvzHSwPVckk=
+
+Name: org/eclipse/californium/core/network/ExchangeCompleteException.h
+ tml
+SHA-256-Digest: VkjJIkYeoFwgRn0zhYT9A/s1HimOGdDJm+U0rc+li6M=
+
+Name: org/eclipse/californium/core/network/InMemoryMessageExchangeStor
+ e.html
+SHA-256-Digest: cj80a7Y2wd6qc7kTZDkw+ed5nMdVry6jQMPfSeulA8I=
+
+Name: org/eclipse/californium/core/network/stack/package-use.html
+SHA-256-Digest: I5+6dlyd2SFTmHQKb5VWOuqKOLZFe8I7wGf17kcy3PQ=
+
+Name: org/eclipse/californium/core/network/class-use/RemoveHandler.htm
+ l
+SHA-256-Digest: GKdfeoI5ZUN7eon4LyBtyBqy2KCA6eoJhAh0QYuW22Y=
+
+Name: org/eclipse/californium/core/network/stack/class-use/AbstractLay
+ er.LogOnlyLayer.html
+SHA-256-Digest: LoWvs/zsstHJXRkIn9/7j8Rn5X5R5+ODnYXctQCPdvY=
+
+Name: org/eclipse/californium/core/network/Exchange.KeyMID.html
+SHA-256-Digest: u3Wgjcr6sUbxFy1yVdHVxGneGpy+c+BhaCmWW99CTgM=
+
+Name: org/eclipse/californium/core/observe/class-use/ObservationUtil.h
+ tml
+SHA-256-Digest: k4/467wAdWXkOlwcSVZAI8+V88yzQEm6Q2pFcG44Y04=
+
+Name: org/eclipse/californium/core/network/stack/class-use/Layer.TopDo
+ wnBuilder.html
+SHA-256-Digest: yPwmfjz9tObT8Hz0wmjZq8XoZpylogGDs9PHty+N+Xg=
+
+Name: org/eclipse/californium/core/network/stack/class-use/BaseCoapSta
+ ck.html
+SHA-256-Digest: qEYt3l9jPc5h8sJNZPsGZmo3Pgp+2fdTPKVVy60a+2Q=
+
+Name: org/eclipse/californium/core/server/package-summary.html
+SHA-256-Digest: raIJ74H975sqNFEkAs8nnI+3CruDNyPbpRAHqRSI1fw=
+
+Name: org/eclipse/californium/core/network/stack/TcpObserveLayer.html
+SHA-256-Digest: Zr0FEps+MwYJkzMZubcyDUK1HFNmAGdOSivc3J+0Wws=
+
+Name: org/eclipse/californium/core/coap/Request.html
+SHA-256-Digest: HlGA0z45wmLhijDJvG1a+zyha6cUBKjH3AzBCnULFdw=
+
+Name: org/eclipse/californium/core/network/class-use/InMemoryMessageId
+ Provider.html
+SHA-256-Digest: CROXnSm+BuXtMYqBpG799JBXXNaIg7UPHyTCSoTeq+M=
+
+Name: org/eclipse/californium/core/coap/class-use/CoAP.CodeClass.html
+SHA-256-Digest: lMdijiVyPaayNOjceeGQVJEcMfs0DJw3iSUG4YjT53k=
+
+Name: org/eclipse/californium/core/network/Exchange.html
+SHA-256-Digest: TNXAFPgEepnhApwtIEiGUCJv9NyiAu0jyjx+1kMKea0=
+
+Name: org/eclipse/californium/core/coap/MediaTypeRegistry.html
+SHA-256-Digest: 9XZqTZdc5BYBGMLkI9K3SDUlzzH1FAKOaX3hOSv+dEY=
+
+Name: org/eclipse/californium/core/coap/CoAP.CodeClass.html
+SHA-256-Digest: YdYwXU8mrDBxJiqyabEOAiKByaztmjJQUNnB+1awuC4=
+
+Name: org/eclipse/californium/core/network/deduplication/package-summa
+ ry.html
+SHA-256-Digest: GBqyr14WC9PdLKkIO9PGDXVDM0mBjWZsG6xKzemYOMs=
+
+Name: org/eclipse/californium/core/network/stack/KeyUri.html
+SHA-256-Digest: hny9g4dyQ65FKYP1yrWuGWnv4jcY87+a3PbiwM2YDPY=
+
+Name: org/eclipse/californium/core/network/interceptors/package-summar
+ y.html
+SHA-256-Digest: y2CO25SnXg6/Dvq9gR6qKeZxf8OjIez8m5/ff/AevQQ=
+
+Name: org/eclipse/californium/core/server/resources/class-use/Resource
+ Observer.html
+SHA-256-Digest: y50YdHjjrt1JEuy0Yp0uS3JMdOkxe96jT0PAzVbAo+0=
+
+Name: org/eclipse/californium/core/coap/MessageObserver.html
+SHA-256-Digest: nAsmN2LIXThYnmAN59RoIteI+lTPB7+U7IZwSFbR2pI=
+
+Name: org/eclipse/californium/core/network/class-use/EndpointContextMa
+ tcherFactory.html
+SHA-256-Digest: Z4yZKuNxL1CdQ66xD3z2SYwBfLGhT150yVoKuXYiUjc=
+
+Name: org/eclipse/californium/core/WebLink.html
+SHA-256-Digest: LianPMh9S1KAJHTSI7t7LxdqxMuWTqkQ8UKRyfYIL3Q=
+
+Name: org/eclipse/californium/core/network/stack/congestioncontrol/pac
+ kage-use.html
+SHA-256-Digest: wLFq2YYxgC9tU0KrUKIF5hCY64yOtM/UUyCFBih824g=
+
+Name: org/eclipse/californium/core/coap/package-frame.html
+SHA-256-Digest: Tdx+yd4W+5d2/a4ylcXoBf+axKDugC/EBjwXQtlwbVg=
+
+Name: org/eclipse/californium/core/server/resources/package-tree.html
+SHA-256-Digest: e0HKWX9YOxdhDFKWqLPfPohhChaBDrvNrzUwv9AEnIw=
+
+Name: org/eclipse/californium/core/observe/package-tree.html
+SHA-256-Digest: LDQClcLQ2YNs3PpJipSM06Yr7gy1HZUz65u7+HosRpM=
+
+Name: org/eclipse/californium/core/network/deduplication/class-use/NoD
+ eduplicator.html
+SHA-256-Digest: cViDjvRy1qUf/xBfwBfE63+Y2S7mSNr23B7/4fBairs=
+
+Name: org/eclipse/californium/core/coap/class-use/OptionNumberRegistry
+ .Defaults.html
+SHA-256-Digest: eJEi8ia/HTS4/hENeOssxhpgkKj4gVasX1i3RZ7RK4o=
+
+Name: org/eclipse/californium/core/network/class-use/InMemoryMessageId
+ Provider.TrackerMode.html
+SHA-256-Digest: qvBk+RZmPQPbwiPoGZm8Z1HOTqVpKBW9CxfrKlIXjdg=
+
+Name: org/eclipse/californium/core/network/class-use/Exchange.html
+SHA-256-Digest: CPv4kkvKgyT85mJVAHgSIc5LebykrA+kI98HNORxLB0=
+
+Name: org/eclipse/californium/core/coap/Response.html
+SHA-256-Digest: 3nJvU3doK1ZSgVs94J1334YRFSwpEAm1cXUYu8g7iSc=
+
+Name: org/eclipse/californium/core/network/EndpointManager.ClientMessa
+ geDeliverer.html
+SHA-256-Digest: p9tmKnf01eatTjkC8pNwg8gzHxiEQC4y3Lm3CkWWJMo=
+
+Name: org/eclipse/californium/core/network/BaseMatcher.html
+SHA-256-Digest: QdH9MDAPYAbDqxvszZ+6NUqiRaMQWThdtOqpGX+6fAY=
+
+Name: org/eclipse/californium/core/network/class-use/MessageExchangeSt
+ ore.html
+SHA-256-Digest: p5QczvT82Am/SjuPGdGTy4Bq2DAg4yBBqMHpb1Atz10=
+
+Name: org/eclipse/californium/core/coap/CoAP.Code.html
+SHA-256-Digest: PCi3CYCtLQQ4ScsLOPB6w4v2g188EwfouUjPlPKXmL0=
+
+Name: org/eclipse/californium/core/coap/CoAPMessageFormatException.htm
+ l
+SHA-256-Digest: qXdmZQMJHxNbhyF+mL5ALDytwpFNdgazxBLdGCpAhWo=
+
+Name: org/eclipse/californium/core/observe/class-use/ObserveNotificati
+ onOrderer.html
+SHA-256-Digest: e9R+FwBTxus/P5rT1y1P1bxKnNUCTHIjAeZeHLdc6p0=
+
+Name: org/eclipse/californium/core/coap/class-use/Message.html
+SHA-256-Digest: Q9ALi2bGgMQBn/ASlqpWPGA7UMU1A7sY2agWybHrQtA=
+
+Name: overview-summary.html
+SHA-256-Digest: 4Gaa24SQ99/zE933MP7ToSv1Pu9942IKQuFpGqxD77k=
+
+Name: org/eclipse/californium/core/server/package-frame.html
+SHA-256-Digest: Rc++4EVYldAQ6c0YrlCGcLURI8PFg+kLijmFsV5x/Gc=
+
+Name: org/eclipse/californium/core/network/stack/congestioncontrol/cla
+ ss-use/PeakhopperRto.html
+SHA-256-Digest: nNa8PWk+t/jVhb0S4uBsgs1hPjIfhiD4rOAvk7/NMTk=
+
+Name: org/eclipse/californium/core/coap/class-use/CoAP.Type.html
+SHA-256-Digest: Howt4Lpi0MU1koe+DuH4IIrqhgj4BoWGc84hxE0cpx8=
+
+Name: org/eclipse/californium/core/coap/Option.html
+SHA-256-Digest: BihZOVH9BZ8qt16MDnvt5YJMAldVhmabwZNywNAYRX0=
+
+Name: org/eclipse/californium/core/network/interceptors/class-use/Anon
+ ymizedOriginTracer.html
+SHA-256-Digest: Fh6rnijdPSFpcvzibGDhrxmMEiJzzpmO++K5h0/AVaU=
+
+Name: resources/titlebar.gif
+SHA-256-Digest: vimlqIcA/URWjZnkWNJ/buyOaEiHFlaqW04wTj9A7bk=
+
+Name: org/eclipse/californium/core/observe/class-use/InMemoryObservati
+ onStore.html
+SHA-256-Digest: Apam5ixUa5bZRIrjkmyK8kWkgvqn4jcBCjhI6JdUbCE=
+
+Name: org/eclipse/californium/core/network/interceptors/MessageInterce
+ ptorAdapter.html
+SHA-256-Digest: YddzX9rCDtuUBuvssjIs+zAR+E6fepx3/h6QUScJ+r0=
+
+Name: org/eclipse/californium/core/network/stack/BaseCoapStack.html
+SHA-256-Digest: kEsfMUYGTvy4twJyeQdJxg+Bq9hm/VY+Huz5wwi6h7o=
+
+Name: org/eclipse/californium/core/network/class-use/RandomTokenGenera
+ tor.html
+SHA-256-Digest: NMDXV30XIEXaxJHyR8Tnk8d5YxTYSF45VT3cgAdYfQc=
+
+Name: org/eclipse/californium/core/coap/class-use/BlockOption.html
+SHA-256-Digest: 3uA1u/sZqvjvXBnYgt0Wg8cc9RF+Y9Hi8hDYg6zPSwg=
+
+Name: org/eclipse/californium/core/observe/ObservationStore.html
+SHA-256-Digest: 0HwuqF/fK0EUZAElSjdJSHpfV76rR9OkwBADHUiWu0g=
+
+Name: org/eclipse/californium/core/network/serialization/package-summa
+ ry.html
+SHA-256-Digest: Yphh+Zva9/EpNFKb+Yc64J8OJQncpCm+pUfzLZ85d0c=
+
+Name: org/eclipse/californium/core/coap/MessageFormatException.html
+SHA-256-Digest: /DQK0+I9dNI0UmkSe3DGqxQXbDHjnd0qwEbmklx0ruY=
+
+Name: org/eclipse/californium/core/network/MessageExchangeStore.html
+SHA-256-Digest: 4TlheKtK6aZaQzZPl2lOrdOfQWXvnyi9yMQ4S9svm9k=
+
+Name: org/eclipse/californium/core/network/stack/Block1BlockwiseStatus
+ .html
+SHA-256-Digest: TokPmmgrDhwXwUvD6MUsgANgopYIP8B0uMX8hRDOiHQ=
+
+Name: org/eclipse/californium/core/network/deduplication/class-use/Cro
+ pRotation.html
+SHA-256-Digest: 1iDV8FZVYc6ZvC2ZzTkVAV98dYJNlCPf8yn8f6J4te4=
+
+Name: org/eclipse/californium/core/network/RandomTokenGenerator.html
+SHA-256-Digest: yhfcwQm9ejoyqzm+Ow2Cxt90BI9IUej9s6AbxXqk1T8=
+
+Name: org/eclipse/californium/core/network/class-use/Endpoint.html
+SHA-256-Digest: I7UxOISpoF5CA665qHrJ0DZIk9M+zhYI30SNd1/nbAM=
+
+Name: org/eclipse/californium/core/network/serialization/package-tree.
+ html
+SHA-256-Digest: qRPzMH+6Wyf7ACQOyzIZ+dGhU5+mj8bz7bnKyhA4JQ8=
+
+Name: org/eclipse/californium/core/network/stack/congestioncontrol/cla
+ ss-use/CocoaStrong.html
+SHA-256-Digest: HutCGoTaUWGIGbpzQ2zqAaE1IRTREZU1a7L3XCkPi/4=
+
+Name: org/eclipse/californium/core/network/Outbox.html
+SHA-256-Digest: QIbAAwr8sBk5DvXYzYaDAkipbyATOaEEiN0lksyHTN8=
+
+Name: org/eclipse/californium/core/observe/class-use/Observation.html
+SHA-256-Digest: e/BkpVElUERE5kj+BdpBLXRHPQimKGLAWoCXWyB39YI=
+
+Name: org/eclipse/californium/core/network/GroupedMessageIdTracker.htm
+ l
+SHA-256-Digest: WFvfLpV5nXCiXee51E9Bjkn6EhflC14hkdx5TZIlZdM=
+
+Name: org/eclipse/californium/core/coap/class-use/OptionNumberRegistry
+ .optionFormats.html
+SHA-256-Digest: zDU/mVOVoteIgnrVXGo3KyuOyVzCIfeWEV8Qzru0Haw=
+
+Name: org/eclipse/californium/core/coap/OptionNumberRegistry.html
+SHA-256-Digest: ebn07ohhyFTYfy0ZwA7JvtZhJkBGuEZgprk9lV1123Y=
+
+Name: org/eclipse/californium/core/CoapResource.html
+SHA-256-Digest: Wqv1QCX8rZEkjx7qOgZLogfEcmDBPA1aaomDJAtnwPE=
+
+Name: org/eclipse/californium/core/class-use/CoapClient.Builder.html
+SHA-256-Digest: WokuRAA9TjNLeQfGSkpJgh6y9Ho3XpzQ1C83gO0C8fU=
+
+Name: org/eclipse/californium/core/coap/CoAP.MessageFormat.html
+SHA-256-Digest: I6cnUCIt6P4qBadq0QB6W4DOzGE9svxWXE/4lPeqOzE=
+
+Name: org/eclipse/californium/core/network/class-use/CoapEndpoint.Outb
+ oxImpl.html
+SHA-256-Digest: WcVP2cEiDlP/XnZST5cUYT7CM6Fl4M5XxGnavVPjrWU=
+
+Name: org/eclipse/californium/core/coap/class-use/MessageObserver.html
+SHA-256-Digest: v1ry7kp5ThDIiPVSkkD7VgLKxfoHrptWGjp7+J3v1iI=
+
+Name: org/eclipse/californium/core/network/interceptors/MessageTracer.
+ html
+SHA-256-Digest: frsTQdadWMyKXaAowc9u94ZPefeXVWkTsgyRzZMr/Tw=
+
+Name: org/eclipse/californium/core/network/stack/congestioncontrol/Bas
+ icRto.html
+SHA-256-Digest: O06qeb7nXC01d5Dtj5e6hC6pgn0eigfLbH5RWgM0Ymw=
+
+Name: org/eclipse/californium/core/server/ServerInterface.html
+SHA-256-Digest: fyDlAPQTswMRpWN8EFzXLEUzlRTsqgCsnPBpkNnesGY=
+
+Name: org/eclipse/californium/core/CoapClient.html
+SHA-256-Digest: gyugj/DzQZNeE23hGT3y27inI5+9NEpFj6TuXSxDMTg=
+
+Name: org/eclipse/californium/core/observe/ObserveManager.html
+SHA-256-Digest: woQDZuEuFiwAhxYG9ou6VevsVoGl/EDapHj4zIbLyP4=
+
+Name: org/eclipse/californium/core/network/RemoveHandler.html
+SHA-256-Digest: 89LrKyVf5wKswqNMbYmVj57TCuoKHbeB5NF9s61brPg=
+
+Name: org/eclipse/californium/core/observe/ObserveRelationFilter.html
+SHA-256-Digest: BbP06php1SuVHFUq0vuTkJLlEjGPLATTKVnrovjwsaY=
+
+Name: org/eclipse/californium/core/observe/class-use/NotificationListe
+ ner.html
+SHA-256-Digest: HadEaoWEIdk3PehedXipVPR1HTZLHjQGacZwGW4aSg8=
+
+Name: org/eclipse/californium/core/network/class-use/EndpointManager.C
+ lientMessageDeliverer.html
+SHA-256-Digest: KF4jPRsyPlooLXKbLd8WXURopC9FqwzXjaeyEgMAd+Y=
+
+Name: org/eclipse/californium/core/coap/CoAP.html
+SHA-256-Digest: naZXPydd9AxCh1krAtr75d6p683+O0UoMfajmKpF6uI=
+
+Name: org/eclipse/californium/core/server/class-use/ServerMessageDeliv
+ erer.html
+SHA-256-Digest: 9yncMxX69fgspnpru0M7+F76+hly5eHPbX6CcQqaYNw=
+
+Name: org/eclipse/californium/core/server/class-use/MessageDeliverer.h
+ tml
+SHA-256-Digest: ntvm1quQXArkrzKLa1af+2DxPX3KcAug9seVxnblKvE=
+
+Name: org/eclipse/californium/core/network/stack/congestioncontrol/Coc
+ oaStrong.html
+SHA-256-Digest: GgCDL6QoWXdEG9vVADl4/WNvjGCm+vwxJ63v7Xenu/o=
+
+Name: org/eclipse/californium/core/observe/NotificationListener.html
+SHA-256-Digest: boR1vnjwrTtuOizM3+71Xt9txwty1NpWtkQM9uuFx8I=
+
+Name: org/eclipse/californium/core/network/deduplication/class-use/Ded
+ uplicatorFactory.html
+SHA-256-Digest: EsFJPy7oyXeGA2yEWwjl/C2IFYmJCbiui1EZ3VOmxcA=
+
+Name: org/eclipse/californium/core/coap/class-use/Request.html
+SHA-256-Digest: +wXCvcYZy7wokrTi6FjFCYP631ArOo2QskhTmcCxM9w=
+
+Name: overview-frame.html
+SHA-256-Digest: L2ViZwyvYOJL8jzROvOUpWgBlpqEqO62WJunoz64Dyc=
+
+Name: org/eclipse/californium/core/coap/CoAP.ResponseCode.html
+SHA-256-Digest: WbX9fDQX9JeOCytbfE6dRhd6aGkD9CsmGfDsF97uErM=
+
+Name: org/eclipse/californium/core/coap/class-use/MediaTypeRegistry.ht
+ ml
+SHA-256-Digest: wWvuIETVhsrckWSrPKuxzBfd/chm88w3NmeqRIBxmdE=
+
+Name: org/eclipse/californium/core/network/class-use/Matcher.html
+SHA-256-Digest: grZSjP70hBSpqddDz8KPbXfm49Dsfgus7f+dl4QhVkA=
+
+Name: org/eclipse/californium/core/Utils.html
+SHA-256-Digest: tf4gTlVfldvgwUTEsNaFI8Qp79ZcVMNVQR8uWhUgrCc=
+
+Name: org/eclipse/californium/core/observe/class-use/ObserveRelationCo
+ ntainer.html
+SHA-256-Digest: uU5sTLd5YsTrm1ob1+dVmruU+nKNP84vjeehzplWIBs=
+
+Name: org/eclipse/californium/core/server/resources/ResourceAttributes
+ .html
+SHA-256-Digest: FsusW4VNT1F0+Lejbx/9z7E46qhhnqftZr0mKUNL7QY=
+
+Name: resources/tab.gif
+SHA-256-Digest: E84YKX++xPtHAghK7XPxKAwyhsOPAs29anj141jLzcU=
+
+Name: org/eclipse/californium/core/server/resources/class-use/Concurre
+ ntCoapResource.html
+SHA-256-Digest: Ummu9bPRy4Yi8EmAPaKkNi8viygFQLCbDQF7dsyP/GY=
+
+Name: org/eclipse/californium/core/coap/OptionSet.html
+SHA-256-Digest: s2tnY2azLgvZ/7lmwpHvX4GHolbAG2q/7dsFoTbOrBY=
+
+Name: serialized-form.html
+SHA-256-Digest: fklO+6vMrLvkvIakoochTagO6l332TvDaRTUyxpq39k=
+
+Name: org/eclipse/californium/core/network/config/class-use/NetworkCon
+ figDefaults.html
+SHA-256-Digest: AiPmkLeh6K5ISd8rYYTvrE6jEGXPPrEz4rF9REnTkf4=
+
+Name: org/eclipse/californium/core/network/deduplication/Deduplicator.
+ html
+SHA-256-Digest: /RzsnM55jwdUyrAcePjYZqt6H8R60M6Vgrr2AzviU0Y=
+
+Name: org/eclipse/californium/core/observe/InMemoryObservationStore.ht
+ ml
+SHA-256-Digest: 7rhi5Z+uGcZbFHpU6nfEmEwwxErEXy76o27EQH0QOIU=
+
+Name: org/eclipse/californium/core/coap/Message.html
+SHA-256-Digest: gi+JGKjpxx1yYLvb+knmJFeeAskjADEoaTU0htayJmk=
+
+Name: org/eclipse/californium/core/observe/package-use.html
+SHA-256-Digest: /PcsBenG0sx1CI7OPkwv+2P6EHM0hAFBrg7CFeV/qUA=
+
+Name: help-doc.html
+SHA-256-Digest: YfQ+uJ3k6W8goqCk2xHb3V7kqQA2M9/0LRRtM4QwnsA=
+
+Name: org/eclipse/californium/core/network/RemoteEndpointManager.html
+SHA-256-Digest: 4J3Z735/sZoOFVysRdklMpkevWH1c/HKFiNaQdFI5Rs=
+
+Name: org/eclipse/californium/core/server/resources/package-use.html
+SHA-256-Digest: G+UCKrqIgdHOTN/iBUqB3Otc2N3jZv6Hl/ZPFfZRUrU=
+
+Name: org/eclipse/californium/core/network/stack/class-use/Reliability
+ Layer.RetransmissionTask.html
+SHA-256-Digest: Q7MlUf5aVMwbTiuca1rQMwGqdrSrPYpJ9OnACLU33vQ=
+
+Name: org/eclipse/californium/core/network/MapBasedMessageIdTracker.ht
+ ml
+SHA-256-Digest: INM5ao6WErxnXBxbJwtab8KDxCRo1abrfIzqIid/rdk=
+
+Name: org/eclipse/californium/core/network/deduplication/package-use.h
+ tml
+SHA-256-Digest: VBjXTwjVyb2xTOQnONvfxRbYPCeu2k3jhXxzzYm5g9M=
+
+Name: org/eclipse/californium/core/package-summary.html
+SHA-256-Digest: TBQTko11fAIc3/B5aurfwYTMME9BGwLWgfMzDw3G7kw=
+
+Name: org/eclipse/californium/core/network/interceptors/AnonymizedOrig
+ inTracer.html
+SHA-256-Digest: 2q5ZcT7MQNQOrSW7PYFjGD6eNd0+HMNPLZa8WJZY27U=
+
+Name: org/eclipse/californium/core/server/resources/class-use/Resource
+ .html
+SHA-256-Digest: uY5RUHKB6Pv76JN00/Mz8p6GI4MPE/ibdbeesXonYKw=
+
+Name: org/eclipse/californium/core/coap/class-use/OptionSet.html
+SHA-256-Digest: yF+cx8AtmmXnTdX4a6fAhqoFdNBxiD66ANMLX72i7YU=
+
+Name: org/eclipse/californium/core/observe/ObserveRelationContainer.ht
+ ml
+SHA-256-Digest: 1VVxUmS74mzJrzj3onSq647+3Of48czy/Ql85xLZ8I8=
+
+Name: org/eclipse/californium/core/coap/package-summary.html
+SHA-256-Digest: 0Qx83msHroaHrjEt64s4CjCfXjBpiEecxESvFjitM7I=
+
+Name: overview-tree.html
+SHA-256-Digest: nZZA8GhssnBXeYNBrdXIYCiPHZkHpnOTKCmJmsKPF3E=
+
+Name: org/eclipse/californium/core/network/class-use/EndpointManager.h
+ tml
+SHA-256-Digest: kTKBLfU/OvI4aVreEjbkqzE8PmcRxedo+K/IKO7YNKs=
+
+Name: org/eclipse/californium/core/network/serialization/class-use/Dat
+ aSerializer.html
+SHA-256-Digest: 20KvHgc91ewrVxt6BQuNAWwc1ktRptlD0xA4z0HGkUY=
+
+Name: org/eclipse/californium/core/network/interceptors/package-frame.
+ html
+SHA-256-Digest: x7JNYwwp2dn8xIamqCyIMLdFxN35SJ7Ta5XY26CE7P4=
+
+Name: org/eclipse/californium/core/network/serialization/MessageHeader
+ .html
+SHA-256-Digest: +/fV/hxX5LIX2go46yTKxKv1QjlGRoTX2q8xbhFckwA=
+
+Name: org/eclipse/californium/core/network/serialization/class-use/Tcp
+ DataParser.html
+SHA-256-Digest: aL3ELonDgfaLJCfBTZrKTZtDbxPLEQjwx+4o3HK6iII=
+
+Name: org/eclipse/californium/core/coap/class-use/EmptyMessage.html
+SHA-256-Digest: jDexAMGv/hpJ+4QCJheljHwmDTa9Mp1OZYNIX45ahzw=
+
+Name: org/eclipse/californium/core/network/class-use/MessageIdTracker.
+ html
+SHA-256-Digest: WLDPNsiGoE37gIzNhxr8/svLBFElf1aDaizHZCxd2vE=
+
+Name: org/eclipse/californium/core/network/package-summary.html
+SHA-256-Digest: 0ikdk2oIYDkymjUetbN1KfSwvbuEBc0Lr4/hWadr/hg=
+
+Name: org/eclipse/californium/core/network/stack/class-use/Block2Block
+ wiseStatus.html
+SHA-256-Digest: DNrCiRx+QVny1lAunwvYOS/1hOYyHdx5DjPR1LazEdY=
+
+Name: org/eclipse/californium/core/class-use/Utils.html
+SHA-256-Digest: wTX6mUopahyBhI8dEVGliZQJ2w0TWTw32CGhIRZCvj8=
+
+Name: org/eclipse/californium/core/CoapClient.Builder.html
+SHA-256-Digest: JGhHtkN6t+Hk87Ld5SzeaGY4OmyJkY/6m1vku984xfE=
+
+Name: org/eclipse/californium/core/network/stack/class-use/CoapStack.h
+ tml
+SHA-256-Digest: 5kTXR4ixv6LwnU9OykUj37U4G3DAgcgjDSLB3SSvDQc=
+
+Name: org/eclipse/californium/core/coap/package-tree.html
+SHA-256-Digest: J92T+PpZImhfyjvdLSjnGibyquy3OTvTuLMyeCV5XDk=
+
+Name: org/eclipse/californium/core/network/stack/congestioncontrol/Coc
+ oa.html
+SHA-256-Digest: robNCjqMjzaRbzfVrvB4av7tTesK5WAYyLw56tL6/tA=
+
+Name: resources/background.gif
+SHA-256-Digest: IF+QbbWdOEWhAnLg4kpR0Xf5Irtue7AA9JjlhwyVbDI=
+
+Name: org/eclipse/californium/core/coap/class-use/Response.html
+SHA-256-Digest: yGjh/WNAtPDmC5aoat2T/jHUHpiXDBIV/v0Jcl7gQFg=
+
+Name: org/eclipse/californium/core/network/class-use/NullMessageIdTrac
+ ker.html
+SHA-256-Digest: P8vSKhmi0awAlTemjnBQjzzhZ6pYTQhxk1o0jlEvDS4=
+
+Name: org/eclipse/californium/core/package-frame.html
+SHA-256-Digest: A9ZkiCZ52C+FyHnf28V8xT+D+H/io2YHZ53aKMfm9wM=
+
+Name: org/eclipse/californium/core/network/EndpointContextMatcherFacto
+ ry.MatcherMode.html
+SHA-256-Digest: Xwi5eh4vxxU2R2qbDHs/j6NM/YSCR+m3S9BRJMgDrcU=
+
+Name: org/eclipse/californium/core/network/config/NetworkConfigObserve
+ rAdapter.html
+SHA-256-Digest: YBCXFO8ee0WLsdzcnbcSEKfaYr7IznvF1/Lc87B4qk4=
+
+Name: org/eclipse/californium/core/network/class-use/BaseMatcher.html
+SHA-256-Digest: zEPB4e7dM3U436Rg2SHmDinx8YZidqYRY0K5dON1GlM=
+
+Name: org/eclipse/californium/core/network/stack/Block2BlockwiseStatus
+ .html
+SHA-256-Digest: eyMIymj8y5uGxrGfWOnoUNKCuffIqK7QQBowFBILqjk=
+
+Name: org/eclipse/californium/core/network/config/class-use/NetworkCon
+ figObserver.html
+SHA-256-Digest: wtz/UUzajVAVLt6FexiQCEhGibhgGqzyFR5VVGhrpOo=
+
