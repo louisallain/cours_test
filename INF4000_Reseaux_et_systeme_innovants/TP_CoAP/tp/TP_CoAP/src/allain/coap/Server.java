@@ -57,7 +57,8 @@ public class Server {
 
                 if(piece.equals("cuisine")) {
                     luxCuisine = lux;
-                    if(luxCuisine >= 300 && nbPersonnesCuisine > 0) lumiereCuisine = true;
+                    if(luxCuisine < 300 && nbPersonnesCuisine > 0) lumiereCuisine = true;
+                    else if(luxCuisine >= 300) lumiereCuisine = false;
                 }
             }
             else {
@@ -70,8 +71,8 @@ public class Server {
                 if(piece.equals("cuisine")) {
                     nbPersonnesCuisine = nbPersonnes;
                     if(luxCuisine >= 300 && nbPersonnesCuisine > 0) lumiereCuisine = true;
+                    else if(nbPersonnesCuisine == 0) lumiereCuisine = false;
                 }
-                
             }
         }
     }
