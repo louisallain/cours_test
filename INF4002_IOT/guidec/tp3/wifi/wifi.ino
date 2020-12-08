@@ -9,10 +9,10 @@ WiFiClient client;
 String mac;
 
 
-#define NETWORK_SSID    "Bbox-80CDC60A"
-#define NETWORK_PASSWD  "7y2uDWWK92utNXdCpq"
-#define SERVER_ADDR     "10.0.0.1"
-#define SERVER_PORT     6000
+#define NETWORK_SSID    "SSID"
+#define NETWORK_PASSWD  "PASS"
+#define SERVER_ADDR     "192.168.1.61"
+#define SERVER_PORT     4444
 
 // ==========================================================================
 
@@ -22,7 +22,7 @@ unsigned long WiFi_last_attempt               = 99999;
 static unsigned long WiFi_attempt_interval    = 10000;
 
 unsigned long last_sampling                   = 99999;
-static unsigned long sampling_interval        = 10000;
+static unsigned long sampling_interval        = 5000;
 
 // ==========================================================================
 // WI-FI MANAGEMENT
@@ -57,17 +57,21 @@ void setup_WiFi_client() {
 // ==========================================================================
 // Return 'true' if 'ssid' has been detected during the last scan.
 // Return 'false' otherwise.
-bool checkSSID(String ssid) {
+// n : number of ssid find by scan
+bool checkSSID(String ssid, int n) {
 
-  Serial.println("TO BE COMPLETED");
+  for(int i=0; i<n; i++) if(ssid == WiFi.SSID(i)) return true;
+  return false;
 }
 
 // ========================================================================
 // Return the channel number used by network 'ssid', as detected during
 // the last scan.  Return 0 if 'ssid' was not detected.
-int getChannel(String ssid) {
+// n : number of ssid find by scan
+int getChannel(String ssid, int n) {
 
-  Serial.println("TO BE COMPLETED");
+  for(int i=0; i<n; i++) if(ssid == WiFi.SSID(i)) return WiFi.channel(i);
+  return 0;
 }
 
 // ==========================================================================
@@ -77,7 +81,13 @@ int getChannel(String ssid) {
 // When a disconnection is detected, stop the WiFiClient if it was connected.
 void check_WiFi_status() {
 
-  Serial.println("TO BE COMPLETED");
+  WiFi_status = WiFi.status();
+  if(WiFi_status == WL_CONNECTED) {
+    digitalWrite(LED_WiFi, HIGH);
+  }
+  else {
+    digitalWrite(LED_WiFi, HIGH);
+  }
 }
 
 // ==========================================================================
@@ -87,13 +97,30 @@ void check_WiFi_status() {
 // — on tente une connexion avec cet AP, en spécifiant le SSID, le mot de passe, et le canal utilisé
 void start_WiFi_connection() {
 
+  Serial.print("Tentative de connexion ");
+  Serial.println(NETWORK_SSID);
+  Serial.println("Scan en cours...");
   int numSsid = WiFi.scanNetworks();
   if (numSsid == -1) {
-    Serial.println("Couldn't get a wifi connection");
+    Serial.println("Connexion Wifi impossible");
     return;
   }
 
-  Serial.println("Number of available networks=" + numSsid);
+  bool ssidFound = checkSSID(NETWORK_SSID, numSsid);
+  // Vérifie qu'on trouve bien l'AP ayant ce SSID
+  if(ssidFound) {
+    Serial.print(NETWORK_SSID);
+    Serial.println(" Trouve");
+    int numChannel = getChannel(NETWORK_SSID, numSsid);
+    if(numChannel != 0) {
+      Serial.println("Tentative d'association...");
+      WiFi.begin(NETWORK_SSID, NETWORK_PASSWD);
+      check_WiFi_status();
+    }
+  }
+  else {
+    Serial.println("SSID non trouve");
+  }
 }
 
 // ==========================================================================
