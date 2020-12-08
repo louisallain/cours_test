@@ -75,6 +75,7 @@ class HomePage extends React.Component {
         fetch(CORS_PROXY_URL+ICS_EVENTS_ADE_FILE_URL, {method: 'POST'}) // passe par un proxy CORS
         .then(res => res.json())
         .then(json => {
+            console.log(utils_function.parseICS(json.contents))
             this.setState({
                 ADE_Events: utils_function.parseICS(json.contents),
                 ADE_EventsRetrieved: true
