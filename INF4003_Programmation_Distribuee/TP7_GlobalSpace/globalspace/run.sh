@@ -1,0 +1,1 @@
+yarn jar ./dtspace.jar dtspace.TupleMemoryClient /user/e1602246/apps/globalspace/dtspace.jar 4

@@ -6,6 +6,7 @@
 package dtspace;
 
 import java.net.InetAddress;
+import java.io.IOException;
 
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
@@ -86,7 +87,7 @@ public class GlobalSpace extends LocalSpace implements RemoteGlobalSpace {
    */
   public ArrayList<String> getAllNodesHostname() {
 
-    ArrayList<String> children = null;
+    List<String> children = null;
     ArrayList<String> hostnames = null;
 
     try {
@@ -95,16 +96,16 @@ public class GlobalSpace extends LocalSpace implements RemoteGlobalSpace {
 
       if(zk != null) {
         
-        if (zk.exists(hostnamesZkPath, this) != null) {
+        if (zk.exists(hostnamesZkPath, false) != null) {
 
           children = zk.getChildren(hostnamesZkPath, false);
           for(String path : children) {
-            hostnames.add(zk.getData(path, false, null));
+            hostnames.add(new String(zk.getData(path, false, null)));
           }
         }
       }
     } 
-    catch (KeeperException | InterruptedException e) {
+    catch (KeeperException | InterruptedException | IOException e) {
       e.printStackTrace();
     }
 
