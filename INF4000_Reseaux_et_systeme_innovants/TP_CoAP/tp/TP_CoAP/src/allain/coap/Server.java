@@ -31,6 +31,8 @@ public class Server {
     static String SEJOUR = "sejour";
     static String SALON = "salon";
 
+    static int port = 5683;
+
     /**
      * Demarre le serveur CoAP.
      * Démarre une commande permettant de simuler des valeurs pour les capteurs.
@@ -38,7 +40,7 @@ public class Server {
     public static void main(String[] args) {
 
         // binds on UDP port 5683
-        CoapServer server = new CoapServer();
+        CoapServer server = new CoapServer(Server.port);
 
         CoapResource path = new CoapResource("maison");
 
@@ -61,8 +63,10 @@ public class Server {
         while(true) {
             Scanner scanner = new Scanner(new InputStreamReader(System.in));
 
+            System.out.println("Entrer 'q' pour terminer le programme.");
             System.out.println("Piece a actionner : (cuisine, sejour ou salon) :");
             String piece = scanner.nextLine();
+            if(piece.equals("q")) System.exit(0); // vérifie seulement au début de la séquence si on souhaite arrêter le programme
             if(!piece.equals(Server.CUISINE) && !piece.equals(Server.SEJOUR) && !piece.equals(Server.SALON)) {
                 System.out.println("Piece inconnue"); continue;
             }

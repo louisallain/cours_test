@@ -16,6 +16,7 @@ public class Client {
      */
     public static void main(String args[]) {
 
+        /*
         // Requête générale
         CoapClient client = new CoapClient("coap://localhost:5683/.well-known/core");
         CoapResponse response1 = client.get();
@@ -23,17 +24,57 @@ public class Client {
         System.out.println(response1.getOptions());
         System.out.println(response1.getResponseText());
         client.shutdown();
+        */
 
+        CoapClient client;
         while(true) {
             Scanner scanner = new Scanner(new InputStreamReader(System.in));
 
-            System.out.println("Piece voule : (cuisine, sejour ou salon) :");
+            System.out.println("Entrer 'q' pour terminer le programme.");
+            System.out.println("Piece voulue : (cuisine, sejour ou salon) ou controle de la porte (porte) : ");
             String piece = scanner.nextLine();
 
-            if(!piece.equals(Server.CUISINE) && !piece.equals(Server.SEJOUR) && !piece.equals(Server.SALON)) {
-                System.out.println("Piece inconnue"); continue;
+
+            if(piece.equals("q")) System.exit(0); // vérifie seulement au début de la séquence si on souhaite arrêter le programme
+            if(!piece.equals(Server.CUISINE) && !piece.equals(Server.SEJOUR) && !piece.equals(Server.SALON) && !piece.equals("porte")) {
+                System.out.println("Commande inconnue"); continue;
             }
-            System.out.println("Pieces selectionnee : " + piece);
+            System.out.println("Commande selectionnee : " + piece);
+
+            if(piece.equals("porte")) {
+                System.out.println("Voir l'etat de la porte (etat) ou la controler (ctrl) :");
+                String porteType = scanner.nextLine();
+                if(!porteType.equals("etat") && !porteType.equals("ctrl")) {
+                    System.out.println("Commande inconnue"); continue;
+                }
+                if(porteType.equals("etat")) {
+                    String uri = new String("coap://localhost:" + DoorServer.port + "/porte");
+                    client = new CoapClient(uri);
+                    CoapResponse response = client.get();
+                    System.out.println(response.getCode());
+                    System.out.println(response.getOptions());
+                    System.out.println(response.getResponseText());
+                    client.shutdown();
+                    continue;
+                }
+                if(porteType.equals("ctrl")) {
+                    System.out.println("Ouvrir (true) ou fermer (false) :");
+                    String valuePorte = scanner.nextLine();
+                    if(!valuePorte.equals("true") && !valuePorte.equals("false")) {
+                        System.out.println("Valeur incorrecte !"); 
+                        continue;
+                    }
+                    String uri = new String("coap://localhost:" + DoorServer.port + "/porte");
+                    client = new CoapClient(uri);
+                    CoapResponse response = client.put(valuePorte, 0);
+                    System.out.println(response.getCode());
+                    System.out.println(response.getOptions());
+                    System.out.println(response.getResponseText());
+                    client.shutdown();
+                    continue;
+                }
+            }
+
             System.out.println("Actionneur : (lumiere ou presence) :");
             String actionneur = scanner.nextLine();
             if(!actionneur.equals("lumiere") && !actionneur.equals("presence")) {
@@ -83,20 +124,7 @@ public class Client {
                 System.out.println(response.getCode());
                 System.out.println(response.getOptions());
                 System.out.println(response.getResponseText());
-
-                // test observer
-                CoapObserveRelation relation = client.observe(new CoapHandler(){
-                    @Override public void onLoad(CoapResponse response) {
-						String content = response.getResponseText();
-						System.out.println("NOTIFICATION: " + content);
-					}
-					
-					@Override public void onError() {
-						System.err.println("OBSERVING FAILED");
-					}
-                });
                 client.shutdown();
-                relation.proactiveCancel(); // désactive la relation d'observer
             }
         }
     }
