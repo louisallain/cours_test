@@ -23,6 +23,8 @@ import org.apache.zookeeper.ZooKeeper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.security.*;
+
 /**
  * Espace de tuple partagé entre plusieurs noeuds
  * Exploite un espace de tuple local.
@@ -51,6 +53,10 @@ public class GlobalSpace extends LocalSpace implements RemoteGlobalSpace {
 
     // Creation et installation du manager de securite
     // mettre dans ~/.java.policy : grant{Permission java.security.AllPermission;};
+
+    // configuraion du manager de sécurité depuis le code
+    Policy.setPolicy(new MinimalPolicy());
+    
     if (System.getSecurityManager() == null) {
         System.setSecurityManager(new SecurityManager()); 
         // ou donner mettre -Djava.security.policy=monfich.policy au lancement du serveur
@@ -88,7 +94,7 @@ public class GlobalSpace extends LocalSpace implements RemoteGlobalSpace {
   public ArrayList<String> getAllNodesHostname() {
 
     List<String> children = null;
-    ArrayList<String> hostnames = null;
+    ArrayList<String> hostnames = new ArrayList<>();
 
     try {
 
@@ -99,8 +105,8 @@ public class GlobalSpace extends LocalSpace implements RemoteGlobalSpace {
         if (zk.exists(hostnamesZkPath, false) != null) {
 
           children = zk.getChildren(hostnamesZkPath, false);
-          for(String path : children) {
-            hostnames.add(new String(zk.getData(path, false, null)));
+          for(String name : children) {
+            hostnames.add(new String(zk.getData(hostnamesZkPath + "/" + name, false, null)));
           }
         }
       }
@@ -174,7 +180,9 @@ public class GlobalSpace extends LocalSpace implements RemoteGlobalSpace {
     }
     else{ // recherche globale
       ArrayList<String> hostnames = this.getAllNodesHostname();
+      int k = 0; // compte le nombre de noeuds parcourus
       for(String host : hostnames) {
+        if(k == this.nbNodes) return t; // arrête quand le nombre de noeuds est atteint
         try {
           Remote r = Naming.lookup("rmi://"+host+":"+rmiPort+"/"+rmiName);
           System.out.println(r);
@@ -187,6 +195,7 @@ public class GlobalSpace extends LocalSpace implements RemoteGlobalSpace {
           e.printStackTrace();
           System.exit(1);
         }
+        k++;
       }
 
       return t;
@@ -228,7 +237,9 @@ public class GlobalSpace extends LocalSpace implements RemoteGlobalSpace {
     }
     else{// recherche globale
       ArrayList<String> hostnames = this.getAllNodesHostname();
+      int k = 0; // compte le nombre de noeuds parcourus
       for(String host : hostnames) {
+        if(k == this.nbNodes) return t; // arrête quand le nombre de noeuds est atteint
         try {
           Remote r = Naming.lookup("rmi://"+host+":"+rmiPort+"/"+rmiName);
           System.out.println(r);
@@ -241,6 +252,7 @@ public class GlobalSpace extends LocalSpace implements RemoteGlobalSpace {
           e.printStackTrace();
           System.exit(1);
         }
+        k++;
       }
 
       return t;
@@ -263,9 +275,17 @@ public class GlobalSpace extends LocalSpace implements RemoteGlobalSpace {
     Tuple t = new Tuple(Integer.valueOf(1));
 
     if(args[0].equals("p")) {
+
       System.out.println("Producteur");
       try {
         GlobalSpace gspace = new GlobalSpace();
+
+        // Essai de getAllHostnames
+        ArrayList<String> tmp = gspace.getAllNodesHostname();
+        for(String h : tmp) {
+          System.out.println(h);
+        }
+
         gspace.write(t);
       }
       catch(RemoteException e) {
