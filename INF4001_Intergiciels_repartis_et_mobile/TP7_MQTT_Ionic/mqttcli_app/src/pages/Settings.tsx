@@ -12,7 +12,11 @@ interface State {
   topic: string;
 }
 
-class Settings extends React.Component<{}, State> {
+interface Props {
+  setupMQTT: Function
+}
+
+class Settings extends React.Component<Props, State> {
 
   constructor(props: any) {
     super(props);
@@ -31,16 +35,19 @@ class Settings extends React.Component<{}, State> {
     Plugins.Storage.get({key: VALUES.NATIVE_STORAGE_BROKER_ADRESS_REF}).then((r) => this.setState({mqttServerAdress: r.value || ""}))
     Plugins.Storage.get({key: VALUES.NATIVE_STORAGE_BROKER_PORT_REF}).then((r) => this.setState({mqttPort: Number(r.value)}))
     Plugins.Storage.get({key: VALUES.NATIVE_STORAGE_TOPIC_REF}).then((r) => this.setState({topic: r.value || ""}))
-    
   }
 
   /**
-   * Sauvegarde les paramètres sur le Storage.
+   * Sauvegarde les paramètres sur le Storage et se connecte avec les paramètres donnés.
    */
-  saveConfigToStorage(state: any) {
+  saveConfigToStorageAndConnect(state: any) {
     Plugins.Storage.set({key: VALUES.NATIVE_STORAGE_BROKER_ADRESS_REF, value: state.mqttServerAdress})
-    Plugins.Storage.set({key: VALUES.NATIVE_STORAGE_BROKER_PORT_REF, value: state.mqttPort.toString()})
-    Plugins.Storage.set({key: VALUES.NATIVE_STORAGE_TOPIC_REF, value: state.topic})
+    .then(() => {
+      Plugins.Storage.set({key: VALUES.NATIVE_STORAGE_BROKER_PORT_REF, value: state.mqttPort.toString()})
+      .then(() => {
+        Plugins.Storage.set({key: VALUES.NATIVE_STORAGE_TOPIC_REF, value: state.topic}).then(() => this.props.setupMQTT())
+      })
+    })
   }
 
   render() {
@@ -61,7 +68,7 @@ class Settings extends React.Component<{}, State> {
             <input className="input" placeholder="Adresse du broker MQTT" value={this.state.mqttServerAdress} onChange={(event) => this.setState({mqttServerAdress: event.target.value})}/>
             <input className="input" type="number" placeholder="Port du broker MQTT" value={this.state.mqttPort} onChange={(event) => this.setState({mqttPort: parseInt(event.target.value)})}/>
             <input className="input" placeholder="Sujet (Topic)" value={this.state.topic} onChange={(event) => this.setState({topic: event.target.value})}/>
-            <button className="input" onClick={() => this.saveConfigToStorage(this.state)}>Connexion</button>
+            <button className="input" onClick={() => this.saveConfigToStorageAndConnect(this.state)}>Connexion</button>
           </div>
         </IonContent>
       </IonPage>

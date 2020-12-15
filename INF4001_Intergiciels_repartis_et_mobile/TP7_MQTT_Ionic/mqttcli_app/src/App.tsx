@@ -33,13 +33,14 @@ import './theme/variables.css';
 import { Cordova, cordova } from '@ionic-native/core';
 
 /* Mes imports */
-import Tab1 from './pages/Tab1';
+import Messages from './pages/Messages';
 import Settings from './pages/Settings';
 import { Plugins } from '@capacitor/core';
-var mqtt = require('mqtt');
+import * as VALUES from './values';
 
 interface State {
-  mqttClient: any
+  messages: any,
+  mqttClient: any,
 }
 
 class App extends React.Component<{}, State> {
@@ -47,18 +48,89 @@ class App extends React.Component<{}, State> {
   constructor(props: any) {
     super(props)
     this.state = {
+      messages: [], // tableau des messages reçus depuis le sujet mqtt
       mqttClient: null
     }
   }
 
   /**
+   * Retrouve la configuration donné par l'utilisateur dans le storage. Indique les erreurs avec des toasts.
+   * Se connecte au broker MQTT et s'abonne au sujet défini dans les paramètres.
+   */
+  connectToMQTTBrokerAndSubscribe = () => {
+    var mqtt = require('mqtt');
+    // var client  = mqtt.connect('wss://test.mosquitto.org:8081');
+
+    Plugins.Storage.get({key: VALUES.NATIVE_STORAGE_BROKER_ADRESS_REF})
+    .then((broker_addr) => {
+      Plugins.Storage.get({key: VALUES.NATIVE_STORAGE_BROKER_PORT_REF})
+      .then((broker_port) => {
+        Plugins.Storage.get({key: VALUES.NATIVE_STORAGE_TOPIC_REF})
+        .then((topic) => {
+
+          var mqtt    = require('mqtt');
+          if(this.state.mqttClient != null) {
+            this.state.mqttClient.end()
+          }
+          var client  = mqtt.connect(`${broker_addr.value}:${broker_port.value}`, {
+            reconnectPeriod: 0
+          });
+
+          // Après connexion, s'abonne au topic 
+          client.on('connect', function () {
+            client.subscribe(topic.value, function (err : any) {
+              if (!err) {
+                console.log("Connexion au broker mqtt ok")
+                Plugins.Toast.show({
+                  text: "Connexion réussi !",
+                  duration: "long",
+                  position: "bottom"
+                })
+              }
+              else {
+                console.error(err)
+                Plugins.Toast.show({
+                  text: "Erreur de connexion au Broker : " + err.toString(),
+                  duration: "long",
+                  position: "bottom"
+                })
+              }
+            })
+          })
+          
+          // Handler de la réception d'un message
+          client.on('message', (topic : any, message : any) => {
+            console.log(message)
+            // on ne vérifie pas le topic puisque l'on suppose qu'il n'y que un seul abonnement à un topic
+            // Ajoute le nouveau message
+            console.log(this.state)
+            this.setState({messages : [...this.state.messages, message.toString()]})
+          })
+
+          client.on('error', () => {
+            console.log("ERREUER")
+            Plugins.Toast.show({
+              text: "Erreur MQTT",
+              duration: "long",
+              position: "bottom"
+            })
+          })
+
+          this.setState({mqttClient: client})
+        })
+      })
+    })
+  }
+
+   /**
    * Handler de l'état de connectivité du réseau.
    * Si connecté, alors connexion au broker mqtt et souscription au topic définis dans les paramètres à l'aide de la fonction this.connectToMQTTBroker
    */
-  handlerNetworkStatusChanged(status: any) {
+  handlerNetworkStatusChanged = (status: any) => {
     console.log("status changed", status)
     if(status.connected === false) {
       console.log("déconnecté !")
+      this.state.mqttClient.end()
       Plugins.Toast.show({
         text: "Déconnecté du réseau, veuillez vous connecter à l'Internet",
         duration: "long",
@@ -77,26 +149,6 @@ class App extends React.Component<{}, State> {
     }
   }
 
-  connectToMQTTBrokerAndSubscribe() {
-    var mqtt    = require('mqtt');
-    var options = {
-        protocol: 'mqtts',
-        // clientId uniquely identifies client
-        // choose any string you wish
-        clientId: 'b0908855'    
-    };
-    var client  = mqtt.connect('mqtt://test.mosquitto.org:8081', options);
-
-    // preciouschicken.com is the MQTT topic
-    client.subscribe('preciouschicken.com');
-    client.on('message', function (topic: any, message: any) {
-      let note = message.toString();
-      console.log(note);
-      client.end();
-      });
-    //this.setState({mqttClient: client})
-  }
-
   /**
    * Ajoute un listener sur l'état de la connectivité réseau.
    * Se connecte au broker mqtt et souscrit au topic si il y a une connexion à internet.
@@ -107,7 +159,6 @@ class App extends React.Component<{}, State> {
     Plugins.Network.getStatus().then((status: any) => {
       if(status.connected === true) {
         this.connectToMQTTBrokerAndSubscribe()
-        
       }
     })
   }
@@ -125,12 +176,16 @@ class App extends React.Component<{}, State> {
         <IonReactRouter>
           <IonTabs>
             <IonRouterOutlet>
-              <Route path="/tab1" component={Tab1} exact={true} />
-              <Route path="/settings" component={Settings} exact={true} />
-              <Route path="/" render={() => <Redirect to="/tab1" />} exact={true} />
+              <Route path="/messages" exact={true}>
+                <Messages messages={this.state.messages} />
+              </Route>
+              <Route path="/settings" exact={true}>
+                <Settings setupMQTT={this.connectToMQTTBrokerAndSubscribe} />
+              </Route>
+              <Route path="/" render={() => <Redirect to="/messages" />} exact={true} />
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
-              <IonTabButton tab="tab1" href="/tab1">
+              <IonTabButton tab="messages" href="/messages">
                 <IonIcon icon={triangle} />
                 <IonLabel>Messages</IonLabel>
               </IonTabButton>
