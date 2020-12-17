@@ -1,0 +1,41 @@
+.mainContainer {
+    display: flex;
+    flex-direction: row;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+}
+
+.leftMenu {
+    background-color: #D3D3D3;
+    flex-grow: 1;
+    max-width: 10%;
+    display: flex;
+    flex-direction: column;
+}
+
+.centerMain {
+    background-color: white;
+    flex-grow: 5;
+    margin: 10px;
+    overflow: auto;
+}
+
+.leftMenuButton:hover {
+    background-color: rgb(97, 205, 255);
+    color: black;
+}
+
+.leftMenuButton {
+    background-color: #0076AD; /* Blue */
+    border: 1px solid#0076AD;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    transition-duration: 0.4s;
+}

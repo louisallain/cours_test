@@ -1,0 +1,56 @@
+.calendarContainer {
+    height: 100%;
+}
+
+.modal {
+    width: 50%;
+    height: 40%;
+    margin: auto;
+    margin-top: 25vh;
+    padding: 20px;
+    background-color: white;
+    border: 1px solid black;
+}
+
+.modal:focus {outline:0;}
+
+.overlayModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    backdrop-filter: blur(4px);  
+}
+
+
+.listContainerShowMore {
+    height: 100%;
+    overflow: auto;
+}
+
+.customEventContainer .deleteEventButton {
+    position: absolute; 
+    top: 0;
+    right:0;
+    margin: 5px;
+}
+
+.customEventContainer .titleEvent {
+    position: absolute; 
+    bottom: 0;
+    margin-bottom: 10px;
+}
+
+.acceptedUsersListContainer {
+    height: 60%;
+    overflow: auto;
+}
+
+.eventInfos {
+    font-size: 12px;
+}
+
+.courseInfos {
+    color: orange;
+}
